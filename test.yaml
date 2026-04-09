@@ -1,0 +1,340 @@
+phones:
+- name: Iphone6
+  model:
+    vendor: Apple
+    family: USA
+    version: '1'
+  testrun_ids:
+    fota:
+    activitytracking:
+    functional:
+    performance:
+  platform: ios
+  releasetype: PU100
+  ip: 192.168.5.100
+  udid: UDID_1
+  user: john
+  release_type: PU1
+
+- &id001
+  name: Chaos
+  model:
+    vendor: nok
+    family: '33'
+    version: '1'
+  platform: android
+  release_type: PU100
+  ip: 192.168.5.0
+  udid: '1111'
+  user: john doe
+
+  testrun_ids:
+    fota: tt1
+    activitytracking: ''
+    functional: ''
+    performance: '4'
+  port:
+- name: Nyx
+  model:
+    vendor: samsung
+    family: and
+    version: '"'
+  platform: android
+  release_type: PU1
+  ip: 192.168.5.1
+  udid: '11122'
+  user: rtc-Nyx@cobi.bike
+  testrun_ids:
+    fota: ftt
+    activitytracking: q
+    functional: q
+    performance: '2'
+- name: Erebos
+  model:
+    vendor: Nokia
+    family: '3310'
+    version: '2'
+  platform: android
+  release_type: PU100
+  ip: 192.168.5.2
+  udid: '1112'
+  user: rtc-Erebos@cobi.bike
+  testrun_ids:
+    fota: OIWD
+    activitytracking: WE
+    functional: '!"'
+    performance: '4'
+- name: Hesperiden
+  model:
+    vendor: qqq
+    family: q
+    version: q
+  platform: android
+  release_type: PU1
+  ip: 192.168.5.3
+  udid: '111111111'
+  user: rtc-Hesperiden@cobi.bike
+
+- name: Hemera
+  model:
+    vendor: Msft
+    family: msf
+    version: '2'
+  platform: android
+  release_type: PU100
+  ip: 192.168.5.221
+  udid: '11111111'
+  user: rtc-Hemera@cobi.bike
+
+rtc_params:
+  min_ip: 220
+  max_ip: 254
+
+stages:
+  prod:
+  - name: name_1
+    hubs:
+    - id: 0
+      ports:
+      - id: 0
+        port:
+        udid: '1111'
+    - id: 1
+      ports:
+      - id: 2
+        port: 02
+        udid: 222
+      - id: 3
+        port:
+        udid: 422
+      - id: 4
+        port:
+        udid:
+      - id: 5
+        port:
+        udid: 3
+  dev:
+  - name: name_2
+    hubs:
+    - id: 0
+      ports:
+      - id: 0
+        port: -1
+        udid: 11122
+      - id: 1
+        port: 2
+        udid: 11123
+      - id: 2
+        port:
+        udid: 11122
+      - id: 3
+        port: -1
+        udid: UDID_1
+
+macmini:
+- name:
+  hubs:
+  - id: 0
+    ports:
+    - id: 0
+      port: 2560
+      udid: 1
+  - id: 1
+    ports:
+    - id: 1
+      port: 02
+      udid: 222
+    - id: 2
+      port:
+      udid:
+    - id: 3
+      port: *id001
+      udid: '1111'
+- name: Chaos
+  hubs:
+  - id: 0
+    ports:
+    - id: 0
+      port:
+      udid: '1112'
+  - id: 1
+    ports:
+    - id: 0
+      port: 02
+      udid: 222
+    - id: 1
+      port:
+      udid:
+    - id: 2
+      port: *id001
+      udid: '1111'
+
+biab:
+  ariel: &ariel
+    name: Ariel
+    bbp: 'false'
+    bdu: 'false'
+  carme: &carme
+    name: Carme
+    bbp: 'false'
+    bdu: 'false'
+  deimos: &deimos
+    name: Deimos
+    bbp: 'false'
+    bdu: 'false'
+  despina: &despina
+    name: Despina
+    bbp: 'false'
+    bdu: 'false'
+  helike: &helike
+    name: Helike
+    bbp: 'false'
+    bdu: 'false'
+  phobos: &phobos
+    name: Phobos
+    bbp: 'false'
+    bdu: 'false'
+  proteus: &proteus
+    name: Proteus
+    #bbp: 'false'
+    #bdu: 'false'
+  valetudo: &valetudo
+    name: Valetudo
+    bbp: 'false'
+    bdu: 'false'
+
+bts:
+  bts_black_mask: &bts_black_mask
+    name: bts-black-mask
+    ip: 192.168.5.138
+    brc:
+      hw_revision: '5.0'
+      mac_address: ''
+      serial_number: 08004-0117-01-A10-00-0000
+    biab: *phobos
+    ebike_release_set: ''
+  bts_black_flash: &bts_black_flash
+    name: bts-black-flash
+    ip: 192.168.5.136
+    brc:
+      hw_revision: '5.0'
+      mac_address: ''
+      serial_number: 08004-0038-01-A10-00-0000
+    biab: *deimos
+    ebike_release_set: ''
+  bts_batwoman: &bts_batwoman
+    name: bts-batwoman
+    ip: 192.168.5.137
+    brc:
+      hw_revision: '5.0'
+      mac_address: ''
+      serial_number: 08004-0170-01-A10-00-0000
+    biab: *valetudo
+    ebike_release_set: ''
+  bts_atom_smasher: &bts_atom_smasher
+    name: bts-atom-smasher
+    ip: 192.168.5.135
+    brc:
+      hw_revision: '4.0'
+      mac_address: ''
+      serial_number: 07614-0160-01-A10-00-0000
+    ebike_release_set: ''
+  bts_aurora: &bts_aurora
+    name: bts-aurora
+    ip: 192.168.5.134
+    brc:
+      hw_revision: '4.0'
+      mac_address: ''
+      serial_number: 07614-0029-01-A10-00-0000
+    ebike_release_set: ''
+  bts_azazel: &bts_azazel
+    name: bts-azazel
+    ip: 192.168.5.133
+    brc:
+      hw_revision: '4.0'
+      mac_address: ''
+      serial_number: 07614-0164-01-A10-00-0000
+    ebike_release_set: ''
+  bts_bishop: &bts_bishop
+    name: bts-bishop
+    ip: 192.168.5.139
+    brc:
+      hw_revision: '5.0'
+      mac_address: ''
+      serial_number: 08004-0171-01-A10-00-0000
+    biab: *carme
+    ebike_release_set: ''
+  bts_black_bolt: &bts_black_bolt
+    name: bts-black-bolt
+    ip: 192.168.5.140
+    brc:
+      hw_revision: '5.0'
+      mac_address: ''
+      serial_number: 08004-0145-01-A10-00-0000
+    biab: *helike
+    ebike_release_set: ''
+  bts_black_adam: &bts_black_adam
+    name: bts-black-adam
+    ip: 192.168.5.142
+    brc:
+      hw_revision: '5.0'
+      mac_address: ''
+      serial_number: 08004-0169-01-A10-00-0000
+    biab: *proteus
+    ebike_release_set: ''
+  bts_beast_boy: &bts_beast_boy
+    name: bts-beast-boy
+    ip: 192.168.5.141
+    brc:
+      hw_revision: '5.0'
+      mac_address: ''
+      serial_number: 08005-0017-01-A10-00-0000
+    biab: *ariel
+    ebike_release_set: ''
+  bts_black_condor: &bts_black_condor
+    name: bts-black-condor
+    ip: 192.168.5.143
+    brc:
+      hw_revision: '5.0'
+      mac_address: ''
+      serial_number: 14013-0037-01-A10-00-0000
+    biab: *despina
+
+# list of access points
+# provide wifi
+access_point:
+  ubiquiti_uap_nanohd: &ubiquiti_uap_nanohd
+    name: Ubiquiti UAP-nanoHD
+
+# list of ethernet switches
+# provide LAN connectivity
+# binding to BTS and hence to biab
+switch:
+  tp_link_tlsg3424: #&tp_link_tlsg3424
+    name: TP-Link TLSG3424
+    port01: *bts_black_mask
+    port02: *bts_black_flash
+    port03: *bts_batwoman
+    port04: *bts_atom_smasher
+    port05: *bts_aurora
+    port06: *bts_azazel
+    port07: *bts_bishop
+    port08: *bts_black_bolt
+    port09: *bts_black_adam
+    port10: *bts_beast_boy
+    port11: *bts_black_condor
+    port12:
+    port13:
+    port14:
+    port15:
+    port16:
+    port17:
+    port18:
+    port19:
+    port20:
+    port21:
+    port22:
+    port23:
+    port24: *ubiquiti_uap_nanohd
+
+
