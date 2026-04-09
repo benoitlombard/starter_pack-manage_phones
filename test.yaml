@@ -1,8 +1,12 @@
+rtc_params:
+  min_ip: 220
+  max_ip: 254
+
 phones:
-- name: Iphone6
+- name: Dyonysos
   model:
     vendor: Apple
-    family: USA
+    family: ios.3
     version: '1'
   testrun_ids:
     fota:
@@ -12,43 +16,64 @@ phones:
   platform: ios
   releasetype: PU100
   ip: 192.168.5.100
-  udid: UDID_1
+  udid: ABCDEF12-34567890ABCDEF12
   user: john
   release_type: PU1
+  deployed: false
+  deployment_path:
+    hub_id:
+    port_id:
 
-- &id001
-  name: Chaos
+zeus: &zeus                   # filled for both
+  name: Zeus                  # filled for both
+  manufacturer: Apple # empty from generator
+  model: iPhone 7 # empty from generator
+  vendor: Apple # empty from RTC_config
+  family: ios.3 # empty from RTC_config
+  version: '1'  # empty from RTC_config
+  platform: ios # autocompleted by generator
+  release_type: PU1           # filled for both
+  ip: 192.168.5.248 # autocompleted by generator
+  udid: 004dbf2d1352472f9c40c6cc62da3c5d43ce2672         # filled for both
+  user: rtc+PROD_iPhone7@cobi.bike
+  deployed: false   # new
+  deployment_path:  # new
+    hub_id:         # new
+    port_id:        # new
+  testrun_ids:      # filled for both (depend of options while generating)
+    fota: ''
+    activitytracking: ''
+    functional: 6205
+    performance: 6198
+
+
+
+
+
+
+
+
+
+
+- name: Chaos
   model:
-    vendor: nok
+    vendor: Nokia
     family: '33'
     version: '1'
   platform: android
   release_type: PU100
   ip: 192.168.5.0
-  udid: '1111'
+  udid: AAAAAAAAAAAAAAAA-1213
   user: john doe
-
+  deployed: false
+  deployment_path:
+    hub_id:
+    port_id:
   testrun_ids:
-    fota: tt1
+    fota: fota_id
     activitytracking: ''
     functional: ''
     performance: '4'
-  port:
-- name: Nyx
-  model:
-    vendor: samsung
-    family: and
-    version: '"'
-  platform: android
-  release_type: PU1
-  ip: 192.168.5.1
-  udid: '11122'
-  user: rtc-Nyx@cobi.bike
-  testrun_ids:
-    fota: ftt
-    activitytracking: q
-    functional: q
-    performance: '2'
 - name: Erebos
   model:
     vendor: Nokia
@@ -57,117 +82,118 @@ phones:
   platform: android
   release_type: PU100
   ip: 192.168.5.2
-  udid: '1112'
+  udid: BBBBBBBBB-34567890ABCDEF12
   user: rtc-Erebos@cobi.bike
+  deployed: false
+  deployment_path:
+    hub_id:
+    port_id:
   testrun_ids:
-    fota: OIWD
-    activitytracking: WE
-    functional: '!"'
+    fota: fota_id_2
+    activitytracking: '0'
+    functional: '444'
     performance: '4'
-- name: Hesperiden
-  model:
-    vendor: qqq
-    family: q
-    version: q
-  platform: android
-  release_type: PU1
-  ip: 192.168.5.3
-  udid: '111111111'
-  user: rtc-Hesperiden@cobi.bike
-
 - name: Hemera
   model:
     vendor: Msft
     family: msf
     version: '2'
   platform: android
-  release_type: PU100
+  release_type: PU1
   ip: 192.168.5.221
   udid: '11111111'
   user: rtc-Hemera@cobi.bike
+  deployed: false
+  deployment_path:
+    hub_id:
+    port_id:
+- name: Nyx
+  model:
+    vendor: Apple
+    family: '9'
+    version: '2.0'
+  platform: ios
+  release_type: PU1
+  ip: 192.168.5.220
+  udid: 34567890ABCDEF12
+  user: rtc-Nyx@cobi.bike
+  deployed: false
+  deployment_path:
+    hub_id:
+    port_id:
 
-rtc_params:
-  min_ip: 220
-  max_ip: 254
 
 stages:
   prod:
-  - name: name_1
-    hubs:
-    - id: 0
-      ports:
-      - id: 0
-        port:
-        udid: '1111'
-    - id: 1
-      ports:
-      - id: 2
-        port: 02
-        udid: 222
-      - id: 3
-        port:
-        udid: 422
-      - id: 4
-        port:
-        udid:
-      - id: 5
-        port:
-        udid: 3
+  - hub_id: 0
+    ports:
+    - port_id: 0
+      port:
+      udid:
+    - port_id: 1
+      port:
+      udid:
+  - hub_id: 1
+    ports:
+    - port_id: 0
+      port:
+      udid:
+    - port_id: 1
+      port:
+      udid:
+    - port_id: 2
+      port:
+      udid:
+    - port_id: 3
+      port:
+      udid:
   dev:
-  - name: name_2
-    hubs:
-    - id: 0
-      ports:
-      - id: 0
-        port: -1
-        udid: 11122
-      - id: 1
-        port: 2
-        udid: 11123
-      - id: 2
-        port:
-        udid: 11122
-      - id: 3
-        port: -1
-        udid: UDID_1
+  - hub_id: 0
+    ports:
+    - port_id: 0
+      port:
+      udid:
+    - port_id: 1
+      port:
+      udid:
+  - hub_id: 1
+    ports:
+    - port_id: 0
+      port:
+      udid:
+    - port_id: 1
+      port:
+      udid:
+    - port_id: 2
+      port:
+      udid:
+    - port_id: 3
+      port:
+      udid:
 
 macmini:
-- name:
-  hubs:
-  - id: 0
-    ports:
-    - id: 0
-      port: 2560
-      udid: 1
-  - id: 1
-    ports:
-    - id: 1
-      port: 02
-      udid: 222
-    - id: 2
-      port:
-      udid:
-    - id: 3
-      port: *id001
-      udid: '1111'
-- name: Chaos
-  hubs:
-  - id: 0
-    ports:
-    - id: 0
-      port:
-      udid: '1112'
-  - id: 1
-    ports:
-    - id: 0
-      port: 02
-      udid: 222
-    - id: 1
-      port:
-      udid:
-    - id: 2
-      port: *id001
-      udid: '1111'
+- hub_id: 0
+  ports:
+  - port_id: 0
+    port:
+    udid:
+  - port_id: 1
+    port:
+    udid:
+- hub_id: 1
+  ports:
+  - port_id: 0
+    port:
+    udid:
+  - port_id: 1
+    port:
+    udid:
+  - port_id: 2
+    port:
+    udid:
+  - port_id: 3
+    port:
+    udid:
 
 biab:
   ariel: &ariel

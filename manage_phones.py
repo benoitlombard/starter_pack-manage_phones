@@ -36,10 +36,6 @@ def check_deployed(udid):
 # Add phone
 def get_unused_name():
 	used = []
-	print("file content:\n", yaml_d, "\n")
-	print("phones keyword content:\n", yaml_d['phones'], "\n")
-	print("phones[0] keyword content:\n", yaml_d['phones'][0], "\n")
-	print("phones[0]['name'] keyword content:\n", yaml_d['phones'][0]['name'], "\n")
 
 	for i in range(len(yaml_d['phones'])):
 		#print("cle recherchee :\n", yaml_d['phones'][i]['name'],"\n")
@@ -53,9 +49,6 @@ def get_unused_name():
 	return new_name
 
 def get_ip():
-	print("yaml_d['rtc_params']: \n", yaml_d['rtc_params'],"\n")
-	print("yaml_d['rtc_params']['min_ip']\n", yaml_d['rtc_params']['min_ip'], "\n")
-	print("yaml_d['phones'][0]['ip'].split('.')[3]\n", yaml_d['phones'][0]['ip'].split('.')[3], "\n")
 	for i in range(yaml_d['rtc_params']['min_ip'], yaml_d['rtc_params']['max_ip']+1):
 		found = False
 		for j in range(len(yaml_d['phones'])):
@@ -113,6 +106,18 @@ def add_phone():
 			print('Phone with ' + udid + ' already exists')
 			return False
 	user = 'rtc-' + yaml_name + '@cobi.bike'
+
+	"""
+	New infos in yaml file's 'phone' section: 
+		
+							deployed: True/False
+							deployment_path:
+								hub_id:	str
+								port_id: str
+	"""
+	deployed = False #This condition is always verified because of 'print('Phone with ' + udid + ' already exists')' verification
+	deployment_path = dict(hub_id = None, port_id = None)
+
 	print('Add testrun ids?')
 	if input('y|n ') == 'y':
 		fota = input('fota: ')
@@ -121,9 +126,9 @@ def add_phone():
 		performance = input('performance: ')
 		testrun_ids = dict(fota = fota, activitytracking = activitytracking, functional = functional, performance = performance)
 
-		new_record = dict(name = yaml_name, model = model, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, testrun_ids = testrun_ids)
+		new_record = dict(name = yaml_name, model = model, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path, testrun_ids = testrun_ids)
 	else:
-		new_record = dict(name = yaml_name, model = model, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user)
+		new_record = dict(name = yaml_name, model = model, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path)
 
 	print(new_record)
 
@@ -143,7 +148,7 @@ def change_phone():
 	print('Phone to change: ')
 	for i, val in  enumerate(yaml_d['phones']):
 		l[i] = val #l[i] = yaml_d['phones'][val]
-		print(str(i) + ': ' + val['name']) # erreur !!!!!!
+		print(str(i) + ': ' + val['name'])
 		print('\t' + val['model']['vendor'] + ' ' + val['model']['family'] + ' ' + str(val['model']['version']))
 	idx = input('? ')
 	phone = l[int(idx)]
@@ -192,7 +197,6 @@ def remove_phone():
 	print('Enter phone name')
 	phone = input('? ')
 	for i in range(len(yaml_d['phones'])):
-		#if yaml_d['phones'][i]['name'] == phone:
 		if yaml_d['phones'][i]['name'] == phone:
 			print('Sure to remove ' + phone + ' from test inventory?')
 			print('You can just undeploy from test stages.')
@@ -205,20 +209,14 @@ def remove_phone():
 			return
 	print(phone + ' not found')
 
+
 # deploy phone
 def find_free_port(stage):
 	for i in yaml_d['stages'][stage]:
 		try:
 			for k in i['hubs']:
-				#print("element de i['hubs'] :", k)
-				#for j in i['hubs'][k]['ports']:
-				#for j in k['ports']:
 				for j in k['ports']:
-					#print("element de k['ports']['port'] :", j['port'])
-					#if i['hubs'][k]['ports'][j] == None:
 					if j['port'] == None:
-						#return dict(macmini = i['name'], hub = k, port = j)
-						#print("on return:", dict(macmini = i['name'], hub = k, port = j))
 						print("free port found, on return:", dict(macmini = i['name'], hub = k['id'], port = j['id']))
 						return dict(macmini = i['name'], hub = k['id'], port = j['id'])
 		except TypeError:
@@ -245,8 +243,6 @@ def deploy_phone():
 	if free_port != None:
 		print('Phone to deploy: ')
 		for val in range(len(yaml_d['phones'])):
-			#print("\n inspection de for val in yaml_d['phones'], on en est a val=",val, "\n")
-			#print("\n affichage de l argument de check_deployed:", yaml_d['phones'][val]['udid'])
 			f, s, m, h, p = check_deployed(yaml_d['phones'][val]['udid'])
 			if not f:
 				l.add(val)
@@ -263,7 +259,6 @@ def deploy_phone():
 			if yaml_d['macmini'][i]['name'] == free_port['macmini'] or yaml_d['macmini'][i]['name'] == None:
 				# I added new possibility: ['name'] = None, for allowing deployment right after undeployment (undeployment will now trigger ['name']=None)
 				
-				# !!!!!!!!!! changer les lignes de find_free_port pour renvoyer l'id, et plus le contenu de ['port']
 				print("yaml_d['macmini'][i]['hubs'][free_port['hub']]['ports']", yaml_d['macmini'][i]['hubs'][free_port['hub']]['ports'])
 				print("[free_port['port']]", [free_port['port']])
 				for id_index in range(len(yaml_d['macmini'][i]['hubs'][free_port['hub']]['ports'])):
@@ -274,7 +269,6 @@ def deploy_phone():
 				yaml_d['macmini'][i]['name'] = yaml_d['phones'][l[int(idx)]]['name']
 				yaml_d['macmini'][i]['hubs'][free_port['hub']]['ports'][id_index]['udid'] = yaml_d['phones'][l[int(idx)]]['udid']
 				yaml_d['macmini'][i]['hubs'][free_port['hub']]['ports'][id_index]['port'] = yaml_d['phones'][l[int(idx)]]
-				#print('Phone deployed to ' + free_port['port'] + ' at hub ' + yaml_d['macmini'][i]['hubs'][free_port['hub']]['name'] + ' at mac mini ' + yaml_d['macmini'][i]['name'])
 				print('Phone deployed to ' + str(free_port['port']) + ' at hub ' + str(free_port['hub']) + ' at mac mini ' + yaml_d['macmini'][i]['name'])
 				print('Please connect phone as soon as possible')
 		
@@ -340,7 +334,7 @@ def undeploy_phone(phone):
 
 def show_stage(stage):
 	for i in yaml_d['stages'][stage]:
-		if 'hubs' in i:
+		if 'hub_id' in i:
 			yaml.dump(i, sys.stdout)
 
 def list_phones():
@@ -427,17 +421,16 @@ def display():
 		list_phones()
 	elif ret == '2':				#new function
 		list_from_yaml('bts')
-	elif ret == '3':				#new function
+	elif ret == '3':				#new function (same as previous)
 		list_from_yaml('biab')
 	elif ret == '4':
 		show_stage('prod')
 	elif ret == '5':
 		show_stage('dev')
-	elif ret == '6':
+	elif ret == '6':				#deleted call to check_deployed (optimizing)
 		print('Not deployed phones:')
 		for i in yaml_d['phones']:
-			f, s, m, h, p = check_deployed(i['udid'])
-			if not f:
+			if not i['deployed']:
 				print(i['name'])
 	elif ret == '7':				#new function
 		print('Phone to show: ')
@@ -446,7 +439,6 @@ def display():
 			if yaml_d['phones'][i]['name'] == ret:
 				yaml.dump(yaml_d['phones'][i], sys.stdout)
 				return
-
 
 if __name__ == "__main__":
 	ret = ''
