@@ -1,7 +1,7 @@
 ###!/usr/bin/env python3
 
 #from types import new_class
-import ruamel.yaml as yaml
+import ruamel.yaml #as yaml
 import sys
 import click
 
@@ -9,7 +9,7 @@ file_name = 'test.yaml'
 #file_name = '../components/commons/rtc_configuration.yaml'
 
 with open(file_name, 'r') as yaml_file:
-	yaml = yaml.YAML(typ='rt')
+	yaml = ruamel.yaml.YAML(typ='rt')
 	yaml_d = yaml.load(yaml_file)
 
 def check_deployed(udid):
@@ -36,10 +36,8 @@ def check_deployed(udid):
 # Add phone
 def get_unused_name():
 	used = []
-
-	for i in range(len(yaml_d['phones'])):
-		#print("cle recherchee :\n", yaml_d['phones'][i]['name'],"\n")
-		used.append(yaml_d['phones'][i]['name'])
+	for name in yaml_d['phones']:
+		used.append(yaml_d['phones'][name]['name'])
 	with open('gods.txt', 'r') as gods:
 		for god in gods:
 			g = god.rstrip()
@@ -51,12 +49,15 @@ def get_unused_name():
 def get_ip():
 	for i in range(yaml_d['rtc_params']['min_ip'], yaml_d['rtc_params']['max_ip']+1):
 		found = False
-		for j in range(len(yaml_d['phones'])):
+		for j in yaml_d['phones']:
 			if i == int(yaml_d['phones'][j]['ip'].split('.')[3]):
 				found = True
 				break
 		if found == False:
 			return i
+
+def CM(**kw):
+    return ruamel.yaml.comments.CommentedMap(**kw)
 
 def add_phone():
 	yaml_name = get_unused_name()
@@ -77,7 +78,6 @@ def add_phone():
 	while version == '':
 		print('Version must be set')
 		version = input('? ')
-	model = dict(vendor = vendor, family = family, version = version)
 	if vendor == 'Apple':
 		platform = 'ios'
 	else:
@@ -101,7 +101,7 @@ def add_phone():
 	while udid == '':
 		print('UDID must be set')
 		udid = input('? ')
-	for i in range(len(yaml_d['phones'])):
+	for i in yaml_d['phones']:
 		if yaml_d['phones'][i]['udid'] == udid:
 			print('Phone with ' + udid + ' already exists')
 			return False
@@ -112,11 +112,12 @@ def add_phone():
 		
 							deployed: True/False
 							deployment_path:
-								hub_id:	str
-								port_id: str
+								status: 'dev' / 'prod' / None
+								hub:	str / None
+								port: str / None
 	"""
 	deployed = False #This condition is always verified because of 'print('Phone with ' + udid + ' already exists')' verification
-	deployment_path = dict(hub_id = None, port_id = None)
+	deployment_path = dict(status = None, hub = None, port = None)
 
 	print('Add testrun ids?')
 	if input('y|n ') == 'y':
@@ -126,15 +127,19 @@ def add_phone():
 		performance = input('performance: ')
 		testrun_ids = dict(fota = fota, activitytracking = activitytracking, functional = functional, performance = performance)
 
-		new_record = dict(name = yaml_name, model = model, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path, testrun_ids = testrun_ids)
+		new_record = CM(name = yaml_name, manufacturer = None, model = None, vendor = vendor, family = family, version = version, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path, testrun_ids = testrun_ids)
 	else:
-		new_record = dict(name = yaml_name, model = model, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path)
+		new_record = CM(name = yaml_name, manufacturer = None, model = None, vendor = vendor, family = family, version = version, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path)
+	
+	new_record.yaml_set_anchor(new_record)
 
-	print(new_record)
-
+	new_record.yaml_set_anchor(yaml_name)
+	new_record['self_reference'] = new_record # incroyable
+	data = CM(yaml_name=new_record)
+	#data[yaml_name] = data.pop('yaml_name') # incroyable
+	
 	if input('add entry to yaml? y|n ') == 'y':
-		print("yaml_name\n", yaml_name)
-		yaml_d['phones'].append(new_record)
+		yaml_d['phones'][yaml_name] = data['yaml_name'] # operate name change here
 
 		with open(file_name, 'w') as yaml_file:
 			yaml.default_flow_style = False
