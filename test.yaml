@@ -2,12 +2,10 @@ rtc_params:
   min_ip: 220
   max_ip: 254
 
-
-
 phones:
-  zeus: &zeus
-                                         # filled for both
-    name: Zeus                  # filled for both
+  zeus:
+                                # filled for both
+    name: zeus                  # filled for both
     manufacturer: Apple         # empty from generator
     model: iPhone 7             # empty from generator
     vendor: Apple               # empty from RTC_config
@@ -18,56 +16,59 @@ phones:
     ip: 192.168.5.248           # autocompleted by generator
     udid: 004dbf2d1352472f9c40c6cc62da3c5d43ce2672  # filled for both
     user: rtc+PROD_iPhone7@cobi.bike                # filled for both
-    deployed: false           # new
-    deployment_path:          # new
-      status:                 # new
-      hub:                    # new
-      port:                   # new
+    deployed: false                     # new
+    deployment_path:
+                              # new
+      status:         # new
+      hub:                  # new
+      port:        # new
     testrun_ids:                  # 
       fota: ''                    #
       activitytracking: ''        #  filled for both (if option 'yes' while generating)
       functional: 6205            #
       performance: 6198           #
-    self_reference:
-  Chaos:
+
+  Chaos: 
     name: Chaos
     manufacturer:
     model:
-    vendor: Apple
-    family: '3'
-    version: '1'
-    platform: ios
+    vendor: Samsung
+    family: S22
+    version: '4'
+    platform: android
     release_type: PU1
     ip: 192.168.5.220
-    udid: QQQA
-    user: rtc-Chaos@cobi.bike
+    udid: SSSS-4444-C
+    user: benoit
     deployed: false
     deployment_path:
       status:
       hub:
       port:
-    self_reference:
-  Nyx: &Nyx
+    testrun_ids:
+      fota: fota__00
+      activitytracking: AA4
+      functional: no
+      performance: '4'
+
+
+  Nyx:
     name: Nyx
     manufacturer:
     model:
-    vendor: Apple
-    family: '5'
+    vendor: Nokia
+    family: '0'
     version: '1'
-    platform: ios
-    release_type: PU100
+    platform: android
+    release_type: PU1
     ip: 192.168.5.221
-    udid: PPPPPPP-4444
-    user: rtc-Nyx@cobi.bike
+    udid: UUUUU-5
+    user: benoit
     deployed: false
     deployment_path:
       status:
       hub:
       port:
-    self_reference: *Nyx
-
-
-
 biab:
   ariel: &ariel
     name: Ariel
@@ -239,7 +240,7 @@ switch:
 usb_hub:
   exsys_ex_1116hmvs_1: &exsys_ex_1116hmvs_1
     name: ExSys EX-1116HMVS
-    port01: *zeus
+    port01:
     port02:
     port03:
     port04:
@@ -269,7 +270,8 @@ usb_hub:
 
 stages:
   prod:
-    tp_link_tlsg3424 <<: *tp_link_tlsg3424
+  - <<: *tp_link_tlsg3424
+    port12:
   dev:
-    exsys_ex_1116hmvs_1 <<: *exsys_ex_1116hmvs_1
-    exsys_ex_1116hmvs_2 <<: *exsys_ex_1116hmvs_2
+  - <<: *exsys_ex_1116hmvs_1
+  - <<: *exsys_ex_1116hmvs_2

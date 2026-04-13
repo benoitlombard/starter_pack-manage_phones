@@ -13,24 +13,18 @@ with open(file_name, 'r') as yaml_file:
 	yaml_d = yaml.load(yaml_file)
 
 def check_deployed(udid):
-	for s in 'prod', 'dev':
-		for i in yaml_d['stages'][s]:
-			if 'hubs' in i:
-				try:
-					for k in i['hubs']:
-						#for j in i['hubs'][k]['ports']:
-						for j in k['ports']:
-							#print("inspecting", j, "in i['hubs'][k]['ports']")
-							try:
-								#print("test if, comparaison entre :", udid, "et :", j['udid'])
-								if str(udid) == str(j['udid']):
-									j['port'] = None
-									#print("test reussi")
-									return True, s, i['name'], k['id'], j['id'] # found, mac name, hub name, port
-							except TypeError:
-								pass
-				except TypeError:
-					pass
+	for stage in 'prod', 'dev':
+		for hub in yaml_d['stages'][stage]:
+			try:
+				for port in hub:
+					print("inspection, port =", port)
+					try:
+						if str(udid) == str(yaml_d['stages'][stage][hub][port]['udid']):
+							return True, stage, hub['name'], port # Description : true/false, hub_name, port_name
+					except TypeError:
+						pass
+			except TypeError:
+				pass
 	return False, '', '', '', ''
 
 # Add phone
@@ -131,15 +125,8 @@ def add_phone():
 	else:
 		new_record = CM(name = yaml_name, manufacturer = None, model = None, vendor = vendor, family = family, version = version, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path)
 	
-	new_record.yaml_set_anchor(new_record)
-
-	new_record.yaml_set_anchor(yaml_name)
-	new_record['self_reference'] = new_record # incroyable
-	data = CM(yaml_name=new_record)
-	#data[yaml_name] = data.pop('yaml_name') # incroyable
-	
 	if input('add entry to yaml? y|n ') == 'y':
-		yaml_d['phones'][yaml_name] = data['yaml_name'] # operate name change here
+		yaml_d['phones'][yaml_name] = new_record # operate name change here
 
 		with open(file_name, 'w') as yaml_file:
 			yaml.default_flow_style = False
@@ -152,9 +139,10 @@ def change_phone():
 	l = {}
 	print('Phone to change: ')
 	for i, val in  enumerate(yaml_d['phones']):
+		print("loop:", i, val)
 		l[i] = val #l[i] = yaml_d['phones'][val]
-		print(str(i) + ': ' + val['name'])
-		print('\t' + val['model']['vendor'] + ' ' + val['model']['family'] + ' ' + str(val['model']['version']))
+		print(str(i) + ': ' + yaml_d['phones'][val]['name'])
+		print('\t' + yaml_d['phones'][val]['vendor'] + ' ' + yaml_d['phones'][val]['family'] + ' ' + str(yaml_d['phones'][val]['version']))
 	idx = input('? ')
 	phone = l[int(idx)]
 	#print(yaml.round_trip_dump(phone))
@@ -176,18 +164,18 @@ def change_phone():
 			releasetype = 'PU1'
 		elif ret == '2':
 			releasetype = 'PU100'
-		phone['release_type'] = releasetype
+		yaml_d['phones'][val]['release_type'] = releasetype
 	elif ret == '2':
 		print('New user: (complete string)')
 		user = input('? ')
-		phone['user'] = user
+		yaml_d['phones'][val]['user'] = user
 	elif ret == '3':
 		fota = input('fota: ')
 		activitytracking = input('activitytracking: ')
 		functional = input('functional: ')
 		performance = input('performance: ')
 		testrun_ids = dict(fota = fota, activitytracking = activitytracking, functional = functional, performance = performance)
-		phone['testrun_ids'] = testrun_ids
+		yaml_d['phones'][val]['testrun_ids'] = testrun_ids
 	else:
 		print('Unknown selection')
 
@@ -201,29 +189,27 @@ def change_phone():
 def remove_phone():
 	print('Enter phone name')
 	phone = input('? ')
-	for i in range(len(yaml_d['phones'])):
-		if yaml_d['phones'][i]['name'] == phone:
-			print('Sure to remove ' + phone + ' from test inventory?')
-			print('You can just undeploy from test stages.')
-			if input('enter yes if are sure: ') == 'yes':
+	if phone in yaml_d['phones']:
+		print('Sure to remove ' + phone + ' from test inventory?')
+		print('You can just undeploy from test stages.')
+		if input('enter yes if are sure: ') == 'yes':
+			if yaml_d['phones'][phone]['deployed']:
 				undeploy_phone(phone)
-				del yaml_d['phones'][i]
-				with open(file_name, 'w') as w:
-					#w.write(yaml.round_trip_dump(yaml_d))
+			del yaml_d['phones'][phone]
+			with open(file_name, 'w') as w:
 					yaml.dump(yaml_d, w)
-			return
+		return
 	print(phone + ' not found')
 
 
 # deploy phone
 def find_free_port(stage):
-	for i in yaml_d['stages'][stage]:
+	for hub_id in range(len(yaml_d['stages'][stage])):
 		try:
-			for k in i['hubs']:
-				for j in k['ports']:
-					if j['port'] == None:
-						print("free port found, on return:", dict(macmini = i['name'], hub = k['id'], port = j['id']))
-						return dict(macmini = i['name'], hub = k['id'], port = j['id'])
+			for port in yaml_d['stages'][stage][hub_id]:
+				if yaml_d['stages'][stage][hub_id][port] == None:
+					#print("free port found, on return:", dict(hub = hub['name'], port = port))
+					return dict(hub_id = hub_id, port = port)
 		except TypeError:
 			pass
 		except KeyError:
@@ -247,100 +233,96 @@ def deploy_phone():
 	free_port = find_free_port(stage)
 	if free_port != None:
 		print('Phone to deploy: ')
-		for val in range(len(yaml_d['phones'])):
-			f, s, m, h, p = check_deployed(yaml_d['phones'][val]['udid'])
-			if not f:
+		for val in yaml_d['phones']:
+			if not yaml_d['phones'][val]['deployed']:
 				l.add(val)
-			
+
 		l = list(l)
 		for i, val in enumerate(l):
 			print(str(i) + ': ' + yaml_d['phones'][val]['name'])
-			print('\t' + yaml_d['phones'][val]['model']['vendor'] + ' ' + yaml_d['phones'][val]['model']['family'] + ' ' + str(yaml_d['phones'][val]['model']['version']))
+			print('\t' + yaml_d['phones'][val]['vendor'] + ' ' + yaml_d['phones'][val]['family'] + ' ' + str(yaml_d['phones'][val]['version']))
 		idx = input('? ')
 		if idx == '':
 			return False
-		
-		for i in range(len(yaml_d['macmini'])):
-			if yaml_d['macmini'][i]['name'] == free_port['macmini'] or yaml_d['macmini'][i]['name'] == None:
-				# I added new possibility: ['name'] = None, for allowing deployment right after undeployment (undeployment will now trigger ['name']=None)
-				
-				print("yaml_d['macmini'][i]['hubs'][free_port['hub']]['ports']", yaml_d['macmini'][i]['hubs'][free_port['hub']]['ports'])
-				print("[free_port['port']]", [free_port['port']])
-				for id_index in range(len(yaml_d['macmini'][i]['hubs'][free_port['hub']]['ports'])):
-					if yaml_d['macmini'][i]['hubs'][free_port['hub']]['ports'][id_index]['id'] == free_port['port']:
-						print("index found:", id_index)
-						break
+		selected_phone = l[int(idx)]
 
-				yaml_d['macmini'][i]['name'] = yaml_d['phones'][l[int(idx)]]['name']
-				yaml_d['macmini'][i]['hubs'][free_port['hub']]['ports'][id_index]['udid'] = yaml_d['phones'][l[int(idx)]]['udid']
-				yaml_d['macmini'][i]['hubs'][free_port['hub']]['ports'][id_index]['port'] = yaml_d['phones'][l[int(idx)]]
-				print('Phone deployed to ' + str(free_port['port']) + ' at hub ' + str(free_port['hub']) + ' at mac mini ' + yaml_d['macmini'][i]['name'])
-				print('Please connect phone as soon as possible')
+		yaml_d['phones'][selected_phone]['deployment_path']['status'] = stage
+		yaml_d['phones'][selected_phone]['deployment_path']['hub'] = free_port['hub_id']
+		yaml_d['phones'][selected_phone]['deployment_path']['port'] = free_port['port']
+				#yaml_d['stages'][stage][free_port['hub_id']][free_port['port']] = yaml_d['phones'][selected_phone]['name']
+		"""
+		yaml_d['phones'][selected_phone].yaml_set_anchor(yaml_d['phones'][selected_phone]['name'])
+		data = CM(port = yaml_d['phones'][selected_phone])
+		setattr(data['port'], ruamel.yaml.comments.merge_attrib, [(0, yaml_d['phones'][selected_phone]['name'])])
+		#yaml = ruamel.yaml.YAML()
+		yaml.dump(data, sys.stdout)
+		"""
+
+		copied_data = CM(name = yaml_d['phones'][selected_phone]['name'], manufacturer = yaml_d['phones'][selected_phone]['manufacturer'], model =  yaml_d['phones'][selected_phone]['model'], vendor = yaml_d['phones'][selected_phone]['vendor'], family = yaml_d['phones'][selected_phone]['family'], version = yaml_d['phones'][selected_phone]['version'], platform = yaml_d['phones'][selected_phone]['platform'], release_type = yaml_d['phones'][selected_phone]['release_type'], ip = yaml_d['phones'][selected_phone]['ip'], udid = yaml_d['phones'][selected_phone]['udid'], user = yaml_d['phones'][selected_phone]['user'], deployed = yaml_d['phones'][selected_phone]['deployed'], deployment_path = yaml_d['phones'][selected_phone]['deployment_path'])
+		copied_data.yaml_set_anchor(copied_data)
+		copied_data.yaml_set_anchor(yaml_d['phones'][selected_phone]['name'])
+		yaml_d['stages'][stage][free_port['hub_id']][free_port['port']] = copied_data # incroyable
+		data = CM(yaml_name=copied_data)
+		yaml.dump(data, sys.stdout)
+
+		#data[yaml_name] = data.pop('yaml_name') # incroyable
 		
+		#yaml_d['phones'][yaml_name] = data['yaml_name'] # operate name change here
+
+		with open(file_name, 'w') as yaml_file:
+			yaml.default_flow_style = False
+			yaml.dump(yaml_d, yaml_file)
+
+
+
+
+
+
+
+
+		yaml_d['phones'][selected_phone]['deployed'] = True
+		print('Phone deployed to ' + str(free_port['port']) + ' at hub ' + str(yaml_d['stages'][stage][free_port['hub_id']]['name']))
+		print('Please connect phone as soon as possible')
+
 		with open(file_name, 'w') as w:
-			#w.write(yaml.round_trip_dump(yaml_d))
 			yaml.dump(yaml_d, w)
 	else:
 		print('No free port at stage ' + stage)
 	return True
-
+		
 
 # undeploy phone
 def undeploy_phone(phone):
 	print(phone)
-	if phone == '':
+	while phone == '':
 		l = {}
 		print('Phone to undeploy: ')
 		for i, val in  enumerate(yaml_d['phones']):
-			l[i] = val['name']
-			print(str(i) + ': ' + val['name'])
+			print("val:", val)
+			l[i] = yaml_d['phones'][val]['name']
+			print(str(i) + ': ' + yaml_d['phones'][val]['name'])
 		idx = input('? ')
 		phone = l[int(idx)]
 
-	print("avant la boucle de recherche, phone=", phone)
-	for i in yaml_d['phones']:
-		print("comparaison entre",phone,"et ", i['name'])
-		if i['name'] == phone:
-			print("la comparaison passe")
-			f, s, m, h, p = check_deployed(i['udid'])
-			print("check_deployed en fct du udid, retour=",f,s,m,h,p)
-			if f:
-				print("on a passe le check True pour check_deployed")
-				for j in range(len(yaml_d['stages'][s])):
-					print("comparaison (name) entre ", m, " et", yaml_d['stages'][s][j]['name'])
-					if yaml_d['stages'][s][j]['name'] == m:
-						for k in range(len(yaml_d['stages'][s][j]['hubs'])):
-							print("comparaison (hub_id) entre ", h, " et", yaml_d['stages'][s][j]['hubs'][k]['id'])
-							if yaml_d['stages'][s][j]['hubs'][k]['id'] == h:
-								for l in range(len(yaml_d['stages'][s][j]['hubs'][h]['ports'])):
-									print("comparaison (port_id) entre ", h, " et", yaml_d['stages'][s][j]['hubs'][k]['id'])
-									if yaml_d['stages'][s][j]['hubs'][k]['ports'][l]['id'] == p:
-										print("on est dans le code d'affectation")
-										yaml_d['stages'][s][j]['hubs'][h]['ports'][p]['port'] = None #original affectation
-										for macmini_index in range(len(yaml_d['macmini'])):
-											if yaml_d['macmini'][macmini_index]['name'] == phone:
-												print("le nom a ete trouve")
-												break
-										yaml_d['macmini'][macmini_index]['name'] = None	# proposition of new additional affectation for easier deployment
-										for macmini_hub_index in range(len(yaml_d['macmini'][macmini_index]['hubs'])):
-											for macmini_port_index in range(len(yaml_d['macmini'][macmini_index]['hubs'][macmini_hub_index]['ports'])):
-												try :
-													if len(yaml_d['macmini'][macmini_index]['hubs'][macmini_hub_index]['ports'][macmini_port_index]['port']) > 3:
-														print("le pointeur de donnees a ete trouve")
-														yaml_d['stages'][s][macmini_index]['hubs'][macmini_hub_index]['ports'][macmini_port_index]['port'] = None  # proposition of new additional affectation
-														yaml_d['stages'][s][macmini_index]['hubs'][macmini_hub_index]['ports'][macmini_port_index]['udid'] = None  # proposition of new additional affectation
-												except:
-													print("error when looping to delete")
+	phone_deployment_status = yaml_d['phones'][phone]['deployment_path']['status']
+	phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']
+	phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
+	try:
+		yaml_d['stages'][phone_deployment_status][phone_deployment_hub][phone_deployment_port] = None
+		yaml_d['phones'][phone]['deployment_path']['status'] = None
+		yaml_d['phones'][phone]['deployment_path']['hub'] = None
+		yaml_d['phones'][phone]['deployment_path']['port'] = None
+		yaml_d['phones'][phone]['deployed'] = False
+	except:
+		print("error when undeploying", phone)
 
-
-										with open(file_name, 'w') as w:
-											yaml.dump(yaml_d, w)
-										print('Please unplug ' + str(phone) + ' from ' + str(p) + ' at hub ' + str(yaml_d['stages'][s][j]['hubs'][h]['id']) + ' at mac mini ' + str(m))
+	with open(file_name, 'w') as w:
+		yaml.dump(yaml_d, w)
+		print('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(phone_deployment_hub) + ' at stage ' + str(phone_deployment_status))
 
 def show_stage(stage):
-	for i in yaml_d['stages'][stage]:
-		if 'hub_id' in i:
-			yaml.dump(i, sys.stdout)
+	for hub in yaml_d['stages'][stage]:
+		yaml.dump(hub, sys.stdout)
 
 def list_phones():
 	print('1: all')
@@ -351,63 +333,63 @@ def list_phones():
 		yaml.dump(yaml_d['phones'], sys.stdout)
 	elif ret == '2':
 		vendor = set()
-		for i in range(len(yaml_d['phones'])):
-			vendor.add(yaml_d['phones'][i]['model']['vendor'])
+		for phone in yaml_d['phones']:
+			vendor.add(yaml_d['phones'][phone]['vendor'])
 		vendor = list(vendor)
 		for i, val in enumerate(vendor):
 			print(str(i) + ': ' + val)
 		sel_vendor = vendor[int(input('Select vendor: '))]
 
 		family = set()
-		for i in range(len(yaml_d['phones'])):
-			if sel_vendor == yaml_d['phones'][i]['model']['vendor']:
-				family.add(yaml_d['phones'][i]['model']['family'])
+		for phone in yaml_d['phones']:
+			if sel_vendor == yaml_d['phones'][phone]['vendor']:
+				family.add(yaml_d['phones'][phone]['family'])
 		family = list(family)
 		for i, val in enumerate(family):
 			print(str(i) + ': ' + val)
 		print(str(i+1) + ': All')
 		ret = int(input('Select family: '))
 		if ret == i+1:
-			for i in range(len(yaml_d['phones'])):
-				if sel_vendor == yaml_d['phones'][i]['model']['vendor']:
-					yaml.dump(yaml_d['phones'][i], sys.stdout)
+			for phone in yaml_d['phones']:
+				if sel_vendor == yaml_d['phones'][phone]['vendor']:
+					yaml.dump(yaml_d['phones'][phone], sys.stdout)
 					#print(yaml.round_trip_dump(yaml_d['phones'][i]))
 			return
 		elif ret <= i:
 			sel_family = family[ret]
 
 		version = set()
-		for i in range(len(yaml_d['phones'])):
-			if sel_vendor == yaml_d['phones'][i]['model']['vendor'] and sel_family == yaml_d['phones'][i]['model']['family']:
-				version.add(yaml_d['phones'][i]['model']['version'])
+		for phone in yaml_d['phones']:
+			if sel_vendor == yaml_d['phones'][phone]['vendor'] and sel_family == yaml_d['phones'][phone]['family']:
+				version.add(yaml_d['phones'][phone]['version'])
 		version = list(version)
 		for i, val in enumerate(version):
 			print(str(i) + ': ' + str(val))
 		print(str(i+1) + ': All')
 		ret = int(input('Select version: '))
 		if ret == i+1:
-			for i in range(len(yaml_d['phones'])):
-				if sel_vendor == yaml_d['phones'][i]['model']['vendor'] and sel_family == yaml_d['phones'][i]['model']['family']:
+			for phone in yaml_d['phones']:
+				if sel_vendor == yaml_d['phones'][phone]['vendor'] and sel_family == yaml_d['phones'][phone]['family']:
 					#print(yaml.round_trip_dump(yaml_d['phones'][i]))
-					yaml.dump(yaml_d['phones'][i], sys.stdout)
+					yaml.dump(yaml_d['phones'][phone], sys.stdout)
 		elif ret <= i:
-			for i in yaml_d['phones']:
-				if sel_vendor == yaml_d['phones'][i]['model']['vendor'] and sel_family == yaml_d['phones'][i]['model']['family'] and version[ret] == yaml_d['phones'][i]['model']['version']:
+			for phone in yaml_d['phones']:
+				if sel_vendor == yaml_d['phones'][phone]['vendor'] and sel_family == yaml_d['phones'][phone]['family'] and version[ret] == yaml_d['phones'][phone]['version']:
 					#print(yaml.round_trip_dump(yaml_d['phones'][i]))
-					yaml.dump(yaml_d['phones'][i], sys.stdout)
+					yaml.dump(yaml_d['phones'][phone], sys.stdout)
 
 	elif ret == '3':
 		l = set()
-		for i in yaml_d['phones']:
-			l.add(i['platform'])
+		for phone in yaml_d['phones']:
+			l.add(yaml_d['phones'][phone]['platform'])
 		l = list(l)
 		for i, v in enumerate(l):
 			print(str(i) + ': ' + v)
 		ret = input('? ')
 		platform = l[int(ret)]
-		for i in yaml_d['phones']:
-			if yaml_d['phones'][i]['platform'] == platform:
-				yaml.dump(yaml_d['phones'][i], sys.stdout)
+		for phone in yaml_d['phones']:
+			if yaml_d['phones'][phone]['platform'] == platform:
+				yaml.dump(yaml_d['phones'][phone], sys.stdout)
 
 def list_from_yaml(yaml_list_key):
 	yaml.dump(yaml_d[yaml_list_key], sys.stdout)
@@ -434,16 +416,17 @@ def display():
 		show_stage('dev')
 	elif ret == '6':				#deleted call to check_deployed (optimizing)
 		print('Not deployed phones:')
-		for i in yaml_d['phones']:
-			if not i['deployed']:
-				print(i['name'])
+		for phone in yaml_d['phones']:
+			if not yaml_d['phones'][phone]['deployed']:
+				print(yaml_d['phones'][phone])
 	elif ret == '7':				#new function
 		print('Phone to show: ')
 		ret = input('? ')
-		for i in range(len(yaml_d['phones'])):
-			if yaml_d['phones'][i]['name'] == ret:
-				yaml.dump(yaml_d['phones'][i], sys.stdout)
+		for phone in yaml_d['phones']:
+			if yaml_d['phones'][phone]['name'] == ret:
+				yaml.dump(yaml_d['phones'][phone], sys.stdout)
 				return
+		print("Phone not found.")
 
 if __name__ == "__main__":
 	ret = ''
