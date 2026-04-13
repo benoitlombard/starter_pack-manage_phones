@@ -28,7 +28,7 @@ phones:
       functional: 6205            #
       performance: 6198           #
 
-  Chaos: 
+  Chaos:
     name: Chaos
     manufacturer:
     model:
@@ -60,15 +60,20 @@ phones:
     family: '0'
     version: '1'
     platform: android
-    release_type: PU1
+    release_type: PU100
     ip: 192.168.5.221
     udid: UUUUU-5
-    user: benoit
+    user: ben
     deployed: false
     deployment_path:
       status:
       hub:
       port:
+    testrun_ids:
+      fota: '111'
+      activitytracking: '1'
+      functional: '1'
+      performance: '1'
 biab:
   ariel: &ariel
     name: Ariel
@@ -271,7 +276,6 @@ usb_hub:
 stages:
   prod:
   - <<: *tp_link_tlsg3424
-    port12:
   dev:
   - <<: *exsys_ex_1116hmvs_1
   - <<: *exsys_ex_1116hmvs_2
