@@ -3,30 +3,28 @@ rtc_params:
   max_ip: 254
 
 phones:
-  zeus:
-                                # filled for both
-    name: zeus                  # filled for both
-    manufacturer: Apple         # empty from generator
-    model: iPhone 7             # empty from generator
-    vendor: Apple               # empty from RTC_config
-    family: ios.3               # empty from RTC_config
-    version: '1'                # empty from RTC_config
-    platform: ios               # autocompleted by generator
-    release_type: PU1           # filled for both
-    ip: 192.168.5.248           # autocompleted by generator
-    udid: 004dbf2d1352472f9c40c6cc62da3c5d43ce2672  # filled for both
-    user: rtc+PROD_iPhone7@cobi.bike                # filled for both
-    deployed: false                     # new
+  zeus: &zeus
+    name: zeus
+    manufacturer: Apple
+    model: iPhone 7
+    vendor: Apple
+    family: ios.3
+    version: '1'
+    platform: ios
+    release_type: PU1
+    ip: 192.168.5.248
+    udid: 004dbf2d1352472f9c40c6cc62da3c5d43ce2672
+    user: rtc+PROD_iPhone7@cobi.bike
+    deployed: true
     deployment_path:
-                              # new
-      status:         # new
-      hub:                  # new
-      port:        # new
-    testrun_ids:                  # 
-      fota: ''                    #
-      activitytracking: ''        #  filled for both (if option 'yes' while generating)
-      functional: 6205            #
-      performance: 6198           #
+      status: prod
+      hub: 0
+      port: port12
+    testrun_ids:
+      fota: ''
+      activitytracking: ''
+      functional: 6205
+      performance: 6198
 
   Chaos:
     name: Chaos
@@ -45,14 +43,7 @@ phones:
       status:
       hub:
       port:
-    testrun_ids:
-      fota: fota__00
-      activitytracking: AA4
-      functional: no
-      performance: '4'
-
-
-  Nyx:
+  Nyx: &Nyx
     name: Nyx
     manufacturer:
     model:
@@ -276,6 +267,8 @@ usb_hub:
 stages:
   prod:
   - <<: *tp_link_tlsg3424
+    port12: *zeus
+    port13:
   dev:
   - <<: *exsys_ex_1116hmvs_1
   - <<: *exsys_ex_1116hmvs_2

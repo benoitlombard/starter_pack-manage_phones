@@ -186,6 +186,10 @@ def change_phone():
 
 # remove phone
 def remove_phone():
+	"""
+	Remove an existing phone by asking user for input\n
+	remove_phone will check if the phone is deployed and undeploy it if necessary befor removing it 
+	"""
 	print('Enter phone name')
 	phone = input('? ')
 	if phone in yaml_d['phones']:
@@ -202,7 +206,12 @@ def remove_phone():
 
 
 # deploy phone
-def find_free_port(stage):
+def find_free_port(stage: str)->dict:
+	"""
+	return the first port of value 'None' found by looping through 'stages'[stage] for a given 'stage'\n
+	the values of 'stage' can only be 'dev' or 'prod'
+	"""
+
 	for hub_id in range(len(yaml_d['stages'][stage])):
 		try:
 			for port in yaml_d['stages'][stage][hub_id]:
@@ -214,7 +223,18 @@ def find_free_port(stage):
 		except KeyError:
 			pass
 
-def deploy_phone():
+def deploy_phone()-> bool:
+	"""
+	Deploy an existing phone by asking user for input\n
+	1) Ask user for what stage he wants between 'dev' or 'prod' as stage\n
+	2) Search for a free port in 'stages'[stage][hubs]\n
+	3) Ask user to chose a phone from undeployed elements of 'phones'\n
+	4) Update 'deployed' and 'deploy_path' attributes from 'phones'[phone]\n
+	5) Copy information of 'phones'[phone] in a new ruamel.yaml commented map\n
+	6) Set a ruamel.yaml Anchor and store a reference to it in the free port found in 'stages'[stage][hubs]\n
+	7) Update the yaml file according to previous changes.
+	"""
+
 	exist = False
 	l = set()
 	print('Stage to deploy:')
@@ -248,31 +268,49 @@ def deploy_phone():
 		yaml_d['phones'][selected_phone]['deployment_path']['status'] = stage
 		yaml_d['phones'][selected_phone]['deployment_path']['hub'] = free_port['hub_id']
 		yaml_d['phones'][selected_phone]['deployment_path']['port'] = free_port['port']
-				#yaml_d['stages'][stage][free_port['hub_id']][free_port['port']] = yaml_d['phones'][selected_phone]['name']
-		"""
-		yaml_d['phones'][selected_phone].yaml_set_anchor(yaml_d['phones'][selected_phone]['name'])
-		data = CM(port = yaml_d['phones'][selected_phone])
-		setattr(data['port'], ruamel.yaml.comments.merge_attrib, [(0, yaml_d['phones'][selected_phone]['name'])])
-		#yaml = ruamel.yaml.YAML()
-		yaml.dump(data, sys.stdout)
-		"""
 
-		copied_data = CM(name = yaml_d['phones'][selected_phone]['name'], manufacturer = yaml_d['phones'][selected_phone]['manufacturer'], model =  yaml_d['phones'][selected_phone]['model'], vendor = yaml_d['phones'][selected_phone]['vendor'], family = yaml_d['phones'][selected_phone]['family'], version = yaml_d['phones'][selected_phone]['version'], platform = yaml_d['phones'][selected_phone]['platform'], release_type = yaml_d['phones'][selected_phone]['release_type'], ip = yaml_d['phones'][selected_phone]['ip'], udid = yaml_d['phones'][selected_phone]['udid'], user = yaml_d['phones'][selected_phone]['user'], deployed = yaml_d['phones'][selected_phone]['deployed'], deployment_path = yaml_d['phones'][selected_phone]['deployment_path'])
-		copied_data.yaml_set_anchor(copied_data)
-		copied_data.yaml_set_anchor(yaml_d['phones'][selected_phone]['name'])
-		yaml_d['stages'][stage][free_port['hub_id']][free_port['port']] = copied_data # incroyable
-		data = CM(yaml_name=copied_data)
-		yaml.dump(data, sys.stdout)
-
-		#data[yaml_name] = data.pop('yaml_name') # incroyable
+		# defining the yaml anchor (one version if testrun_ids defined, and one version if testrun_ids not defined)
+		if 'testrun_ids' in yaml_d['phones'][selected_phone]: # version with testrun_ids defined
+				yaml_d['phones'][selected_phone] = ruamel.yaml.CommentedMap(
+									name = yaml_d['phones'][selected_phone]['name'],
+									manufacturer = yaml_d['phones'][selected_phone]['manufacturer'],
+									model =  yaml_d['phones'][selected_phone]['model'],
+									vendor = yaml_d['phones'][selected_phone]['vendor'],
+									family = yaml_d['phones'][selected_phone]['family'],
+									version = yaml_d['phones'][selected_phone]['version'],
+									platform = yaml_d['phones'][selected_phone]['platform'],
+									release_type = yaml_d['phones'][selected_phone]['release_type'],
+									ip = yaml_d['phones'][selected_phone]['ip'],
+									udid = yaml_d['phones'][selected_phone]['udid'],
+									user = yaml_d['phones'][selected_phone]['user'],
+									deployed = yaml_d['phones'][selected_phone]['deployed'],
+									deployment_path = yaml_d['phones'][selected_phone]['deployment_path'],
+									testrun_ids = yaml_d['phones'][selected_phone]['testrun_ids']
+									)
 		
-		#yaml_d['phones'][yaml_name] = data['yaml_name'] # operate name change here
+		else:	# version with testrun_ids undefined
+			yaml_d['phones'][selected_phone] = ruamel.yaml.CommentedMap(
+									name = yaml_d['phones'][selected_phone]['name'],
+									manufacturer = yaml_d['phones'][selected_phone]['manufacturer'],
+									model =  yaml_d['phones'][selected_phone]['model'],
+									vendor = yaml_d['phones'][selected_phone]['vendor'],
+									family = yaml_d['phones'][selected_phone]['family'],
+									version = yaml_d['phones'][selected_phone]['version'],
+									platform = yaml_d['phones'][selected_phone]['platform'],
+									release_type = yaml_d['phones'][selected_phone]['release_type'],
+									ip = yaml_d['phones'][selected_phone]['ip'],
+									udid = yaml_d['phones'][selected_phone]['udid'],
+									user = yaml_d['phones'][selected_phone]['user'],
+									deployed = yaml_d['phones'][selected_phone]['deployed'],
+									deployment_path = yaml_d['phones'][selected_phone]['deployment_path']
+									)
+
+		yaml_d['phones'][selected_phone].yaml_set_anchor(selected_phone, always_dump=True)
+		yaml_d['stages'][stage][free_port['hub_id']][free_port['port']] = yaml_d['phones'][selected_phone]
 
 		with open(file_name, 'w') as yaml_file:
 			yaml.default_flow_style = False
 			yaml.dump(yaml_d, yaml_file)
-
-
 
 		yaml_d['phones'][selected_phone]['deployed'] = True
 		print('Phone deployed to ' + str(free_port['port']) + ' at hub ' + str(yaml_d['stages'][stage][free_port['hub_id']]['name']))
@@ -284,17 +322,20 @@ def deploy_phone():
 		print('No free port at stage ' + stage)
 	return True
 		
-
 # undeploy phone
-def undeploy_phone(phone):
+def undeploy_phone(phone: str) -> None:
+	"""
+	Undeploy phone from 'stage', given his name
+	"""
+
 	print(phone)
 	while phone == '':
 		l = {}
 		print('Phone to undeploy: ')
-		for i, val in  enumerate(yaml_d['phones']):
-			print("val:", val)
-			l[i] = yaml_d['phones'][val]['name']
-			print(str(i) + ': ' + yaml_d['phones'][val]['name'])
+		for i, inspected_phone in  enumerate(yaml_d['phones']):
+			if yaml_d['phones'][inspected_phone]['deployed']:
+				l[i] = yaml_d['phones'][inspected_phone]['name']
+				print(str(i) + ': ' + yaml_d['phones'][inspected_phone]['name'])
 		idx = input('? ')
 		phone = l[int(idx)]
 	if yaml_d['phones'][phone]['deployed']:
