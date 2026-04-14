@@ -1,6 +1,6 @@
 from manage_phones import *
 
-def find_free_port(stage: str, yaml_d: dict)->dict[int, str]:
+def _find_free_port(stage: str, yaml_d: dict)->dict[int, str]:
 	"""
 	return the first port of value 'None' found by looping through 'stages'[stage] for a given 'stage'\n
 	the values of 'stage' can only be 'dev' or 'prod'
@@ -43,7 +43,7 @@ def deploy_phone(yaml_d: dict)-> bool:
 		print('Unknown selection')
 		return False
 
-	free_port = find_free_port(stage, yaml_d)
+	free_port = _find_free_port(stage, yaml_d)
 	if free_port != None:
 		print('Phone to deploy: ')
 		for phone in yaml_d['phones']:

@@ -1,20 +1,20 @@
 from manage_phones import *
 
-def list_from_yaml(yaml_list_key: str, yaml_d: dict)->None:
+def _list_from_yaml(yaml_list_key: str, yaml_d: dict)->None:
 	"""
 	Function dedicated to print informations in the yaml file that are available with a single key entry: 'biab'/'bts'
 	"""
 	yaml.dump(yaml_d[yaml_list_key], sys.stdout)
 	return
 
-def show_stage(stage: str, yaml_d: dict)->None:
+def _show_stage(stage: str, yaml_d: dict)->None:
 	"""
 	Display the content of 'stages'['dev'] or 'stages'['prod'] from yaml file
 	"""
 	for hub in yaml_d['stages'][stage]:
 		yaml.dump(hub, sys.stdout)
 
-def list_phones(yaml_d: dict)->None:
+def _list_phones(yaml_d: dict)->None:
 	"""
 	Display phone informations ordered and filtered by asking user choices of sorting and filtering
 	"""
@@ -94,15 +94,15 @@ def display(yaml_d: dict)->None:
 	print('7: Show configuration of phone')
 	ret = input('? ')
 	if ret == '1':
-		list_phones(yaml_d)
+		_list_phones(yaml_d)
 	elif ret == '2':				#new function
-		list_from_yaml('bts', yaml_d)
+		_list_from_yaml('bts', yaml_d)
 	elif ret == '3':				#new function (same as previous)
-		list_from_yaml('biab', yaml_d)
+		_list_from_yaml('biab', yaml_d)
 	elif ret == '4':
-		show_stage('prod', yaml_d)
+		_show_stage('prod', yaml_d)
 	elif ret == '5':
-		show_stage('dev', yaml_d)
+		_show_stage('dev', yaml_d)
 	elif ret == '6':				#deleted call to check_deployed (optimizing)
 		print('Not deployed phones:')
 		for phone in yaml_d['phones']:

@@ -1,7 +1,7 @@
 from manage_phones import *
 
 # Add phone
-def get_unused_name(yaml_d: dict)->str:
+def _get_unused_name(yaml_d: dict)->str:
 	"""
 	Loop through gods in gods.txt file to return the first unused name in 'phones' from gods.txt
 	"""
@@ -16,7 +16,7 @@ def get_unused_name(yaml_d: dict)->str:
 				break
 	return unused_name
 
-def get_ip(yaml_d: dict)->int:
+def _get_ip(yaml_d: dict)->int:
 	"""
 	Loop through values from 'rtc_params'['min_ip'], 'rtc_params'['max_ip']\n
 	And return the first 3 digits number unused as ip's last triple in 'phones'
@@ -35,7 +35,7 @@ def add_phone(yaml_d: dict)->bool:
 	Allows the user to add a new phone by writing phone informations\n
 	The informations will be stored in the yaml file
 	"""
-	yaml_phone_name = get_unused_name(yaml_d)
+	yaml_phone_name = _get_unused_name(yaml_d)
 	print('RTC device name: ' + yaml_phone_name)
 	print('Vendor:')
 	vendor = input('? ')
@@ -68,7 +68,7 @@ def add_phone(yaml_d: dict)->bool:
 		releasetype = 'PU1'
 	elif ret == '2':
 		releasetype = 'PU100'
-	ip = '192.168.5.' + str(get_ip(yaml_d))
+	ip = '192.168.5.' + str(_get_ip(yaml_d))
 	print('IP used: ' + ip)
 	print('UDID:')
 	udid = input('? ')
