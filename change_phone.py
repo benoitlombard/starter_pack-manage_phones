@@ -12,7 +12,11 @@ def change_phone(yaml_d: dict)->None:
 		print(str(phone_index) + ': ' + yaml_d['phones'][phone]['name'])
 		print('\t' + yaml_d['phones'][phone]['vendor'] + ' ' + yaml_d['phones'][phone]['family'] + ' ' + str(yaml_d['phones'][phone]['version']))
 	indx = input('? ')
-	phone = dict_of_phones[int(indx)]
+	try:
+		phone = dict_of_phones[int(indx)]
+	except:
+		print('Unknown selection')
+		return
 	yaml.dump(phone, sys.stdout)
 	print('What to change')
 	print('1: Release type')

@@ -17,7 +17,11 @@ def undeploy_phone(phone: str, yaml_d: dict) -> None:
 				dict_of_phones[phone_index] = yaml_d['phones'][inspected_phone]['name']
 				print(str(phone_index) + ': ' + yaml_d['phones'][inspected_phone]['name'])
 		indx = input('? ')
-		phone = dict_of_phones[int(indx)]
+		try:
+			phone = dict_of_phones[int(indx)]
+		except:
+			print("Error: unknown phone")
+			return
 	if yaml_d['phones'][phone]['deployed']:
 		phone_deployment_status = yaml_d['phones'][phone]['deployment_path']['status']
 		phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']

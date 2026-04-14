@@ -9,12 +9,11 @@ with open(file_name, 'r') as yaml_file:
 	yaml_d = yaml.load(yaml_file)
 
 # importing other files
-import display_infos
-import add_phone
-import change_phone
-import deploy_phone
-import remove_undeploy_phone
-
+import display_infos	# displaying infos
+import add_phone		# adding a new phone
+import change_phone		# changing phone infos
+import deploy_phone		# deploying a phone
+import remove_undeploy_phone	# removing or undeploying a phone
 
 if __name__ == "__main__":
 	ret = ''
@@ -41,4 +40,3 @@ if __name__ == "__main__":
 			remove_undeploy_phone.remove_phone(yaml_d)
 		elif ret == '6':
 			display_infos.display(yaml_d)
-

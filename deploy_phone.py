@@ -55,10 +55,11 @@ def deploy_phone(yaml_d: dict)-> bool:
 			print(str(phone_index) + ': ' + yaml_d['phones'][phone]['name'])
 			print('\t' + yaml_d['phones'][phone]['vendor'] + ' ' + yaml_d['phones'][phone]['family'] + ' ' + str(yaml_d['phones'][phone]['version']))
 		indx = input('? ')
-		if indx == '' or int(indx) > len(list_phones) or int(indx) < 0:     # trash, faire un try/except plutot
+		try:
+			selected_phone = list_phones[int(indx)]
+		except:
+			print('Unknown selection')
 			return False
-		# ajouter try/ except !!!! erreur si on n'entre pas le bon nombre
-		selected_phone = list_phones[int(indx)]
 
 		yaml_d['phones'][selected_phone]['deployment_path']['status'] = stage
 		yaml_d['phones'][selected_phone]['deployment_path']['hub'] = free_port['hub_id']
