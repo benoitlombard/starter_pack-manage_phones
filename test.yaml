@@ -55,16 +55,33 @@ phones:
     ip: 192.168.5.221
     udid: UUUUU-5
     user: ben
-    deployed: false
+    deployed: true
     deployment_path:
-      status:
-      hub:
-      port:
+      status: prod
+      hub: 0
+      port: port13
     testrun_ids:
       fota: '111'
       activitytracking: '1'
       functional: '1'
       performance: '1'
+  Erebos:
+    name: Erebos
+    manufacturer:
+    model:
+    vendor: Apple
+    family: ios.4
+    version: '4.4'
+    platform: ios
+    release_type: PU1
+    ip: 192.168.5.222
+    udid: AAAA-HJyba-441
+    user: rtc-Erebos@cobi.bike
+    deployed: false
+    deployment_path:
+      status:
+      hub:
+      port:
 biab:
   ariel: &ariel
     name: Ariel
@@ -268,7 +285,8 @@ stages:
   prod:
   - <<: *tp_link_tlsg3424
     port12: *zeus
-    port13:
+    port13: *Nyx
   dev:
   - <<: *exsys_ex_1116hmvs_1
+    port01:
   - <<: *exsys_ex_1116hmvs_2
