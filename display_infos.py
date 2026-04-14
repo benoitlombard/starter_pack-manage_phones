@@ -1,7 +1,5 @@
 from manage_phones import *
 
-from manage_phones import yaml_d
-
 def list_from_yaml(yaml_list_key: str, yaml_d: dict)->None:
 	"""
 	Function dedicated to print informations in the yaml file that are available with a single key entry: 'biab'/'bts'

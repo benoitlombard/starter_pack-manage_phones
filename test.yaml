@@ -17,9 +17,9 @@ phones:
     user: rtc+PROD_iPhone7@cobi.bike
     deployed: true
     deployment_path:
-      status: dev
+      status: prod
       hub: 0
-      port: port03
+      port: port12
     testrun_ids:
       fota: ''
       activitytracking: ''
@@ -40,10 +40,10 @@ phones:
     user: benoit
     deployed: true
     deployment_path:
-      status: dev
+      status: prod
       hub: 0
-      port: port01
-  Nyx: &Nyx
+      port: port13
+  Nyx:
     name: Nyx
     manufacturer:
     model:
@@ -55,17 +55,17 @@ phones:
     ip: 192.168.5.221
     udid: UUUUU-5
     user: ben
-    deployed: true
+    deployed: false
     deployment_path:
-      status: dev
-      hub: 0
-      port: port02
+      status:
+      hub:
+      port:
     testrun_ids:
       fota: '111'
       activitytracking: '1'
       functional: '1'
       performance: '1'
-  Erebos: &Erebos
+  Erebos:
     name: Erebos
     manufacturer:
     model:
@@ -77,11 +77,11 @@ phones:
     ip: 192.168.5.222
     udid: AAAA-HJyba-441
     user: rtc-Erebos@cobi.bike
-    deployed: true
+    deployed: false
     deployment_path:
-      status: dev
-      hub: 0
-      port: port04
+      status:
+      hub:
+      port:
 biab:
   ariel: &ariel
     name: Ariel
@@ -284,12 +284,14 @@ usb_hub:
 stages:
   prod:
   - <<: *tp_link_tlsg3424
-    port12:
-    port13:
+    port12: *zeus
+    port13: *Chaos
+    port14:
+    port15:
   dev:
   - <<: *exsys_ex_1116hmvs_1
-    port01: *Chaos
-    port02: *Nyx
-    port03: *zeus
-    port04: *Erebos
+    port01:
+    port02:
+    port03:
+    port04:
   - <<: *exsys_ex_1116hmvs_2
