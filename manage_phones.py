@@ -1,13 +1,17 @@
-
+# importing libraries
 import ruamel.yaml
 import sys
 import click
 
-file_name = 'test.yaml'
+#global yaml_d
 
+file_name = 'test.yaml'
 with open(file_name, 'r') as yaml_file:
 	yaml = ruamel.yaml.YAML(typ='rt')
 	yaml_d = yaml.load(yaml_file)
+
+# importing other files
+import display_infos
 
 # Add phone
 def get_unused_name()->str:
@@ -340,123 +344,6 @@ def undeploy_phone(phone: str) -> None:
 	else:
 		print(phone, "is not deployed.")
 
-def show_stage(stage: str)->None:
-	"""
-	Display the content of 'stages'['dev'] or 'stages'['prod'] from yaml file
-	"""
-	for hub in yaml_d['stages'][stage]:
-		yaml.dump(hub, sys.stdout)
-
-def list_phones()->None:
-	"""
-	Display phone informations ordered and filtered by asking user choices of sorting and filtering
-	"""
-	print('1: all')
-	print('2: by model')
-	print('3: by platform')
-	ret = input('? ')
-	if ret == '1':
-		yaml.dump(yaml_d['phones'], sys.stdout)
-	elif ret == '2':
-		list_of_vendor = set()
-		for phone in yaml_d['phones']:
-			list_of_vendor.add(yaml_d['phones'][phone]['vendor'])
-		vendor = list(list_of_vendor)
-		for vendor_index, vendor_val in enumerate(vendor):
-			print(str(vendor_index) + ': ' + vendor_val)
-		sel_vendor = vendor[int(input('Select vendor: '))]
-
-		list_of_family = set()
-		for phone in yaml_d['phones']:
-			if sel_vendor == yaml_d['phones'][phone]['vendor']:
-				list_of_family.add(yaml_d['phones'][phone]['family'])
-		family = list(list_of_family)
-		for family_index,family_val in enumerate(family):
-			print(str(family_index) + ': ' + family_val)
-		print(str(family_index+1) + ': All')
-		ret = int(input('Select family: '))
-		if ret == family_index+1:
-			for phone in yaml_d['phones']:
-				if sel_vendor == yaml_d['phones'][phone]['vendor']:
-					yaml.dump(yaml_d['phones'][phone], sys.stdout)
-			return
-		elif ret <= family_index:
-			sel_family = family[ret]
-
-		version = set()
-		for phone in yaml_d['phones']:
-			if sel_vendor == yaml_d['phones'][phone]['vendor'] and sel_family == yaml_d['phones'][phone]['family']:
-				version.add(yaml_d['phones'][phone]['version'])
-		version = list(version)
-		for version_index, val_version in enumerate(version):
-			print(str(version_index) + ': ' + str(val_version))
-		print(str(version_index) + ': All')
-		ret = int(input('Select version: '))
-		if ret == version_index + 1:
-			for phone in yaml_d['phones']:
-				if sel_vendor == yaml_d['phones'][phone]['vendor'] and sel_family == yaml_d['phones'][phone]['family']:
-					yaml.dump(yaml_d['phones'][phone], sys.stdout)
-		elif ret <= version_index:
-			for phone in yaml_d['phones']:
-				if sel_vendor == yaml_d['phones'][phone]['vendor'] and sel_family == yaml_d['phones'][phone]['family'] and version[ret] == yaml_d['phones'][phone]['version']:
-					yaml.dump(yaml_d['phones'][phone], sys.stdout)
-
-	elif ret == '3':
-		list_of_platforms = set()
-		for phone in yaml_d['phones']:
-			list_of_platforms.add(yaml_d['phones'][phone]['platform'])
-		list_of_platforms = list(list_of_platforms)
-		for platform_index, platform_val in enumerate(list_of_platforms):
-			print(str(platform_index) + ': ' + platform_val)
-		ret = input('? ')
-		platform = list_of_platforms[int(ret)]
-		for phone in yaml_d['phones']:
-			if yaml_d['phones'][phone]['platform'] == platform:
-				yaml.dump(yaml_d['phones'][phone], sys.stdout)
-
-def list_from_yaml(yaml_list_key: str)->None:
-	"""
-	Function dedicated to print informations in the yaml file that are available with a single key entry: 'biab'/'bts'
-	"""
-	yaml.dump(yaml_d[yaml_list_key], sys.stdout)
-	return
-
-def display()->None:
-	"""
-	Display a sub menu dedicated to allow user to list and print informations stored in the yaml file 
-	"""
-	print('1: List phones')
-	print('2: List all bts')
-	print('3: List all biab')
-	print('4: List production stage')
-	print('5: List development stage')
-	print('6: Show undeployed phones')
-	print('7: Show configuration of phone')
-	ret = input('? ')
-	if ret == '1':
-		list_phones()
-	elif ret == '2':				#new function
-		list_from_yaml('bts')
-	elif ret == '3':				#new function (same as previous)
-		list_from_yaml('biab')
-	elif ret == '4':
-		show_stage('prod')
-	elif ret == '5':
-		show_stage('dev')
-	elif ret == '6':				#deleted call to check_deployed (optimizing)
-		print('Not deployed phones:')
-		for phone in yaml_d['phones']:
-			if not yaml_d['phones'][phone]['deployed']:
-				print(yaml_d['phones'][phone])
-	elif ret == '7':				#new function
-		print('Phone to show: ')
-		ret = input('? ')
-		for phone in yaml_d['phones']:
-			if yaml_d['phones'][phone]['name'] == ret:
-				yaml.dump(yaml_d['phones'][phone], sys.stdout)
-				return
-		print("Phone not found.")
-
 if __name__ == "__main__":
 	ret = ''
 	while ret != 'x':
@@ -469,6 +356,9 @@ if __name__ == "__main__":
 		print('5: Remove phone')
 		print('6: Show configuration')
 		print('x: Exit')
+		with open(file_name, 'r') as yaml_file:
+			yaml = ruamel.yaml.YAML(typ='rt')
+			yaml_d = yaml.load(yaml_file)
 		ret = input('? ')
 		if ret == '1':
 			add_phone()
@@ -481,4 +371,4 @@ if __name__ == "__main__":
 		elif ret == '5':
 			remove_phone()
 		elif ret == '6':
-			display()
+			display_infos.display(yaml_d)
