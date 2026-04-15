@@ -55,7 +55,7 @@ def remove_phone(yaml_d: dict = yaml_d)->None:
 	if phone in yaml_d['phones']:
 		print('Sure to remove ' + phone + ' from test inventory?')
 		print('You can just undeploy from test stages.')
-		if input('enter yes if are sure: ') == 'yes':
+		if input('enter yes if are sure: ').lower() == 'yes':
 			time_origin = time.time()
 			if yaml_d['phones'][phone]['deployed']:
 				undeploy_phone(phone, yaml_d)
@@ -65,5 +65,4 @@ def remove_phone(yaml_d: dict = yaml_d)->None:
 		print(f"time elapsed: {(time.time() - time_origin):.6f} seconds.")
 		return
 	print(phone + ' not found')
-
 

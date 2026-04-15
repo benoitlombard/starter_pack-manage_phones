@@ -53,7 +53,7 @@ def add_phone(yaml_d: dict = yaml_d)->bool:
 	while version == '':
 		print('Version must be set')
 		version = input('? ')
-	if vendor == 'Apple':
+	if vendor.lower() == 'apple':
 		platform = 'ios'
 	else:
 		platform = 'android'
@@ -100,7 +100,7 @@ def add_phone(yaml_d: dict = yaml_d)->bool:
 	deployment_path = dict(status = None, hub = None, port = None)
 
 	print('Add testrun ids?')
-	if input('y|n ') == 'y':
+	if input('y|n ').lower() == 'y':
 		fota = input('fota: ')
 		activitytracking = input('activitytracking: ')
 		functional = input('functional: ')
@@ -113,7 +113,7 @@ def add_phone(yaml_d: dict = yaml_d)->bool:
 	
 	new_phone_record.yaml_set_anchor(yaml_phone_name, always_dump=True)
 
-	if input('add entry to yaml? y|n ') == 'y':
+	if input('add entry to yaml? y|n ').lower() == 'y':
 		yaml_d['phones'][yaml_phone_name] = new_phone_record # operate name change here
 
 		with open(file_name, 'w') as yaml_file:

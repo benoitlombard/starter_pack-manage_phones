@@ -110,7 +110,7 @@ def display(yaml_d: dict = yaml_d)->None:
 		print('Phone to show: ')
 		ret = input('? ')
 		for phone in yaml_d['phones']:
-			if yaml_d['phones'][phone]['name'] == ret:
+			if yaml_d['phones'][phone]['name'].lower() == ret.lower():
 				yaml.dump(yaml_d['phones'][phone], sys.stdout)
 				return
 		print("Phone not found.")
