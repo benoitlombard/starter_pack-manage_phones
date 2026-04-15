@@ -1,4 +1,5 @@
 import ruamel.yaml
+import time
 from manage_phones import yaml_d, yaml, file_name
 
 def _find_free_port(stage: str, yaml_d: dict = yaml_d)->dict[int, str]:
@@ -54,6 +55,7 @@ def deploy_phone(yaml_d: dict = yaml_d)-> bool:
 			print(str(phone_index) + ': ' + yaml_d['phones'][phone]['name'])
 			print('\t' + yaml_d['phones'][phone]['vendor'] + ' ' + yaml_d['phones'][phone]['family'] + ' ' + str(yaml_d['phones'][phone]['version']))
 		indx = input('? ')
+		time_origin = time.time()
 		try:
 			selected_phone = list_phones[int(indx)]
 		except:
@@ -101,5 +103,6 @@ def deploy_phone(yaml_d: dict = yaml_d)-> bool:
 			yaml.dump(yaml_d, yaml_file)
 	else:
 		print('No free port at stage ' + stage)
+	print(f"time elapsed: {(time.time() - time_origin):.6f} seconds.")
 	return True
 

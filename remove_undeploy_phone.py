@@ -1,3 +1,4 @@
+import time
 from manage_phones import yaml_d, yaml, file_name
 
 # undeploy phone
@@ -41,6 +42,7 @@ def undeploy_phone(phone: str, yaml_d: dict = yaml_d) -> None:
 			print('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(phone_deployment_hub) + ' at stage ' + str(phone_deployment_status))
 	else:
 		print(phone, "is not deployed.")
+	return
 
 # remove phone
 def remove_phone(yaml_d: dict = yaml_d)->None:
@@ -54,11 +56,13 @@ def remove_phone(yaml_d: dict = yaml_d)->None:
 		print('Sure to remove ' + phone + ' from test inventory?')
 		print('You can just undeploy from test stages.')
 		if input('enter yes if are sure: ') == 'yes':
+			time_origin = time.time()
 			if yaml_d['phones'][phone]['deployed']:
 				undeploy_phone(phone, yaml_d)
 			del yaml_d['phones'][phone]
 			with open(file_name, 'w') as w:
 					yaml.dump(yaml_d, w)
+		print(f"time elapsed: {(time.time() - time_origin):.6f} seconds.")
 		return
 	print(phone + ' not found')
 
