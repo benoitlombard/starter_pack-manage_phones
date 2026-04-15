@@ -86,7 +86,6 @@ def add_phone(yaml_d: dict = yaml_d)->bool:
 			print('Phone with ' + udid + ' already exists')
 			return False
 	user = 'rtc-' + yaml_phone_name + '@cobi.bike'
-
 	"""
 	New infos in yaml file's 'phone' section: 
 		
