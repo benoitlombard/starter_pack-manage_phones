@@ -16,7 +16,7 @@ def _get_unused_name(yaml_d: dict = yaml_d)->str:
 				break
 	return unused_name
 
-def _get_ip(yaml_d: dict = yaml_d)->int:
+def _get_ip(yaml_d: dict = yaml_d)->int|None:
 	"""
 	Loop through values from 'rtc_params'['min_ip'], 'rtc_params'['max_ip']\n
 	And return the first 3 digits number unused as ip's last triple in 'phones'
@@ -68,7 +68,12 @@ def add_phone(yaml_d: dict = yaml_d)->bool:
 		releasetype = 'PU1'
 	elif ret == '2':
 		releasetype = 'PU100'
-	ip = '192.168.5.' + str(_get_ip(yaml_d))
+	ip = _get_ip(yaml_d)
+	if ip == None:
+		print("Impossible to add a new phone:")
+		print("There is no ip available at the moment")
+		return False
+	ip = '192.168.5.' + str(ip)
 	print('IP used: ' + ip)
 	print('UDID:')
 	udid = input('? ')

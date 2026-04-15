@@ -89,7 +89,7 @@ def deploy_phone(yaml_d: dict = yaml_d)-> bool:
 		hub_name = yaml_d['stages'][stage][free_port['hub_id']]['hub_name']
 		port_name = free_port['port']
 		yaml_d[str(source_name)][str(hub_name)][str(port_name)] = yaml_d['phones'][selected_phone]
-
+		
 		yaml_d['phones'][selected_phone]['deployed'] = True
 
 		print('Phone deployed to ' + str(free_port['port']) + ' at hub ' + str(yaml_d['stages'][stage][free_port['hub_id']]['name']))
