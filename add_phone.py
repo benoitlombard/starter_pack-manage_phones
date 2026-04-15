@@ -70,7 +70,7 @@ def add_phone(yaml_d: dict = yaml_d)->bool:
 	elif ret == '2':
 		releasetype = 'PU100'
 	ip = _get_ip(yaml_d)
-	if ip == None:
+	if ip is None:
 		print("Impossible to add a new phone:")
 		print("There is no ip available at the moment")
 		return False

@@ -1,6 +1,6 @@
 # importing libraries
 import ruamel.yaml
-import click
+import typer
 
 global file_name
 global yaml
@@ -31,15 +31,16 @@ if __name__ == "__main__":
 		print('6: Show configuration')
 		print('x: Exit')
 		ret = input('? ')
-		if ret == '1':
-			add_phone.add_phone(yaml_d)
-		elif ret == '2':
-			change_phone.change_phone(yaml_d)
-		elif ret == '3':
-			deploy_phone.deploy_phone(yaml_d)
-		elif ret == '4':
-			remove_undeploy_phone.undeploy_phone('', yaml_d)
-		elif ret == '5':
-			remove_undeploy_phone.remove_phone(yaml_d)
-		elif ret == '6':
-			display_infos.display(yaml_d)
+		match ret:
+			case '1':
+				add_phone.add_phone(yaml_d)
+			case '2':
+				change_phone.change_phone(yaml_d)
+			case '3':
+				deploy_phone.deploy_phone(yaml_d)
+			case '4':
+				remove_undeploy_phone.undeploy_phone('', yaml_d)
+			case '5':
+				remove_undeploy_phone.remove_phone(yaml_d)
+			case '6':
+				display_infos.display(yaml_d)

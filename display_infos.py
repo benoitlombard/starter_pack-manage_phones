@@ -91,27 +91,29 @@ def display(yaml_d: dict = yaml_d)->None:
 	print('6: Show undeployed phones')
 	print('7: Show configuration of phone')
 	ret = input('? ')
-	if ret == '1':
-		_list_phones(yaml_d)
-	elif ret == '2':				#new function
-		_list_from_yaml('bts', yaml_d)
-	elif ret == '3':				#new function (same as previous)
-		_list_from_yaml('biab', yaml_d)
-	elif ret == '4':
-		_show_stage('prod', yaml_d)
-	elif ret == '5':
-		_show_stage('dev', yaml_d)
-	elif ret == '6':				#deleted call to check_deployed (optimizing)
-		print('Not deployed phones:')
-		for phone in yaml_d['phones']:
-			if not yaml_d['phones'][phone]['deployed']:
-				print(yaml_d['phones'][phone])
-	elif ret == '7':				#new function
-		print('Phone to show: ')
-		ret = input('? ')
-		for phone in yaml_d['phones']:
-			if yaml_d['phones'][phone]['name'].lower() == ret.lower():
-				yaml.dump(yaml_d['phones'][phone], sys.stdout)
-				return
-		print("Phone not found.")
-	return
+	match ret:
+		case '1':
+			_list_phones(yaml_d)
+		case '2':				#new function
+			_list_from_yaml('bts', yaml_d)
+		case '3':				#new function (same as previous)
+			_list_from_yaml('biab', yaml_d)
+		case '4':
+			_show_stage('prod', yaml_d)
+		case '5':
+			_show_stage('dev', yaml_d)
+		case '6':				#deleted call to check_deployed (optimizing)
+			print('Not deployed phones:')
+			for phone in yaml_d['phones']:
+				if not yaml_d['phones'][phone]['deployed']:
+					print(yaml_d['phones'][phone])
+		case '7':				#new function
+			print('Phone to show: ')
+			ret = input('? ')
+			for phone in yaml_d['phones']:
+				if yaml_d['phones'][phone]['name'].lower() == ret.lower():
+					yaml.dump(yaml_d['phones'][phone], sys.stdout)
+					return
+			print("Phone not found.")
+		case _:
+			return
