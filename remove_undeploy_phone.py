@@ -27,7 +27,10 @@ def undeploy_phone(phone: str, yaml_d: dict) -> None:
 		phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']
 		phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
 		try:
-			yaml_d['stages'][phone_deployment_status][phone_deployment_hub][phone_deployment_port] = None
+			source_name = yaml_d['stages'][phone_deployment_status][phone_deployment_hub]['source_name']
+			hub_name = yaml_d['stages'][phone_deployment_status][phone_deployment_hub]['hub_name']
+			yaml_d[str(source_name)][str(hub_name)][phone_deployment_port] = None
+
 			yaml_d['phones'][phone]['deployment_path']['status'] = None
 			yaml_d['phones'][phone]['deployment_path']['hub'] = None
 			yaml_d['phones'][phone]['deployment_path']['port'] = None

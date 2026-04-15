@@ -7,14 +7,13 @@ def _find_free_port(stage: str, yaml_d: dict)->dict[int, str]:
 	"""
 	for hub_id in range(len(yaml_d['stages'][stage])):
 		try:
+			test_source = yaml_d['stages'][stage][hub_id]['source_name']
+			test_hub = yaml_d['stages'][stage][hub_id]['hub_name']
 			for port in yaml_d['stages'][stage][hub_id]:
-				if yaml_d['stages'][stage][hub_id][port] == None:
-					#print("free port found, on return:", dict(hub = hub['name'], port = port))
+				if yaml_d[test_source][test_hub][port] == None:
 					return dict(hub_id = hub_id, port = port)
-		except TypeError:
-			pass
-		except KeyError:
-			pass
+		except:
+			print("Error when trying to find a free port")
 
 # deploy phone
 def deploy_phone(yaml_d: dict)-> bool:
@@ -64,45 +63,33 @@ def deploy_phone(yaml_d: dict)-> bool:
 		yaml_d['phones'][selected_phone]['deployment_path']['status'] = stage
 		yaml_d['phones'][selected_phone]['deployment_path']['hub'] = free_port['hub_id']
 		yaml_d['phones'][selected_phone]['deployment_path']['port'] = free_port['port']
+		# defining the yaml commented map (one version if testrun_ids defined, and one version if testrun_ids not defined)
+		full_phone_infos_as_ruamel_map = ruamel.yaml.CommentedMap(name = yaml_d['phones'][selected_phone]['name'],
+											manufacturer = yaml_d['phones'][selected_phone]['manufacturer'],
+											model =  yaml_d['phones'][selected_phone]['model'],
+											vendor = yaml_d['phones'][selected_phone]['vendor'],
+											family = yaml_d['phones'][selected_phone]['family'],
+											version = yaml_d['phones'][selected_phone]['version'],
+											platform = yaml_d['phones'][selected_phone]['platform'],
+											release_type = yaml_d['phones'][selected_phone]['release_type'],
+											ip = yaml_d['phones'][selected_phone]['ip'],
+											udid = yaml_d['phones'][selected_phone]['udid'],
+											user = yaml_d['phones'][selected_phone]['user'],
+											deployed = yaml_d['phones'][selected_phone]['deployed'],
+											deployment_path = yaml_d['phones'][selected_phone]['deployment_path']
+											)
 
-		# defining the yaml anchor (one version if testrun_ids defined, and one version if testrun_ids not defined)
 		if 'testrun_ids' in yaml_d['phones'][selected_phone]: # version with testrun_ids defined
-				yaml_d['phones'][selected_phone] = ruamel.yaml.CommentedMap(
-									name = yaml_d['phones'][selected_phone]['name'],
-									manufacturer = yaml_d['phones'][selected_phone]['manufacturer'],
-									model =  yaml_d['phones'][selected_phone]['model'],
-									vendor = yaml_d['phones'][selected_phone]['vendor'],
-									family = yaml_d['phones'][selected_phone]['family'],
-									version = yaml_d['phones'][selected_phone]['version'],
-									platform = yaml_d['phones'][selected_phone]['platform'],
-									release_type = yaml_d['phones'][selected_phone]['release_type'],
-									ip = yaml_d['phones'][selected_phone]['ip'],
-									udid = yaml_d['phones'][selected_phone]['udid'],
-									user = yaml_d['phones'][selected_phone]['user'],
-									deployed = yaml_d['phones'][selected_phone]['deployed'],
-									deployment_path = yaml_d['phones'][selected_phone]['deployment_path'],
-									testrun_ids = yaml_d['phones'][selected_phone]['testrun_ids']
-									)
-		
-		else:	# version with testrun_ids undefined
-			yaml_d['phones'][selected_phone] = ruamel.yaml.CommentedMap(
-									name = yaml_d['phones'][selected_phone]['name'],
-									manufacturer = yaml_d['phones'][selected_phone]['manufacturer'],
-									model =  yaml_d['phones'][selected_phone]['model'],
-									vendor = yaml_d['phones'][selected_phone]['vendor'],
-									family = yaml_d['phones'][selected_phone]['family'],
-									version = yaml_d['phones'][selected_phone]['version'],
-									platform = yaml_d['phones'][selected_phone]['platform'],
-									release_type = yaml_d['phones'][selected_phone]['release_type'],
-									ip = yaml_d['phones'][selected_phone]['ip'],
-									udid = yaml_d['phones'][selected_phone]['udid'],
-									user = yaml_d['phones'][selected_phone]['user'],
-									deployed = yaml_d['phones'][selected_phone]['deployed'],
-									deployment_path = yaml_d['phones'][selected_phone]['deployment_path']
-									)
+			full_phone_infos_as_ruamel_map['testrun_ids'] = yaml_d['phones'][selected_phone]['testrun_ids']
 
+		yaml_d['phones'][selected_phone] = full_phone_infos_as_ruamel_map
 		yaml_d['phones'][selected_phone].yaml_set_anchor(selected_phone, always_dump=True)
-		yaml_d['stages'][stage][free_port['hub_id']][free_port['port']] = yaml_d['phones'][selected_phone]
+
+		# Setting the reference to the phone :
+		source_name = yaml_d['stages'][stage][free_port['hub_id']]['source_name']
+		hub_name = yaml_d['stages'][stage][free_port['hub_id']]['hub_name']
+		port_name = free_port['port']
+		yaml_d[str(source_name)][str(hub_name)][str(port_name)] = yaml_d['phones'][selected_phone]
 		yaml_d['phones'][selected_phone]['deployed'] = True
 
 		print('Phone deployed to ' + str(free_port['port']) + ' at hub ' + str(yaml_d['stages'][stage][free_port['hub_id']]['name']))

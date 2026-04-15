@@ -24,10 +24,10 @@ def _get_ip(yaml_d: dict)->int:
 	for last_digit_ip in range(yaml_d['rtc_params']['min_ip'], yaml_d['rtc_params']['max_ip']+1):
 		found = False
 		for phone in yaml_d['phones']:
-			if last_digit_ip == int(yaml_d['phones'][phone]['ip'].split('.')[3]):
+			if last_digit_ip == int(yaml_d['phones'][phone]['ip'].split('.')[-1]):
 				found = True
 				break
-		if found == False:
+		if not found :
 			return last_digit_ip
 
 def add_phone(yaml_d: dict)->bool:
@@ -101,10 +101,12 @@ def add_phone(yaml_d: dict)->bool:
 		performance = input('performance: ')
 		testrun_ids = dict(fota = fota, activitytracking = activitytracking, functional = functional, performance = performance)
 
-		new_phone_record = dict(name = yaml_phone_name, manufacturer = None, model = None, vendor = vendor, family = family, version = version, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path, testrun_ids = testrun_ids)
+		new_phone_record = ruamel.yaml.CommentedMap(name = yaml_phone_name, manufacturer = None, model = None, vendor = vendor, family = family, version = version, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path, testrun_ids = testrun_ids)
 	else:
-		new_phone_record = dict(name = yaml_phone_name, manufacturer = None, model = None, vendor = vendor, family = family, version = version, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path)
+		new_phone_record = ruamel.yaml.CommentedMap(name = yaml_phone_name, manufacturer = None, model = None, vendor = vendor, family = family, version = version, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path)
 	
+	new_phone_record.yaml_set_anchor(yaml_phone_name, always_dump=True)
+
 	if input('add entry to yaml? y|n ') == 'y':
 		yaml_d['phones'][yaml_phone_name] = new_phone_record # operate name change here
 
