@@ -1,4 +1,5 @@
-from manage_phones import *
+import sys
+from manage_phones import yaml_d, yaml
 
 def _list_from_yaml(yaml_list_key: str, yaml_d: dict = yaml_d)->None:
 	"""

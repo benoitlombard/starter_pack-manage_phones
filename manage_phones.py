@@ -1,7 +1,10 @@
 # importing libraries
 import ruamel.yaml
-import sys # useful for dumping yaml content to terminal
 import click
+
+global file_name
+global yaml
+global yaml_d
 
 file_name = 'test.yaml'
 with open(file_name, 'r') as yaml_file:

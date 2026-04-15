@@ -1,4 +1,5 @@
-from manage_phones import *
+import sys
+from manage_phones import yaml_d, yaml, file_name
 
 # change phone
 def change_phone(yaml_d: dict = yaml_d)->None:

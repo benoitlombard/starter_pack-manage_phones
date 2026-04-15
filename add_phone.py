@@ -1,4 +1,5 @@
-from manage_phones import *
+import ruamel.yaml
+from manage_phones import yaml_d, yaml, file_name
 
 # Add phone
 def _get_unused_name(yaml_d: dict = yaml_d)->str:

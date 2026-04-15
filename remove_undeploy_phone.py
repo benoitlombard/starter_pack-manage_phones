@@ -1,5 +1,4 @@
-from manage_phones import *
-
+from manage_phones import yaml_d, yaml, file_name
 
 # undeploy phone
 def undeploy_phone(phone: str, yaml_d: dict = yaml_d) -> None:
@@ -8,7 +7,6 @@ def undeploy_phone(phone: str, yaml_d: dict = yaml_d) -> None:
 	It particular, values from his 'deployment_path' are set to none, 'deployed' attribute is set to false\n
 	And the port his emptied from a reference of a yaml anchor of the phone's data
 	"""
-	print(phone)
 	while phone == '':
 		dict_of_phones = {}
 		print('Phone to undeploy: ')
