@@ -12,7 +12,7 @@ def _get_unused_name(yaml_d: dict = yaml_d)->str:
 	with open('gods.txt', 'r') as gods_txt:
 		for god in gods_txt:
 			god_name = god.rstrip()
-			if not god_name in list_of_used_names:
+			if god_name not in list_of_used_names:
 				unused_name = god_name
 				break
 	return unused_name

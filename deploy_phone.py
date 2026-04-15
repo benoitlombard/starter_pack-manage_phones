@@ -12,9 +12,9 @@ def _find_free_port(stage: str, yaml_d: dict = yaml_d)->dict[int, str]:
 			test_source = yaml_d['stages'][stage][hub_id]['source_name']
 			test_hub = yaml_d['stages'][stage][hub_id]['hub_name']
 			for port in yaml_d['stages'][stage][hub_id]:
-				if yaml_d[test_source][test_hub][port] == None:
+				if yaml_d[test_source][test_hub][port] is None:
 					return dict(hub_id = hub_id, port = port)
-		except:
+		except KeyError:
 			print("Error when trying to find a free port")
 
 # deploy phone
@@ -29,7 +29,6 @@ def deploy_phone(yaml_d: dict = yaml_d)-> bool:
 	6) Set a ruamel.yaml Anchor and store a reference to it in the free port found in 'stages'[stage][hubs]\n
 	7) Update the yaml file according to previous changes.
 	"""
-	exist = False
 	list_phones = set()
 	print('Stage to deploy:')
 	print('1: Production')
@@ -44,7 +43,7 @@ def deploy_phone(yaml_d: dict = yaml_d)-> bool:
 		return False
 
 	free_port = _find_free_port(stage, yaml_d)
-	if free_port != None:
+	if free_port is not None:
 		print('Phone to deploy: ')
 		for phone in yaml_d['phones']:
 			if not yaml_d['phones'][phone]['deployed']:
@@ -58,7 +57,7 @@ def deploy_phone(yaml_d: dict = yaml_d)-> bool:
 		time_origin = time.time()
 		try:
 			selected_phone = list_phones[int(indx)]
-		except:
+		except ValueError:
 			print('Unknown selection')
 			return False
 

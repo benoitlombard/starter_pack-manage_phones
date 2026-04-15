@@ -15,7 +15,7 @@ def change_phone(yaml_d: dict = yaml_d)->None:
 	indx = input('? ')
 	try:
 		phone = dict_of_phones[int(indx)]
-	except:
+	except ValueError:
 		print('Unknown selection')
 		return
 	yaml.dump(phone, sys.stdout)

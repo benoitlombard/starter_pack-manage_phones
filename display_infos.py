@@ -36,7 +36,7 @@ def _ask_user_for_sorting_parameters(phone_attribute: str, selected_vendor: str 
 
 	try:
 		ret = int(ret)
-	except:
+	except ValueError:
 		print('Unknown selection')
 		return
 	if ret == atttribute_index + 1:
@@ -69,10 +69,10 @@ def _list_phones(yaml_d: dict = yaml_d)->None:
 		yaml.dump(yaml_d['phones'], sys.stdout)
 	elif ret == '2':
 		sel_vendor = _ask_user_for_sorting_parameters('vendor', '', '', yaml_d)
-		if sel_vendor != None:
+		if sel_vendor is not None:
 			sel_family = _ask_user_for_sorting_parameters('family', sel_vendor, '', yaml_d)
-			if sel_family != None:
-				sel_platform = _ask_user_for_sorting_parameters('version', sel_vendor, sel_family, yaml_d)
+			if sel_family is not None:
+				_ask_user_for_sorting_parameters('version', sel_vendor, sel_family, yaml_d)
 	elif ret == '3':
 		_ask_user_for_sorting_parameters('platform', '', '', yaml_d)
 	else:

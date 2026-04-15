@@ -18,7 +18,7 @@ def undeploy_phone(phone: str, yaml_d: dict = yaml_d) -> None:
 		indx = input('? ')
 		try:
 			phone = dict_of_phones[int(indx)]
-		except:
+		except ValueError:
 			print("Error: unknown phone")
 			return
 	if yaml_d['phones'][phone]['deployed']:
@@ -34,7 +34,7 @@ def undeploy_phone(phone: str, yaml_d: dict = yaml_d) -> None:
 			yaml_d['phones'][phone]['deployment_path']['hub'] = None
 			yaml_d['phones'][phone]['deployment_path']['port'] = None
 			yaml_d['phones'][phone]['deployed'] = False
-		except:
+		except KeyError:
 			print("error when undeploying", phone)
 
 		with open(file_name, 'w') as w:
