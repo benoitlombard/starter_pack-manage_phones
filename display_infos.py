@@ -1,20 +1,65 @@
 from manage_phones import *
 
-def _list_from_yaml(yaml_list_key: str, yaml_d: dict)->None:
+def _list_from_yaml(yaml_list_key: str, yaml_d: dict = yaml_d)->None:
 	"""
 	Function dedicated to print informations in the yaml file that are available with a single key entry: 'biab'/'bts'
 	"""
 	yaml.dump(yaml_d[yaml_list_key], sys.stdout)
 	return
 
-def _show_stage(stage: str, yaml_d: dict)->None:
+def _show_stage(stage: str, yaml_d: dict = yaml_d)->None:
 	"""
 	Display the content of 'stages'['dev'] or 'stages'['prod'] from yaml file
 	"""
 	for hub in yaml_d['stages'][stage]:
 		yaml.dump(hub, sys.stdout)
 
-def _list_phones(yaml_d: dict)->None:
+def _ask_user_for_sorting_parameters(phone_attribute: str, selected_vendor: str = '', selected_family: str = '', yaml_d: dict = yaml_d)-> str | None:
+	"""
+	Ask user for sorting and filtering parameters and print informations of phones that match the filtering and sorting
+	"""
+	list_of_selected_attribute = []
+	for phone in yaml_d['phones']:
+		if (phone_attribute == 'vendor' and yaml_d['phones'][phone]['vendor'] not in list_of_selected_attribute) or (phone_attribute == 'platform' and yaml_d['phones'][phone]['platform'] not in list_of_selected_attribute):
+			list_of_selected_attribute.append(yaml_d['phones'][phone][phone_attribute])
+		elif phone_attribute == 'family' and selected_vendor == yaml_d['phones'][phone]['vendor']:
+			list_of_selected_attribute.append(yaml_d['phones'][phone][phone_attribute])
+		elif phone_attribute == 'version' and selected_vendor == yaml_d['phones'][phone]['vendor'] and selected_family == yaml_d['phones'][phone]['family']:
+			list_of_selected_attribute.append(yaml_d['phones'][phone][phone_attribute])
+
+	for atttribute_index in range(len(list_of_selected_attribute)):
+		print(str(atttribute_index) + ': ' + str(list_of_selected_attribute[atttribute_index]))
+	if phone_attribute in ['family', 'version']:
+		print(str(atttribute_index + 1) + ': All')
+	ret = input('Select ' + phone_attribute + ': ')
+
+	try:
+		ret = int(ret)
+	except:
+		print('Unknown selection')
+		return
+	if ret == atttribute_index + 1:
+		for phone in yaml_d['phones']:
+			if phone_attribute == 'family' and selected_vendor == yaml_d['phones'][phone]['vendor']:
+				yaml.dump(yaml_d['phones'][phone], sys.stdout)
+					
+			elif phone_attribute == 'version' and selected_vendor == yaml_d['phones'][phone]['vendor'] and selected_family == yaml_d['phones'][phone]['family']:
+				yaml.dump(yaml_d['phones'][phone], sys.stdout)
+		return
+	elif ret <= atttribute_index:
+		if phone_attribute == 'version':
+			for phone in yaml_d['phones']:
+				if selected_vendor == yaml_d['phones'][phone]['vendor'] and selected_family == yaml_d['phones'][phone]['family'] and list_of_selected_attribute[ret] == yaml_d['phones'][phone]['version']:
+					yaml.dump(yaml_d['phones'][phone], sys.stdout)
+			return
+		elif phone_attribute == 'platform':
+			for phone in yaml_d['phones']:
+				if list_of_selected_attribute[ret] == yaml_d['phones'][phone]['platform']:
+					yaml.dump(yaml_d['phones'][phone], sys.stdout)
+		return list_of_selected_attribute[ret]
+
+
+def _list_phones(yaml_d: dict = yaml_d)->None:
 	"""
 	Display phone informations ordered and filtered by asking user choices of sorting and filtering
 	"""
@@ -25,63 +70,15 @@ def _list_phones(yaml_d: dict)->None:
 	if ret == '1':
 		yaml.dump(yaml_d['phones'], sys.stdout)
 	elif ret == '2':
-		list_of_vendor = set()
-		for phone in yaml_d['phones']:
-			list_of_vendor.add(yaml_d['phones'][phone]['vendor'])
-		vendor = list(list_of_vendor)
-		for vendor_index, vendor_val in enumerate(vendor):
-			print(str(vendor_index) + ': ' + vendor_val)
-		sel_vendor = vendor[int(input('Select vendor: '))]
-
-		list_of_family = set()
-		for phone in yaml_d['phones']:
-			if sel_vendor == yaml_d['phones'][phone]['vendor']:
-				list_of_family.add(yaml_d['phones'][phone]['family'])
-		family = list(list_of_family)
-		for family_index,family_val in enumerate(family):
-			print(str(family_index) + ': ' + family_val)
-		print(str(family_index+1) + ': All')
-		ret = int(input('Select family: '))
-		if ret == family_index+1:
-			for phone in yaml_d['phones']:
-				if sel_vendor == yaml_d['phones'][phone]['vendor']:
-					yaml.dump(yaml_d['phones'][phone], sys.stdout)
-			return
-		elif ret <= family_index:
-			sel_family = family[ret]
-
-		version = set()
-		for phone in yaml_d['phones']:
-			if sel_vendor == yaml_d['phones'][phone]['vendor'] and sel_family == yaml_d['phones'][phone]['family']:
-				version.add(yaml_d['phones'][phone]['version'])
-		version = list(version)
-		for version_index, val_version in enumerate(version):
-			print(str(version_index) + ': ' + str(val_version))
-		print(str(version_index) + ': All')
-		ret = int(input('Select version: '))
-		if ret == version_index + 1:
-			for phone in yaml_d['phones']:
-				if sel_vendor == yaml_d['phones'][phone]['vendor'] and sel_family == yaml_d['phones'][phone]['family']:
-					yaml.dump(yaml_d['phones'][phone], sys.stdout)
-		elif ret <= version_index:
-			for phone in yaml_d['phones']:
-				if sel_vendor == yaml_d['phones'][phone]['vendor'] and sel_family == yaml_d['phones'][phone]['family'] and version[ret] == yaml_d['phones'][phone]['version']:
-					yaml.dump(yaml_d['phones'][phone], sys.stdout)
-
+		sel_vendor = _ask_user_for_sorting_parameters('vendor', '', '', yaml_d)
+		if sel_vendor != None:
+			sel_family = _ask_user_for_sorting_parameters('family', sel_vendor, '', yaml_d)
+			if sel_family != None:
+				sel_platform = _ask_user_for_sorting_parameters('version', sel_vendor, sel_family, yaml_d)
 	elif ret == '3':
-		list_of_platforms = set()
-		for phone in yaml_d['phones']:
-			list_of_platforms.add(yaml_d['phones'][phone]['platform'])
-		list_of_platforms = list(list_of_platforms)
-		for platform_index, platform_val in enumerate(list_of_platforms):
-			print(str(platform_index) + ': ' + platform_val)
-		ret = input('? ')
-		platform = list_of_platforms[int(ret)]
-		for phone in yaml_d['phones']:
-			if yaml_d['phones'][phone]['platform'] == platform:
-				yaml.dump(yaml_d['phones'][phone], sys.stdout)
+		_ask_user_for_sorting_parameters('platform', '', '', yaml_d)
 
-def display(yaml_d: dict)->None:
+def display(yaml_d: dict = yaml_d)->None:
 	"""
 	Display a sub menu dedicated to allow user to list and print informations stored in the yaml file 
 	"""

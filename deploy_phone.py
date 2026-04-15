@@ -1,6 +1,6 @@
 from manage_phones import *
 
-def _find_free_port(stage: str, yaml_d: dict)->dict[int, str]:
+def _find_free_port(stage: str, yaml_d: dict = yaml_d)->dict[int, str]:
 	"""
 	return the first port of value 'None' found by looping through 'stages'[stage] for a given 'stage'\n
 	the values of 'stage' can only be 'dev' or 'prod'
@@ -16,7 +16,7 @@ def _find_free_port(stage: str, yaml_d: dict)->dict[int, str]:
 			print("Error when trying to find a free port")
 
 # deploy phone
-def deploy_phone(yaml_d: dict)-> bool:
+def deploy_phone(yaml_d: dict = yaml_d)-> bool:
 	"""
 	Deploy an existing phone by asking user for input\n
 	1) Ask user for what stage he wants between 'dev' or 'prod' as deployment stage\n
@@ -27,7 +27,6 @@ def deploy_phone(yaml_d: dict)-> bool:
 	6) Set a ruamel.yaml Anchor and store a reference to it in the free port found in 'stages'[stage][hubs]\n
 	7) Update the yaml file according to previous changes.
 	"""
-	
 	exist = False
 	list_phones = set()
 	print('Stage to deploy:')
@@ -90,6 +89,7 @@ def deploy_phone(yaml_d: dict)-> bool:
 		hub_name = yaml_d['stages'][stage][free_port['hub_id']]['hub_name']
 		port_name = free_port['port']
 		yaml_d[str(source_name)][str(hub_name)][str(port_name)] = yaml_d['phones'][selected_phone]
+
 		yaml_d['phones'][selected_phone]['deployed'] = True
 
 		print('Phone deployed to ' + str(free_port['port']) + ' at hub ' + str(yaml_d['stages'][stage][free_port['hub_id']]['name']))

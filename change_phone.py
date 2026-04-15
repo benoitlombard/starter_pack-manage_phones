@@ -1,7 +1,7 @@
 from manage_phones import *
 
 # change phone
-def change_phone(yaml_d: dict)->None:
+def change_phone(yaml_d: dict = yaml_d)->None:
 	"""
 	Allows user to change some informations from 'phones' data by asking which phone and what value of attribute he want to change
 	"""
