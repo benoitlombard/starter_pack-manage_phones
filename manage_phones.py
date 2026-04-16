@@ -34,12 +34,12 @@ if __name__ == "__main__":
 			case '1':
 				add_phone.add_phone(yaml_d) # to change with CLI use
 			case '2':
-				change_phone.change_phone('', '', '', '', '', '', '', yaml_d, False)
+				change_phone.change_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '3':
-				deploy_phone.deploy_phone('', '', yaml_d, False)
+				deploy_phone.deploy_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '4':
-				remove_undeploy_phone.undeploy_phone('', yaml_d, False)
+				remove_undeploy_phone.undeploy_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '5':
-				remove_undeploy_phone.remove_phone('', yaml_d, False)
+				remove_undeploy_phone.remove_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '6':
 				display_infos.display(yaml_d) # to change with CLI use

@@ -2,6 +2,7 @@
 import typer
 import ruamel.yaml
 import time
+import sys
 
 from manage_phones import yaml_d, yaml, file_name
 
@@ -10,8 +11,7 @@ from add_phone import _get_ip, _get_unused_name		# CLI function : add
 from remove_undeploy_phone import undeploy_phone, remove_phone	 # CLI function : reploy, remove
 from change_phone import change_phone	 # CLI function : change
 from deploy_phone import deploy_phone	 # CLI function : deploy
-
-import display_infos	# displaying infos
+from display_infos import _list_phones, _list_from_yaml, _show_stage	# displaying infos
 
 phone_management_app = typer.Typer()
 
@@ -178,5 +178,34 @@ def deploy(phone: str, stage: str, mesure_time: bool = True)->bool:
 	if ret > 0:
 		return False
 	return True
+
+#show_config
+@phone_management_app.command()
+def show_config(phone: str, mesure_time: bool = True)->bool:
+	"""
+	Change one or more value of a phone's data given his name\n
+	Exemples of use:        'python manage_phones_CLI.py show-config Chaos
+	      			        'python manage_phones_CLI.py show-config zeus
+	"""
+	if mesure_time:
+		time_origin = time.time()
+
+	try:
+		yaml.dump(yaml_d['phones'][phone], sys.stdout)
+		if mesure_time:
+			typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
+		return True
+	except:
+		typer.secho(f'{phone} not found.', fg=typer.colors.RED)
+		if mesure_time:
+			typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
+		return False
+
+
+
+
+
+
+
 
 phone_management_app()

@@ -1,21 +1,22 @@
 import sys
 from manage_phones import yaml_d, yaml
 
-def _list_from_yaml(yaml_list_key: str, yaml_d: dict = yaml_d)->None:
+def _list_from_yaml(yaml_list_key: str, yaml_d: dict = yaml_d)->bool:
 	"""
 	Function dedicated to print informations in the yaml file that are available with a single key entry: 'biab'/'bts'
 	"""
 	yaml.dump(yaml_d[yaml_list_key], sys.stdout)
-	return
+	return True
 
-def _show_stage(stage: str, yaml_d: dict = yaml_d)->None:
+def _show_stage(stage: str, yaml_d: dict = yaml_d)->bool:
 	"""
 	Display the content of 'stages'['dev'] or 'stages'['prod'] from yaml file
 	"""
 	for hub in yaml_d['stages'][stage]:
 		yaml.dump(hub, sys.stdout)
+	return True
 
-def _ask_user_for_sorting_parameters(phone_attribute: str, selected_vendor: str = '', selected_family: str = '', yaml_d: dict = yaml_d)-> str | None:
+def _ask_user_for_sorting_parameters(phone_attribute: str, selected_vendor: str = '', selected_family: str = '', yaml_d: dict = yaml_d)-> str | bool:
 	"""
 	Ask user for sorting and filtering parameters and print informations of phones that match the filtering and sorting
 	"""
@@ -38,7 +39,7 @@ def _ask_user_for_sorting_parameters(phone_attribute: str, selected_vendor: str 
 		ret = int(ret)
 	except ValueError:
 		print('Unknown selection')
-		return
+		return False
 	if ret == atttribute_index + 1:
 		for phone in yaml_d['phones']:
 			if (phone_attribute == 'family' and selected_vendor == yaml_d['phones'][phone]['vendor']) or (phone_attribute == 'version' and selected_vendor == yaml_d['phones'][phone]['vendor'] and selected_family == yaml_d['phones'][phone]['family']):
@@ -57,7 +58,7 @@ def _ask_user_for_sorting_parameters(phone_attribute: str, selected_vendor: str 
 		return list_of_selected_attribute[ret]
 
 
-def _list_phones(yaml_d: dict = yaml_d)->None:
+def _list_phones(yaml_d: dict = yaml_d)->bool:
 	"""
 	Display phone informations ordered and filtered by asking user choices of sorting and filtering
 	"""
@@ -67,19 +68,21 @@ def _list_phones(yaml_d: dict = yaml_d)->None:
 	ret = input('? ')
 	if ret == '1':
 		yaml.dump(yaml_d['phones'], sys.stdout)
+		return True
 	elif ret == '2':
 		sel_vendor = _ask_user_for_sorting_parameters('vendor', '', '', yaml_d)
 		if sel_vendor is not None:
 			sel_family = _ask_user_for_sorting_parameters('family', sel_vendor, '', yaml_d)
 			if sel_family is not None:
-				_ask_user_for_sorting_parameters('version', sel_vendor, sel_family, yaml_d)
+				return _ask_user_for_sorting_parameters('version', sel_vendor, sel_family, yaml_d)
 	elif ret == '3':
-		_ask_user_for_sorting_parameters('platform', '', '', yaml_d)
+		return _ask_user_for_sorting_parameters('platform', '', '', yaml_d)
 	else:
 		print('Unknown selection')
+		return False
 	return
 
-def display(yaml_d: dict = yaml_d)->None:
+def display(yaml_d: dict = yaml_d)->bool:
 	"""
 	Display a sub menu dedicated to allow user to list and print informations stored in the yaml file 
 	"""
@@ -93,27 +96,29 @@ def display(yaml_d: dict = yaml_d)->None:
 	ret = input('? ')
 	match ret:
 		case '1':
-			_list_phones(yaml_d)
+			return _list_phones(yaml_d)
 		case '2':				#new function
-			_list_from_yaml('bts', yaml_d)
+			return _list_from_yaml('bts', yaml_d)
 		case '3':				#new function (same as previous)
-			_list_from_yaml('biab', yaml_d)
+			return _list_from_yaml('biab', yaml_d)
 		case '4':
-			_show_stage('prod', yaml_d)
+			return _show_stage('prod', yaml_d)
 		case '5':
-			_show_stage('dev', yaml_d)
+			return _show_stage('dev', yaml_d)
 		case '6':				#deleted call to check_deployed (optimizing)
 			print('Not deployed phones:')
 			for phone in yaml_d['phones']:
 				if not yaml_d['phones'][phone]['deployed']:
 					print(yaml_d['phones'][phone])
+			return True
 		case '7':				#new function
 			print('Phone to show: ')
 			ret = input('? ')
-			for phone in yaml_d['phones']:
-				if yaml_d['phones'][phone]['name'].lower() == ret.lower():
-					yaml.dump(yaml_d['phones'][phone], sys.stdout)
-					return
-			print("Phone not found.")
+			try:
+				yaml.dump(yaml_d['phones'][phone], sys.stdout)
+				return True
+			except:
+				print("Phone not found.")
+				return False
 		case _:
-			return
+			return False

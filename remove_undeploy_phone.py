@@ -1,4 +1,3 @@
-import time
 from manage_phones import yaml_d, yaml, file_name
 
 # undeploy phone
