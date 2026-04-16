@@ -5,14 +5,13 @@ import time
 
 from manage_phones import yaml_d, yaml, file_name
 
+# importing other functions
 from add_phone import _get_ip, _get_unused_name		# CLI function : add
 from remove_undeploy_phone import undeploy_phone, remove_phone	 # CLI function : reploy, remove
 from change_phone import change_phone	 # CLI function : change
+from deploy_phone import deploy_phone	 # CLI function : deploy
 
-
-# importing other files
 import display_infos	# displaying infos
-import deploy_phone		# deploying a phone
 
 phone_management_app = typer.Typer()
 
@@ -70,7 +69,7 @@ def add(vendor: str, family: str, version: str, udid: str, user: str, releasetyp
 			typer.secho(f'{yaml_phone_name} successfully writen to yaml', fg=typer.colors.GREEN)
 	return True
 
-
+#undeploy
 @phone_management_app.command()
 def undeploy(phone: str, mesure_time: bool = True)->bool:
 	"""
@@ -84,7 +83,7 @@ def undeploy(phone: str, mesure_time: bool = True)->bool:
 		case 0:
 			typer.secho(f'{phone} successfully undeployed.', fg=typer.colors.GREEN)
 		case 1:
-			typer.secho('Key Error, unknown selection.', fg=typer.colors.RED)
+			typer.secho('Unknown selection.', fg=typer.colors.RED)
 		case 2:
 			typer.secho('Key Error when writing to the yaml file.\nUndeployment failed', fg=typer.colors.RED)
 		case 3:
@@ -96,7 +95,7 @@ def undeploy(phone: str, mesure_time: bool = True)->bool:
 		return False
 	return True
 
-
+#remove
 @phone_management_app.command()
 def remove(phone: str, mesure_time: bool = True)->bool:
 	"""
@@ -121,7 +120,7 @@ def remove(phone: str, mesure_time: bool = True)->bool:
 		return False
 	return True
 
-
+# change
 @phone_management_app.command()
 def change(phone: str, releasetype: str = '', user: str = '', fota: str = '', activitytracking: str = '', functional: str = '', performance: str = '', mesure_time: bool = True)->bool:
 	"""
@@ -140,7 +139,7 @@ def change(phone: str, releasetype: str = '', user: str = '', fota: str = '', ac
 		case 0:
 			typer.secho(f'{phone} successfully changed.', fg=typer.colors.GREEN)
 		case 1:
-			typer.secho('Key Error, unknown selection.', fg=typer.colors.RED)
+			typer.secho('Unknown selection.', fg=typer.colors.RED)
 		case 2:
 			typer.secho('Error when writing to the yaml file.', fg=typer.colors.RED)
 
@@ -150,6 +149,34 @@ def change(phone: str, releasetype: str = '', user: str = '', fota: str = '', ac
 		return False
 	return True
 
+#deploy
+@phone_management_app.command()
+def deploy(phone: str, stage: str, mesure_time: bool = True)->bool:
+	"""
+	Change one or more value of a phone's data given his name\n
+	Exemples of use:        'python manage_phones_CLI.py deploy Chaos dev
+	      			        'python manage_phones_CLI.py deploy Chaos prod --mesure-time False
+	"""
+	if mesure_time:
+		time_origin = time.time()
+	ret = deploy_phone(phone, stage, yaml_d, True)
 
+	match ret:
+		case 0:
+			typer.secho(f'{phone} successfully deployed in {stage}.', fg=typer.colors.GREEN)
+		case 1:
+			typer.secho('Unknown selection.', fg=typer.colors.RED)
+		case 2:
+			typer.secho(f'No free port in stage {stage}.', fg=typer.colors.RED)
+		case 3:
+			typer.secho(f'{phone} is already deployed.', fg=typer.colors.RED)
+		case 4:
+			typer.secho('An unknown error occured.', fg=typer.colors.RED)
+
+	if mesure_time:
+		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
+	if ret > 0:
+		return False
+	return True
 
 phone_management_app()

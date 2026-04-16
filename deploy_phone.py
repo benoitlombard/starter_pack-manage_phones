@@ -1,10 +1,9 @@
 import ruamel.yaml
-import time
 from manage_phones import yaml_d, yaml, file_name
 
-def _find_free_port(stage: str, yaml_d: dict = yaml_d)->dict[int, str]:
+def _find_free_port(stage: str, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->dict[int, str]:
 	"""
-	return the first port of value 'None' found by looping through 'stages'[stage] for a given 'stage'\n
+	return path to the first port of value 'None' found by looping through 'stages'[stage] for a given 'stage'\n
 	the values of 'stage' can only be 'dev' or 'prod'
 	"""
 	for hub_id in range(len(yaml_d['stages'][stage])):
@@ -15,10 +14,12 @@ def _find_free_port(stage: str, yaml_d: dict = yaml_d)->dict[int, str]:
 				if yaml_d[test_source][test_hub][port] is None:
 					return dict(hub_id = hub_id, port = port)
 		except KeyError:
-			print("Error when trying to find a free port")
+			if not call_from_CLI:
+				print("Error when trying to find a free port")
+			# add raise KeyError
 
 # deploy phone
-def deploy_phone(yaml_d: dict = yaml_d)-> bool:
+def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)-> int:
 	"""
 	Deploy an existing phone by asking user for input\n
 	1) Ask user for what stage he wants between 'dev' or 'prod' as deployment stage\n
@@ -29,37 +30,43 @@ def deploy_phone(yaml_d: dict = yaml_d)-> bool:
 	6) Set a ruamel.yaml Anchor and store a reference to it in the free port found in 'stages'[stage][hubs]\n
 	7) Update the yaml file according to previous changes.
 	"""
-	list_phones = set()
-	print('Stage to deploy:')
-	print('1: Production')
-	print('2: Development')
-	ret = input('? ')
-	if ret == '1':
-		stage = 'prod'
-	elif ret == '2':
-		stage = 'dev'
-	else:
-		print('Unknown selection')
-		return False
-
-	free_port = _find_free_port(stage, yaml_d)
-	if free_port is not None:
-		print('Phone to deploy: ')
-		for phone in yaml_d['phones']:
-			if not yaml_d['phones'][phone]['deployed']:
-				list_phones.add(phone)
-
-		list_phones = list(list_phones)
-		for phone_index, phone in enumerate(list_phones):
-			print(str(phone_index) + ': ' + yaml_d['phones'][phone]['name'])
-			print('\t' + yaml_d['phones'][phone]['vendor'] + ' ' + yaml_d['phones'][phone]['family'] + ' ' + str(yaml_d['phones'][phone]['version']))
-		indx = input('? ')
-		time_origin = time.time()
-		try:
-			selected_phone = list_phones[int(indx)]
-		except ValueError:
+	while stage == '':
+		list_phones = set()
+		print('Stage to deploy:')
+		print('1: Production')
+		print('2: Development')
+		ret = input('? ')
+		if ret == '1':
+			stage = 'prod'
+		elif ret == '2':
+			stage = 'dev'
+		else:
 			print('Unknown selection')
-			return False
+			stage = ''
+
+	free_port = _find_free_port(stage, yaml_d, call_from_CLI)
+	if free_port is not None:
+
+		if phone == '':
+			print('Phone to deploy: ')
+			for phone in yaml_d['phones']:
+				if not yaml_d['phones'][phone]['deployed']:
+					list_phones.add(phone)
+
+			list_phones = list(list_phones)
+			for phone_index, phone in enumerate(list_phones):
+				print(str(phone_index) + ': ' + yaml_d['phones'][phone]['name'])
+				print('\t' + yaml_d['phones'][phone]['vendor'] + ' ' + yaml_d['phones'][phone]['family'] + ' ' + str(yaml_d['phones'][phone]['version']))
+			indx = input('? ')
+			try:
+				selected_phone = list_phones[int(indx)]
+			except ValueError:
+				print('Unknown selection')
+				return 1 # Unknown selection
+		else:
+			if yaml_d['phones'][phone]['deployed']:
+				return 3 # Phone already deployed
+			selected_phone = phone
 
 		yaml_d['phones'][selected_phone]['deployment_path']['status'] = stage
 		yaml_d['phones'][selected_phone]['deployment_path']['hub'] = free_port['hub_id']
@@ -98,10 +105,11 @@ def deploy_phone(yaml_d: dict = yaml_d)-> bool:
 		print('Please connect phone as soon as possible')
 
 		with open(file_name, 'w') as yaml_file:
-			yaml.default_flow_style = False
 			yaml.dump(yaml_d, yaml_file)
+			return 0
 	else:
-		print('No free port at stage ' + stage)
-	print(f"time elapsed: {(time.time() - time_origin):.6f} seconds.")
-	return True
+		if not call_from_CLI:
+			print('No free port at stage ' + stage)
+		return 2 # no free port in selected stage
+	return 4 # unknown error
 
