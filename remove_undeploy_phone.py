@@ -2,7 +2,7 @@ import time
 from manage_phones import yaml_d, yaml, file_name
 
 # undeploy phone
-def undeploy_phone(phone: str, yaml_d: dict = yaml_d)->bool:
+def undeploy_phone(phone: str, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int:
 	"""
 	Undeploy phone from 'stage', given his name\n
 	It particular, values from his 'deployment_path' are set to none, 'deployed' attribute is set to false\n
@@ -18,14 +18,16 @@ def undeploy_phone(phone: str, yaml_d: dict = yaml_d)->bool:
 		indx = input('? ')
 		try:
 			phone = dict_of_phones[int(indx)]
-		except ValueError:
-			print("Error: unknown phone")
-			return False
-	if yaml_d['phones'][phone]['deployed']:
-		phone_deployment_status = yaml_d['phones'][phone]['deployment_path']['status']
-		phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']
-		phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
-		try:
+		except KeyError:
+			if not call_from_CLI:
+				print("Error: unknown selection")
+			return 1 # KeyError: unknown selection
+				
+	try:
+		if yaml_d['phones'][phone]['deployed']:
+			phone_deployment_status = yaml_d['phones'][phone]['deployment_path']['status']
+			phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']
+			phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
 			source_name = yaml_d['stages'][phone_deployment_status][phone_deployment_hub]['source_name']
 			hub_name = yaml_d['stages'][phone_deployment_status][phone_deployment_hub]['hub_name']
 			yaml_d[str(source_name)][str(hub_name)][phone_deployment_port] = None
@@ -34,36 +36,47 @@ def undeploy_phone(phone: str, yaml_d: dict = yaml_d)->bool:
 			yaml_d['phones'][phone]['deployment_path']['hub'] = None
 			yaml_d['phones'][phone]['deployment_path']['port'] = None
 			yaml_d['phones'][phone]['deployed'] = False
-		except KeyError:
-			print("error when undeploying", phone)
+		else:
+			if not call_from_CLI:
+				print(phone, "is not deployed.")
+			return 3 # phone not deployed
+	except KeyError:
+		if not call_from_CLI:
+			print("Key error phone has not been found")
+		return 2 # KeyError with the yaml file
 
-		with open(file_name, 'w') as w:
-			yaml.dump(yaml_d, w)
-			print('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(phone_deployment_hub) + ' at stage ' + str(phone_deployment_status))
-	else:
-		print(phone, "is not deployed.")
-		return False
-	return True
+	with open(file_name, 'w') as w:
+		yaml.dump(yaml_d, w)
+		if call_from_CLI:
+			return 0 # success
+		print('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(phone_deployment_hub) + ' at stage ' + str(phone_deployment_status))
+	
 
 # remove phone
-def remove_phone(yaml_d: dict = yaml_d)->None:
+def remove_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int:
 	"""
 	Remove an existing phone by asking user for input\n
 	remove_phone will check if the phone is deployed and undeploy it if necessary befor removing it 
 	"""
-	print('Enter phone name')
-	phone = input('? ')
+	while phone == '':
+		print('Enter phone name')
+		phone = input('? ')
 	if phone in yaml_d['phones']:
-		print('Sure to remove ' + phone + ' from test inventory?')
-		print('You can just undeploy from test stages.')
-		if input('enter yes if are sure: ').lower() == 'yes':
-			time_origin = time.time()
+		if not call_from_CLI:
+			print('Sure to remove ' + phone + ' from test inventory?')
+			print('You can just undeploy from test stages.')
+		if call_from_CLI or input('enter yes if are sure: ').lower() == 'yes':
 			if yaml_d['phones'][phone]['deployed']:
-				undeploy_phone(phone, yaml_d)
+				undeploy_phone(phone, yaml_d, call_from_CLI) # passing call_from_CLI argument
 			del yaml_d['phones'][phone]
 			with open(file_name, 'w') as w:
-					yaml.dump(yaml_d, w)
-		print(f"time elapsed: {(time.time() - time_origin):.6f} seconds.")
-		return
-	print(phone + ' not found')
+				yaml.dump(yaml_d, w)
+				return 0 # success
+		else:
+			return 1 # aborted
+	if not call_from_CLI:
+		print(phone + ' not found')
+	return 2 # phone not found
+
+
 

@@ -1,14 +1,17 @@
 #imports
 import typer
 import ruamel.yaml
+import time
 
 from manage_phones import yaml_d, yaml, file_name
 
-from add_phone import _get_ip, _get_unused_name
-from remove_undeploy_phone import undeploy_phone
+from add_phone import _get_ip, _get_unused_name		# CLI function : add
+from remove_undeploy_phone import undeploy_phone, remove_phone	 # CLI function : reploy, remove
+from change_phone import change_phone	 # CLI function : change
+
+
 # importing other files
 import display_infos	# displaying infos
-import change_phone		# changing phone infos
 import deploy_phone		# deploying a phone
 
 phone_management_app = typer.Typer()
@@ -69,18 +72,83 @@ def add(vendor: str, family: str, version: str, udid: str, user: str, releasetyp
 
 
 @phone_management_app.command()
-def undeploy(phone: str)->None:
+def undeploy(phone: str, mesure_time: bool = True)->bool:
 	"""
 	Undeploy phone from 'stage', given his name\n
 	Exemples of use:        'python manage_phones_CLI.py undeploy Aither
 	"""
-	if undeploy_phone(phone, yaml_d):
-		typer.secho(f'{phone} successfully undeployed.', fg=typer.colors.GREEN)
-	else:
-		typer.secho(f'Undeployment of {phone} failed.', fg=typer.colors.RED)
-	return
+	if mesure_time:
+		time_origin = time.time()
+	ret = undeploy_phone(phone, yaml_d, True)
+	match ret:
+		case 0:
+			typer.secho(f'{phone} successfully undeployed.', fg=typer.colors.GREEN)
+		case 1:
+			typer.secho('Key Error, unknown selection.', fg=typer.colors.RED)
+		case 2:
+			typer.secho('Key Error when writing to the yaml file.\nUndeployment failed', fg=typer.colors.RED)
+		case 3:
+			typer.secho(f'{phone} is not deployed.\nUndeployment is not possible', fg=typer.colors.RED)
+		
+	if mesure_time:
+		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
+	if ret > 0:
+		return False
+	return True
 
 
+@phone_management_app.command()
+def remove(phone: str, mesure_time: bool = True)->bool:
+	"""
+	Remove phone from 'stage', given his name\n
+	Exemples of use:        'python manage_phones_CLI.py remove Erebos
+	"""
+	if mesure_time:
+		time_origin = time.time()
+	ret = remove_phone(phone, yaml_d, True)
+
+	match ret:
+		case 0:
+			typer.secho(f'{phone} successfully removed.', fg=typer.colors.GREEN)
+		case 1:
+			typer.secho('User aborted phone removal.', fg=typer.colors.RED)
+		case 2:
+			typer.secho(f'{phone} not found.', fg=typer.colors.RED)
+
+	if mesure_time:
+		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
+	if ret > 0:
+		return False
+	return True
+
+
+@phone_management_app.command()
+def change(phone: str, releasetype: str = '', user: str = '', fota: str = '', activitytracking: str = '', functional: str = '', performance: str = '', mesure_time: bool = True)->bool:
+	"""
+	Change one or more value of a phone's data given his name\n
+	Exemples of use:        'python manage_phones_CLI.py change Chaos --releasetype PU100 --user jean
+	      			        'python manage_phones_CLI.py change Chaos --fota fota_id
+	"""
+	if releasetype == '' and user == '' and fota == '' and activitytracking == '' and functional == '' and performance == '':
+		typer.secho('No values to change !', fg=typer.colors.BRIGHT_RED)
+		return False
+	if mesure_time:
+		time_origin = time.time()
+	ret = change_phone(phone, releasetype, user, fota, functional, activitytracking, performance, yaml_d, True)
+
+	match ret:
+		case 0:
+			typer.secho(f'{phone} successfully changed.', fg=typer.colors.GREEN)
+		case 1:
+			typer.secho('Key Error, unknown selection.', fg=typer.colors.RED)
+		case 2:
+			typer.secho('Error when writing to the yaml file.', fg=typer.colors.RED)
+
+	if mesure_time:
+		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
+	if ret > 0:
+		return False
+	return True
 
 
 
