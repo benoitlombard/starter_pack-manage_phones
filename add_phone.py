@@ -113,7 +113,7 @@ def add_phone(yaml_d: dict = yaml_d)->bool:
 	new_phone_record.yaml_set_anchor(yaml_phone_name, always_dump=True)
 
 	if input('add entry to yaml? y|n ').lower() == 'y':
-		yaml_d['phones'][yaml_phone_name] = new_phone_record # operate name change here
+		yaml_d['phones'][yaml_phone_name] = new_phone_record
 
 		with open(file_name, 'w') as yaml_file:
 			yaml.default_flow_style = False

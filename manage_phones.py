@@ -1,12 +1,11 @@
 # importing libraries
 import ruamel.yaml
-import typer
 
 global file_name
 global yaml
 global yaml_d
 
-file_name = 'test.yaml'
+file_name = 'test.yaml'	# variables: file_name, yaml, yaml_d have to be declared before importing local modules
 with open(file_name, 'r') as yaml_file:
 	yaml = ruamel.yaml.YAML(typ='rt')
 	yaml_d = yaml.load(yaml_file)

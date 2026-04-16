@@ -2,7 +2,7 @@ import time
 from manage_phones import yaml_d, yaml, file_name
 
 # undeploy phone
-def undeploy_phone(phone: str, yaml_d: dict = yaml_d) -> None:
+def undeploy_phone(phone: str, yaml_d: dict = yaml_d)->bool:
 	"""
 	Undeploy phone from 'stage', given his name\n
 	It particular, values from his 'deployment_path' are set to none, 'deployed' attribute is set to false\n
@@ -20,7 +20,7 @@ def undeploy_phone(phone: str, yaml_d: dict = yaml_d) -> None:
 			phone = dict_of_phones[int(indx)]
 		except ValueError:
 			print("Error: unknown phone")
-			return
+			return False
 	if yaml_d['phones'][phone]['deployed']:
 		phone_deployment_status = yaml_d['phones'][phone]['deployment_path']['status']
 		phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']
@@ -42,7 +42,8 @@ def undeploy_phone(phone: str, yaml_d: dict = yaml_d) -> None:
 			print('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(phone_deployment_hub) + ' at stage ' + str(phone_deployment_status))
 	else:
 		print(phone, "is not deployed.")
-	return
+		return False
+	return True
 
 # remove phone
 def remove_phone(yaml_d: dict = yaml_d)->None:
