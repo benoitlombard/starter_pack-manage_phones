@@ -11,7 +11,7 @@ from add_phone import _get_ip, _get_unused_name		# CLI function : add
 from remove_undeploy_phone import undeploy_phone, remove_phone	 # CLI function : reploy, remove
 from change_phone import change_phone	 # CLI function : change
 from deploy_phone import deploy_phone	 # CLI function : deploy
-from display_infos import _list_phones, _list_from_yaml, _show_stage	# displaying infos
+from display_infos import _list_from_yaml, _show_stage	# displaying infos
 
 phone_management_app = typer.Typer()
 
@@ -201,11 +201,42 @@ def show_config(phone: str, mesure_time: bool = True)->bool:
 			typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 		return False
 
+#lists
+@phone_management_app.command()
+def lists(item_to_show: str = 'phones', stage_to_show: str = 'prod', mesure_time: bool = True)->bool:
+	"""
+	Change one or more value of a phone's data given his name\n
+	Exemples of use:		'python manage_phones_CLI.py lists --item-to-show phones
+							'python manage_phones_CLI.py lists --item-to-show bts
+							'python manage_phones_CLI.py lists --item-to-show stage
+	      			        'python manage_phones_CLI.py lists --item-to-show stage --stage-to-show dev
+          			        'python manage_phones_CLI.py lists --item-to-show undeployed_phones
+	"""
+	if mesure_time:
+		time_origin = time.time()
 
-
-
-
-
-
+	match item_to_show.lower():
+		case 'phones':
+			yaml.dump(yaml_d['phones'], sys.stdout)
+			ret = True
+		case 'bts' | 'biab':
+			ret = _list_from_yaml(item_to_show.lower(), yaml_d)
+		case 'stage':
+			ret = _show_stage(stage_to_show.lower(), yaml_d)
+		case 'undeployed_phones':
+			for phone in yaml_d['phones']:
+				if not yaml_d['phones'][phone]['deployed']:
+					print(yaml_d['phones'][phone])
+			ret = True
+		case _:
+			typer.secho(f'Error: Unknown entry: {item_to_show}', fg=typer.colors.RED)
+			return False
+	if ret:
+		if mesure_time:
+			typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
+		return True
+	else:
+		typer.secho('Something went wrong.', fg=typer.colors.RED)
+		return False
 
 phone_management_app()
