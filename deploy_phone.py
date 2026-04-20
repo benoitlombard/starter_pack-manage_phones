@@ -14,9 +14,7 @@ def _find_free_port(stage: str, yaml_d: dict = yaml_d, call_from_CLI: bool = Fal
 				if yaml_d[test_source][test_hub][port] is None:
 					return dict(hub_id = hub_id, port = port)
 		except KeyError:
-			if not call_from_CLI:
-				print("Error when trying to find a free port")
-			# add raise KeyError
+			return f"Error when trying to find a free port in {stage}.", False
 
 # deploy phone
 def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)-> int:
@@ -60,13 +58,15 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
 			indx = input('? ')
 			try:
 				selected_phone = list_phones[int(indx)]
-			except ValueError:
-				print('Unknown selection')
-				return 1 # Unknown selection
+			except:
+				return "Unknown selection.", False
 		else:
-			if yaml_d['phones'][phone]['deployed']:
-				return 3 # Phone already deployed
-			selected_phone = phone
+			try:
+				if yaml_d['phones'][phone]['deployed']:
+					return f'{phone} is already deployed.', False
+				selected_phone = phone
+			except:
+				return f'No phone named {phone}.', False
 
 		yaml_d['phones'][selected_phone]['deployment_path']['status'] = stage
 		yaml_d['phones'][selected_phone]['deployment_path']['hub'] = free_port['hub_id']
@@ -106,10 +106,8 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
 
 		with open(file_name, 'w') as yaml_file:
 			yaml.dump(yaml_d, yaml_file)
-			return 0
+			return f'{phone} successfully deployed in {stage}.', True
 	else:
-		if not call_from_CLI:
-			print('No free port at stage ' + stage)
-		return 2 # no free port in selected stage
-	return 4 # unknown error
+		return f'No free port in stage {stage}.', False
+	return 'An unknown error occured.', False
 

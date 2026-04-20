@@ -1,7 +1,7 @@
 from manage_phones import yaml_d, yaml, file_name
 
 # undeploy phone
-def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int:
+def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->tuple[str,bool]:
 	"""
 	Undeploy phone from 'stage', given his name\n
 	It particular, values from his 'deployment_path' are set to none, 'deployed' attribute is set to false\n
@@ -46,7 +46,7 @@ def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool =
 	
 
 # remove phone
-def remove_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int:
+def remove_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->tuple[str,bool]:
 	"""
 	Remove an existing phone by asking user for input\n
 	remove_phone will check if the phone is deployed and undeploy it if necessary befor removing it 

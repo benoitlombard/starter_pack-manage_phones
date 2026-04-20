@@ -2,7 +2,7 @@ import sys
 from manage_phones import yaml_d, yaml, file_name
 
 # change phone
-def change_phone(*args, **kwargs)->None:
+def change_phone(*args, **kwargs)->tuple[str,bool]:
 	"""
 	Allows user to change some informations from 'phones' data by asking which phone and what value of attribute he want to change
 	"""
@@ -10,9 +10,6 @@ def change_phone(*args, **kwargs)->None:
 	keys = ['phone', 'release_type', 'user', 'fota', 'activitytracking', 'functional', 'performance', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid', 'deployed', 'status', 'hub', 'port', 'yaml_d', 'call_from_CLI']
 	for key in keys:
 		new_data[key] = kwargs[key] if kwargs.get(key) else ''
-	print("phone =", new_data['phone'], "release_type =", new_data['release_type'], "user =", new_data['user'], "fota =", new_data['fota'], "activitytracking =", new_data['activitytracking'])
-
-	##### remplacer tous les  phones par new_data['phone'] notamment celui 3 lignes plus bas
 
 	while new_data['phone'] == '':
 		dict_of_phones = {}
@@ -27,16 +24,17 @@ def change_phone(*args, **kwargs)->None:
 			print("dict_of_phones[int(indx)] =", dict_of_phones[int(indx)])
 			print("new_data['phone'] =", new_data['phone'])
 			new_data['phone'] = dict_of_phones[int(indx)]
-		except KeyError:
-			print('Unknown selection')
-			return 1 # KeyError unknown selection
+		except:
+			return 'Unknown selection.', False
 	if new_data['call_from_CLI']:
-		for attribute in ['release_type', 'user', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid', 'deployed']:
-			yaml_d['phones'][new_data['phone']][attribute] = new_data[attribute] if new_data[attribute] != '' else yaml_d['phones'][new_data['phone']][attribute]
-		if new_data['status'] != '' or new_data['hub'] != '' or new_data['port'] != '':
-			for deployment_path_attribute in ['status', 'hub', 'port']:
-				yaml_d['phones'][new_data['phone']]['deployment_path'][deployment_path_attribute] = new_data[deployment_path_attribute] if new_data[deployment_path_attribute] != '' else yaml_d['phones'][new_data['phone']]['deployment_path'][deployment_path_attribute]
-
+		try:
+			for attribute in ['release_type', 'user', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid', 'deployed']:
+				yaml_d['phones'][new_data['phone']][attribute] = new_data[attribute] if new_data[attribute] != '' else yaml_d['phones'][new_data['phone']][attribute]
+			if new_data['status'] != '' or new_data['hub'] != '' or new_data['port'] != '':
+				for deployment_path_attribute in ['status', 'hub', 'port']:
+					yaml_d['phones'][new_data['phone']]['deployment_path'][deployment_path_attribute] = new_data[deployment_path_attribute] if new_data[deployment_path_attribute] != '' else yaml_d['phones'][new_data['phone']]['deployment_path'][deployment_path_attribute]
+		except KeyError:
+			return f"Phone {new_data['phone']} not found.", False
 		if new_data['fota'] != '' or new_data['activitytracking'] != '' or new_data['functional'] != '' or new_data['performance'] != '':
 			if not 'testrun_ids' in yaml_d['phones'][new_data['phone']]:
 				yaml_d['phones'][new_data['phone']]['testrun_ids'] = {}
@@ -86,10 +84,9 @@ def change_phone(*args, **kwargs)->None:
 			yaml_d['phones'][new_data['phone']]['testrun_ids'] = testrun_ids
 		else:
 			print('Unknown selection')
-			return 1 # KeyError unknown selection
+			return 'Unknown selection.', False
 		
 	with open(file_name, 'w') as w:
 		yaml.dump(yaml_d, w)
-		return 0 # success
-	return 2 # unknown failure during writing
-	
+		return f'{new_data['phone']} successfully changed.', True
+	return 'Error when writing to the yaml file.'

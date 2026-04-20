@@ -32,7 +32,7 @@ def _get_ip(yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int|None:
 		if not found :
 			return last_digit_ip
 
-def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', releasetype: str = '', write: str = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->bool|int:
+def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', releasetype: str = '', write: str = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->tuple[str,bool]:
 	"""
 	Allows the user to add a new phone by writing phone informations\n
 	The informations will be stored in the yaml file
@@ -128,5 +128,5 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
 			yaml.dump(yaml_d, yaml_file)
 			return f"{yaml_phone_name} successfully added !", True
 		return "Unknown error happened.", False
-	return f"{yaml_phone_name} successfully added, but not wrote on yaml file as user intended", True
+	return f"{yaml_phone_name} successfully added, but not saved in yaml file", True
 

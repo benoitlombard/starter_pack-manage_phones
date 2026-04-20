@@ -94,23 +94,12 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
 		return False
 	if mesure_time:
 		time_origin = time.time()
-	ret = change_phone(phone = phone, release_type = release_type, user = user, fota = fota, functional = functional, activitytracking = activitytracking,
+	ret = error_method(change_phone(phone = phone, release_type = release_type, user = user, fota = fota, functional = functional, activitytracking = activitytracking,
 					performance = performance, manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform,
-					ip = ip, udid = udid, deployed = deployed, status = status, hub = hub, port = port, yaml_d = yaml_d, call_from_CLI = True)
-
-	match ret:
-		case 0:
-			typer.secho(f'{phone} successfully changed.', fg=typer.colors.GREEN)
-		case 1:
-			typer.secho('Unknown selection.', fg=typer.colors.RED)
-		case 2:
-			typer.secho('Error when writing to the yaml file.', fg=typer.colors.RED)
-
+					ip = ip, udid = udid, deployed = deployed, status = status, hub = hub, port = port, yaml_d = yaml_d, call_from_CLI = True))
 	if mesure_time:
 		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
-	if ret > 0:
-		return False
-	return True
+	return ret
 
 #deploy
 @phone_management_app.command()
@@ -122,25 +111,10 @@ def deploy(phone: str, stage: str, mesure_time: bool = True)->bool:
 	"""
 	if mesure_time:
 		time_origin = time.time()
-	ret = deploy_phone(phone, stage, yaml_d, True)
-
-	match ret:
-		case 0:
-			typer.secho(f'{phone} successfully deployed in {stage}.', fg=typer.colors.GREEN)
-		case 1:
-			typer.secho('Unknown selection.', fg=typer.colors.RED)
-		case 2:
-			typer.secho(f'No free port in stage {stage}.', fg=typer.colors.RED)
-		case 3:
-			typer.secho(f'{phone} is already deployed.', fg=typer.colors.RED)
-		case 4:
-			typer.secho('An unknown error occured.', fg=typer.colors.RED)
-
+	ret = error_method(deploy_phone(phone, stage, yaml_d, True))
 	if mesure_time:
 		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
-	if ret > 0:
-		return False
-	return True
+	return ret
 
 #show_config
 @phone_management_app.command()
@@ -152,7 +126,6 @@ def show_config(phone: str, mesure_time: bool = True)->bool:
 	"""
 	if mesure_time:
 		time_origin = time.time()
-
 	try:
 		yaml.dump(yaml_d['phones'][phone], sys.stdout)
 		if mesure_time:

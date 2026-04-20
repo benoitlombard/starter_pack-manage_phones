@@ -48,7 +48,7 @@ if __name__ == "__main__":
 			case '1':
 				error_method_menu_version(add_phone.add_phone(releasetype = '', write = False, yaml_d = yaml_d, call_from_CLI= False))
 			case '2':
-				change_phone.change_phone(yaml_d = yaml_d, call_from_CLI= False)
+				error_method_menu_version(change_phone.change_phone(yaml_d = yaml_d, call_from_CLI= False))
 			case '3':
 				deploy_phone.deploy_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '4':
