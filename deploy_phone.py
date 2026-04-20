@@ -101,7 +101,7 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
 
 		yaml_d['phones'][selected_phone]['deployed'] = True
 
-		print('Phone deployed to ' + str(free_port['port']) + ' at hub ' + str(yaml_d['stages'][stage][free_port['hub_id']]['name']))
+		print(str(phone) + ' deployed to ' + str(free_port['port']) + ' at hub ' + str(yaml_d['stages'][stage][free_port['hub_id']]['name']))
 		print('Please connect phone as soon as possible')
 
 		with open(file_name, 'w') as yaml_file:

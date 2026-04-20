@@ -32,7 +32,7 @@ if __name__ == "__main__":
 		ret = input('? ')
 		match ret:
 			case '1':
-				add_phone.add_phone(yaml_d) # to change with CLI use
+				add_phone.add_phone(releasetype = '', write = False, yaml_d = yaml_d, call_from_CLI= False) # to change with CLI use
 			case '2':
 				change_phone.change_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '3':
@@ -42,4 +42,4 @@ if __name__ == "__main__":
 			case '5':
 				remove_undeploy_phone.remove_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '6':
-				display_infos.display(yaml_d) # to change with CLI use
+				display_infos.display(yaml_d)
