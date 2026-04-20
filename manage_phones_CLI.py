@@ -62,28 +62,17 @@ def undeploy(phone: str, mesure_time: bool = True)->bool:
 
 #remove
 @phone_management_app.command()
-def remove(phone: str, mesure_time: bool = True)->bool:
+def remove(phone: str = '', mesure_time: bool = True)->bool:
 	"""
 	Remove phone from 'stage' entry, given his name\n
-	Exemples of use:        'python manage_phones_CLI.py remove Erebos
+	Exemples of use:        'python manage_phones_CLI.py remove --phone Erebos
 	"""
 	if mesure_time:
 		time_origin = time.time()
-	ret = remove_phone(phone, yaml_d, True)
-
-	match ret:
-		case 0:
-			typer.secho(f'{phone} successfully removed.', fg=typer.colors.GREEN)
-		case 1:
-			typer.secho('User aborted phone removal.', fg=typer.colors.RED)
-		case 2:
-			typer.secho(f'{phone} not found.', fg=typer.colors.RED)
-
+	ret = error_method(remove_phone(phone, yaml_d, True))
 	if mesure_time:
 		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
-	if ret > 0:
-		return False
-	return True
+	return ret
 
 # change
 @phone_management_app.command()

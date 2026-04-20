@@ -64,12 +64,10 @@ def remove_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = F
 			del yaml_d['phones'][phone]
 			with open(file_name, 'w') as w:
 				yaml.dump(yaml_d, w)
-				return 0 # success
+				return f'{phone} successfully removed.', True
 		else:
-			return 1 # aborted
-	if not call_from_CLI:
-		print(phone + ' not found')
-	return 2 # phone not found
+			return 'User aborted phone removal.', False
+	return f'{phone} not found.', False
 
 
 
