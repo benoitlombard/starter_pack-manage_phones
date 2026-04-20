@@ -48,7 +48,7 @@ def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', u
 
 #undeploy
 @phone_management_app.command()
-def undeploy(phone: str, mesure_time: bool = True)->bool:
+def undeploy(phone: str = '', mesure_time: bool = True)->bool:
 	"""
 	Undeploy phone from 'stage', given his name\n
 	Exemples of use:        'python manage_phones_CLI.py undeploy --phone Aither
@@ -80,7 +80,7 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
 		   functional: str = '', performance: str = '', manufacturer: str = '', model: str = '',
 		   vendor: str = '', family: str = '', version: str = '', platform: str = '', ip: str = '',
 		   udid: str = '', deployed: str = '', status: str = '', hub: str = '', port: str = '',
-		   yaml_d: str = '', mesure_time: bool = True)->bool:
+		   mesure_time: bool = True)->bool:
 	"""
 	Change one or more value of a phone's data given his name\n
 	Exemples of use:        'python manage_phones_CLI.py change --phone Chaos --release-type PU100 --user jean
@@ -103,11 +103,11 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
 
 #deploy
 @phone_management_app.command()
-def deploy(phone: str, stage: str, mesure_time: bool = True)->bool:
+def deploy(phone: str = '', stage: str = '', mesure_time: bool = True)->bool:
 	"""
 	Deploy a phone given his name and the stage it should be deployed at\n
-	Exemples of use:        'python manage_phones_CLI.py deploy Chaos dev
-	      			        'python manage_phones_CLI.py deploy Chaos prod --no-mesure-time
+	Exemples of use:        'python manage_phones_CLI.py deploy --phone Chaos --stage dev
+	      			        'python manage_phones_CLI.py deploy --phone Chaos --stage prod --no-mesure-time
 	"""
 	if mesure_time:
 		time_origin = time.time()
@@ -118,11 +118,10 @@ def deploy(phone: str, stage: str, mesure_time: bool = True)->bool:
 
 #show_config
 @phone_management_app.command()
-def show_config(phone: str, mesure_time: bool = True)->bool:
+def show_config(phone: str = '', mesure_time: bool = True)->bool:
 	"""
 	Show the detailed data of a phone data given his name\n
-	Exemples of use:        'python manage_phones_CLI.py show-config Chaos
-	      			        'python manage_phones_CLI.py show-config zeus
+	Exemples of use:        'python manage_phones_CLI.py show-config --phone Chaos
 	"""
 	if mesure_time:
 		time_origin = time.time()

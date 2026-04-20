@@ -16,7 +16,6 @@ def _get_unused_name(yaml_d: dict = yaml_d, call_from_CLI: bool = False)->str:
 				unused_name = god_name
 				break
 	return unused_name
-	
 
 def _get_ip(yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int|None:
 	"""

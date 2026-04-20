@@ -6,6 +6,8 @@ def change_phone(*args, **kwargs)->tuple[str,bool]:
 	"""
 	Allows user to change some informations from 'phones' data by asking which phone and what value of attribute he want to change
 	"""
+	yaml_d = kwargs['yaml_d'] # unpacking yaml_d to handle recently created phones
+
 	new_data = {}
 	keys = ['phone', 'release_type', 'user', 'fota', 'activitytracking', 'functional', 'performance', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid', 'deployed', 'status', 'hub', 'port', 'yaml_d', 'call_from_CLI']
 	for key in keys:
@@ -83,10 +85,9 @@ def change_phone(*args, **kwargs)->tuple[str,bool]:
 			testrun_ids = dict(fota = new_data['fota'], activitytracking = new_data['activitytracking'], functional = new_data['functional'], performance = new_data['performance'])
 			yaml_d['phones'][new_data['phone']]['testrun_ids'] = testrun_ids
 		else:
-			print('Unknown selection')
 			return 'Unknown selection.', False
 		
 	with open(file_name, 'w') as w:
 		yaml.dump(yaml_d, w)
 		return f'{new_data['phone']} successfully changed.', True
-	return 'Error when writing to the yaml file.'
+	return 'Error when writing to the yaml file.', False

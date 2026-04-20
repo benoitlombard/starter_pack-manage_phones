@@ -44,7 +44,6 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
 
 	free_port = _find_free_port(stage, yaml_d, call_from_CLI)
 	if free_port is not None:
-
 		if phone == '':
 			print('Phone to deploy: ')
 			for phone in yaml_d['phones']:

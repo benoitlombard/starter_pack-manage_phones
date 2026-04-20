@@ -37,8 +37,7 @@ def _ask_user_for_sorting_parameters(phone_attribute: str, selected_vendor: str 
 
 	try:
 		ret = int(ret)
-	except ValueError:
-		print('Unknown selection')
+	except:
 		return False
 	if ret == atttribute_index + 1:
 		for phone in yaml_d['phones']:
@@ -66,18 +65,23 @@ def _list_phones(yaml_d: dict = yaml_d)->bool:
 	print('2: by model')
 	print('3: by platform')
 	ret = input('? ')
-	if ret == '1':
-		yaml.dump(yaml_d['phones'], sys.stdout)
-		return True
-	elif ret == '2':
-		sel_vendor = _ask_user_for_sorting_parameters('vendor', '', '', yaml_d)
-		if sel_vendor is not None:
-			sel_family = _ask_user_for_sorting_parameters('family', sel_vendor, '', yaml_d)
-			if sel_family is not None:
-				return _ask_user_for_sorting_parameters('version', sel_vendor, sel_family, yaml_d)
-	elif ret == '3':
-		return _ask_user_for_sorting_parameters('platform', '', '', yaml_d)
-	else:
+
+	try:
+		if ret == '1':
+			yaml.dump(yaml_d['phones'], sys.stdout)
+			return True
+		elif ret == '2':
+				sel_vendor = _ask_user_for_sorting_parameters('vendor', '', '', yaml_d)
+				if sel_vendor is not None:
+					sel_family = _ask_user_for_sorting_parameters('family', sel_vendor, '', yaml_d)
+					if sel_family is not None:
+						return _ask_user_for_sorting_parameters('version', sel_vendor, sel_family, yaml_d)
+		elif ret == '3':
+			return _ask_user_for_sorting_parameters('platform', '', '', yaml_d)
+		else:
+			print('Unknown selection')
+			return False
+	except:
 		print('Unknown selection')
 		return False
 	return
@@ -115,7 +119,7 @@ def display(yaml_d: dict = yaml_d)->bool:
 			print('Phone to show: ')
 			ret = input('? ')
 			try:
-				yaml.dump(yaml_d['phones'][phone], sys.stdout)
+				yaml.dump(yaml_d['phones'][ret], sys.stdout)
 				return True
 			except:
 				print("Phone not found.")
