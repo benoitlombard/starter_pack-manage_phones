@@ -51,7 +51,7 @@ def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', u
 def undeploy(phone: str, mesure_time: bool = True)->bool:
 	"""
 	Undeploy phone from 'stage', given his name\n
-	Exemples of use:        'python manage_phones_CLI.py undeploy Aither
+	Exemples of use:        'python manage_phones_CLI.py undeploy --phone Aither
 	"""
 	if mesure_time:
 		time_origin = time.time()

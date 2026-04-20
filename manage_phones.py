@@ -52,7 +52,7 @@ if __name__ == "__main__":
 			case '3':
 				deploy_phone.deploy_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '4':
-				remove_undeploy_phone.undeploy_phone(yaml_d = yaml_d, call_from_CLI= False)
+				error_method_menu_version(remove_undeploy_phone.undeploy_phone(yaml_d = yaml_d, call_from_CLI= False))
 			case '5':
 				remove_undeploy_phone.remove_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '6':

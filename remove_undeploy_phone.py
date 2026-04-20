@@ -1,7 +1,7 @@
 from manage_phones import yaml_d, yaml, file_name
 
 # undeploy phone
-def undeploy_phone(phone: str, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int:
+def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int:
 	"""
 	Undeploy phone from 'stage', given his name\n
 	It particular, values from his 'deployment_path' are set to none, 'deployed' attribute is set to false\n
@@ -17,9 +17,9 @@ def undeploy_phone(phone: str, yaml_d: dict = yaml_d, call_from_CLI: bool = Fals
 		indx = input('? ')
 		try:
 			phone = dict_of_phones[int(indx)]
-		except KeyError:
+		except:
 			return "Unknown selection.", False
-				
+		
 	try:
 		if yaml_d['phones'][phone]['deployed']:
 			phone_deployment_status = yaml_d['phones'][phone]['deployment_path']['status']
@@ -35,14 +35,14 @@ def undeploy_phone(phone: str, yaml_d: dict = yaml_d, call_from_CLI: bool = Fals
 			yaml_d['phones'][phone]['deployed'] = False
 		else:
 			return f"{phone} is not deployed.\nUndeployment is not possible.", False
-	except KeyError:
+	except:
 		return "Key Error when writing to the yaml file.\nUndeployment failed.", False
 
 	with open(file_name, 'w') as w:
 		yaml.dump(yaml_d, w)
-		if call_from_CLI:
-			return f"{phone} successfully undeployed.", True
 		print('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(phone_deployment_hub) + ' at stage ' + str(phone_deployment_status))
+		return f"{phone} successfully undeployed.", True
+	return "Unknown error happened.", False
 	
 
 # remove phone
