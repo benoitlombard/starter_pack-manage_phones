@@ -1,13 +1,12 @@
 #imports
 import typer
-import ruamel.yaml
 import time
 import sys
 
 from manage_phones import yaml_d, yaml, file_name
 
 # importing other functions
-from add_phone import _get_ip, _get_unused_name, add_phone		# CLI function : add    #XXXXXXXXXXXXXXXXXXXXXXXXXXX
+from add_phone import add_phone		 # CLI function : add
 from remove_undeploy_phone import undeploy_phone, remove_phone	 # CLI function : reploy, remove
 from change_phone import change_phone	 # CLI function : change
 from deploy_phone import deploy_phone	 # CLI function : deploy
@@ -15,34 +14,37 @@ from display_infos import _list_from_yaml, _show_stage	# displaying infos
 
 phone_management_app = typer.Typer()
 
+# error_method
+def error_method(args: list['message': str, 'is_success':bool])->bool:
+	"""
+	Print error/success message formated GREEN/RED using Typer module.\n
+	parameters of function: tuple= (message: str, is_success: bool)
+	"""
+	message = args[0]
+	is_success = args[1]
+	if is_success:
+		typer.secho(message, fg=typer.colors.GREEN)
+		return True
+	else:
+		typer.secho(message, fg=typer.colors.RED)
+		return False
+
 # add
 @phone_management_app.command()
 def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', release_type: str = 'PU1', write: str = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, mesure_time: bool = True)-> bool:
 	"""
 	Allows the user to add a new phone through CLI\n
 	The informations will be stored in the yaml file by default, except if optional argument write is set to False.\n
-	Exemples of use:     'python manage_phones_CLI.py add --vendor Apple --family ios3.0 --version 4.5 --udid Arwschio4cb8ac-cc4 --user john --release_type PU100
-                         'python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-Arwschio4cb8ac-cc4 --user johnny --release_type PU1 --write True --manufacturer microsoft
+	Exemples of use:     'python manage_phones_CLI.py add --vendor Apple --family ios3.0 --version 4.5 --udid Arwschio4cb8ac-cc4 --user john --release-type PU100
+                         'python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-Arwschio4cb8ac-cc4 --user johnny --release-type PU1 --write True --manufacturer microsoft
 						 'python manage_phones_CLI.py add --vendor Microsft --family msft --version 2 --udid udid-Arwschiddddd8888ac-cc4 --user johnny --manufacturer microsoft --fota fota_id_112 --activitytracking 44
 	"""
 	if mesure_time:
 		time_origin = time.time()
-	ret = add_phone(vendor, family, version, udid, user, release_type, write, fota, activitytracking,  functional, performance, manufacturer, model, yaml_d, True)
-	match ret:
-		case 0:
-			typer.secho('Phone successfully added !', fg=typer.colors.GREEN)
-		case 1:
-			typer.secho('Error when trying to add the phone:\nno ip available (see rtc_params range).', fg=typer.colors.RED)
-		case 2:
-			typer.secho('Error when trying to add the phone:\nthis udid has already been used for another phone.', fg=typer.colors.RED)
-		case 3:
-			typer.secho('Something went wrong.', fg=typer.colors.RED)
-		
+	ret = error_method(add_phone(vendor, family, version, udid, user, release_type, write, fota, activitytracking,  functional, performance, manufacturer, model, yaml_d, True))
 	if mesure_time:
 		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
-	if ret > 0:
-		return False
-	return True
+	return ret
 
 #undeploy
 @phone_management_app.command()
@@ -53,28 +55,16 @@ def undeploy(phone: str, mesure_time: bool = True)->bool:
 	"""
 	if mesure_time:
 		time_origin = time.time()
-	ret = undeploy_phone(phone, yaml_d, True)
-	match ret:
-		case 0:
-			typer.secho(f'{phone} successfully undeployed.', fg=typer.colors.GREEN)
-		case 1:
-			typer.secho('Unknown selection.', fg=typer.colors.RED)
-		case 2:
-			typer.secho('Key Error when writing to the yaml file.\nUndeployment failed', fg=typer.colors.RED)
-		case 3:
-			typer.secho(f'{phone} is not deployed.\nUndeployment is not possible', fg=typer.colors.RED)
-		
+	ret = error_method(undeploy_phone(phone, yaml_d, True))
 	if mesure_time:
 		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
-	if ret > 0:
-		return False
-	return True
+	return ret
 
 #remove
 @phone_management_app.command()
 def remove(phone: str, mesure_time: bool = True)->bool:
 	"""
-	Remove phone from 'stage', given his name\n
+	Remove phone from 'stage' entry, given his name\n
 	Exemples of use:        'python manage_phones_CLI.py remove Erebos
 	"""
 	if mesure_time:

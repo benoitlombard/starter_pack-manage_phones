@@ -18,9 +18,7 @@ def undeploy_phone(phone: str, yaml_d: dict = yaml_d, call_from_CLI: bool = Fals
 		try:
 			phone = dict_of_phones[int(indx)]
 		except KeyError:
-			if not call_from_CLI:
-				print("Error: unknown selection")
-			return 1 # KeyError: unknown selection
+			return "Unknown selection.", False
 				
 	try:
 		if yaml_d['phones'][phone]['deployed']:
@@ -36,18 +34,14 @@ def undeploy_phone(phone: str, yaml_d: dict = yaml_d, call_from_CLI: bool = Fals
 			yaml_d['phones'][phone]['deployment_path']['port'] = None
 			yaml_d['phones'][phone]['deployed'] = False
 		else:
-			if not call_from_CLI:
-				print(phone, "is not deployed.")
-			return 3 # phone not deployed
+			return f"{phone} is not deployed.\nUndeployment is not possible.", False
 	except KeyError:
-		if not call_from_CLI:
-			print("Key error phone has not been found")
-		return 2 # KeyError with the yaml file
+		return "Key Error when writing to the yaml file.\nUndeployment failed.", False
 
 	with open(file_name, 'w') as w:
 		yaml.dump(yaml_d, w)
 		if call_from_CLI:
-			return 0 # success
+			return f"{phone} successfully undeployed.", True
 		print('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(phone_deployment_hub) + ' at stage ' + str(phone_deployment_status))
 	
 

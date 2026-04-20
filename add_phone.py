@@ -77,11 +77,7 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
 			releasetype = 'PU100'
 	ip = _get_ip(yaml_d, call_from_CLI)
 	if ip is None:
-		if call_from_CLI:
-			return 1 # no ip available
-		print("Impossible to add a new phone:")
-		print("There is no ip available at the moment")
-		return False
+		return "Impossible to add a new phone:\nThere is no ip available at the moment", False
 	ip = '192.168.5.' + str(ip)
 	print('IP used: ' + ip)
 	if not call_from_CLI:
@@ -92,10 +88,7 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
 		udid = input('? ')
 	for phone in yaml_d['phones']:
 		if yaml_d['phones'][phone]['udid'] == udid:
-			if call_from_CLI:
-				return 2 # udid already used
-			print('Phone with ' + udid + ' already exists')
-			return False
+			return "Error when trying to add the phone:\nthis udid has already been used for another phone.", False
 	user = 'rtc-' + yaml_phone_name + '@cobi.bike'
 	"""
 	New infos in yaml file's 'phone' section: 
@@ -133,6 +126,7 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
 		yaml_d['phones'][yaml_phone_name] = new_phone_record
 		with open(file_name, 'w') as yaml_file:
 			yaml.dump(yaml_d, yaml_file)
-			return 0 # Success
-	return 3 # Unkown error
+			return f"{yaml_phone_name} successfully added !", True
+		return "Unknown error happened.", False
+	return f"{yaml_phone_name} successfully added, but not wrote on yaml file as user intended", True
 
