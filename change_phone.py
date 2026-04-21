@@ -1,5 +1,5 @@
 import sys
-from manage_phones import yaml_d, yaml, file_name
+from manage_phones import yaml, file_name
 from error_methods import error_printing
 
 # change phone

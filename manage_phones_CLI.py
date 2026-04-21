@@ -1,4 +1,3 @@
-#imports
 import typer
 import time
 import sys
