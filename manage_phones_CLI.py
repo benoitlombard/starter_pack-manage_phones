@@ -3,7 +3,7 @@ import typer
 import time
 import sys
 
-from manage_phones import yaml_d, yaml, file_name
+from manage_phones import yaml_d, yaml
 
 # importing other functions
 from add_phone import add_phone		 # CLI function : add
@@ -13,21 +13,6 @@ from deploy_phone import deploy_phone	 # CLI function : deploy
 from display_infos import _list_from_yaml, _show_stage	# displaying infos
 
 phone_management_app = typer.Typer()
-
-# error_method
-def error_method(args: list['message': str, 'is_success':bool])->bool:
-	"""
-	Print error/success message formated GREEN/RED using Typer module.\n
-	parameters of function: tuple= (message: str, is_success: bool)
-	"""
-	message = args[0]
-	is_success = args[1]
-	if is_success:
-		typer.secho(message, fg=typer.colors.GREEN)
-		return True
-	else:
-		typer.secho(message, fg=typer.colors.RED)
-		return False
 
 # add
 @phone_management_app.command()
@@ -41,7 +26,7 @@ def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', u
 	"""
 	if mesure_time:
 		time_origin = time.time()
-	ret = error_method(add_phone(vendor, family, version, udid, user, release_type, write, fota, activitytracking,  functional, performance, manufacturer, model, yaml_d, True))
+	ret = add_phone(vendor, family, version, udid, user, release_type, write, fota, activitytracking,  functional, performance, manufacturer, model, yaml_d, True)
 	if mesure_time:
 		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 	return ret
@@ -55,7 +40,7 @@ def undeploy(phone: str = '', mesure_time: bool = True)->bool:
 	"""
 	if mesure_time:
 		time_origin = time.time()
-	ret = error_method(undeploy_phone(phone, yaml_d, True))
+	ret = undeploy_phone(phone, yaml_d, True)
 	if mesure_time:
 		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 	return ret
@@ -69,7 +54,7 @@ def remove(phone: str = '', mesure_time: bool = True)->bool:
 	"""
 	if mesure_time:
 		time_origin = time.time()
-	ret = error_method(remove_phone(phone, yaml_d, True))
+	ret = remove_phone(phone, yaml_d, True)
 	if mesure_time:
 		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 	return ret
@@ -94,9 +79,9 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
 		return False
 	if mesure_time:
 		time_origin = time.time()
-	ret = error_method(change_phone(phone = phone, release_type = release_type, user = user, fota = fota, functional = functional, activitytracking = activitytracking,
+	ret = change_phone(phone = phone, release_type = release_type, user = user, fota = fota, functional = functional, activitytracking = activitytracking,
 					performance = performance, manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform,
-					ip = ip, udid = udid, deployed = deployed, status = status, hub = hub, port = port, yaml_d = yaml_d, call_from_CLI = True))
+					ip = ip, udid = udid, deployed = deployed, status = status, hub = hub, port = port, yaml_d = yaml_d, call_from_CLI = True)
 	if mesure_time:
 		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 	return ret
@@ -111,7 +96,7 @@ def deploy(phone: str = '', stage: str = '', mesure_time: bool = True)->bool:
 	"""
 	if mesure_time:
 		time_origin = time.time()
-	ret = error_method(deploy_phone(phone, stage, yaml_d, True))
+	ret = deploy_phone(phone, stage, yaml_d, True)
 	if mesure_time:
 		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 	return ret
@@ -138,12 +123,11 @@ def show_config(phone: str = '', mesure_time: bool = True)->bool:
 
 #lists
 @phone_management_app.command()
-def lists(item_to_show: str = 'phones', stage_to_show: str = 'prod', mesure_time: bool = True)->bool:
+def lists(item_to_show: str = '', stage_to_show: str = '', mesure_time: bool = True)->bool:
 	"""
 	Print available data in yaml file given item-to-show parameter and stage-to-show parameter if the item is a stage\n
 	Exemples of use:		'python manage_phones_CLI.py lists --item-to-show phones
 							'python manage_phones_CLI.py lists --item-to-show bts
-							'python manage_phones_CLI.py lists --item-to-show stage
 	      			        'python manage_phones_CLI.py lists --item-to-show stage --stage-to-show dev
           			        'python manage_phones_CLI.py lists --item-to-show undeployed_phones
 	"""
@@ -156,21 +140,25 @@ def lists(item_to_show: str = 'phones', stage_to_show: str = 'prod', mesure_time
 		case 'bts' | 'biab':
 			ret = _list_from_yaml(item_to_show.lower(), yaml_d)
 		case 'stage':
-			ret = _show_stage(stage_to_show.lower(), yaml_d)
+			try:
+				ret = _show_stage(stage_to_show.lower(), yaml_d)
+			except KeyError as err:
+				typer.secho(f"KeyError: makes sure 'stage' value is either 'dev' or 'prod'.", fg=typer.colors.RED)
+				raise err
 		case 'undeployed_phones':
 			for phone in yaml_d['phones']:
 				if not yaml_d['phones'][phone]['deployed']:
 					print(yaml_d['phones'][phone])
 			ret = True
 		case _:
-			typer.secho(f'Error: Unknown entry: {item_to_show}', fg=typer.colors.RED)
+			typer.secho(f"Error: User input do not match selection: '{item_to_show}'.", fg=typer.colors.RED)
 			return False
 	if ret:
 		if mesure_time:
 			typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 		return True
 	else:
-		typer.secho('Something went wrong.', fg=typer.colors.RED)
+		typer.secho('An unknown error occured.', fg=typer.colors.RED)
 		if mesure_time:
 			typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 		return False

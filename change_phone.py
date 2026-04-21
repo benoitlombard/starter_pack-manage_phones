@@ -1,5 +1,6 @@
 import sys
 from manage_phones import yaml_d, yaml, file_name
+from error_methods import error_printing
 
 # change phone
 def change_phone(*args, **kwargs)->tuple[str,bool]:
@@ -7,7 +8,6 @@ def change_phone(*args, **kwargs)->tuple[str,bool]:
 	Allows user to change some informations from 'phones' data by asking which phone and what value of attribute he want to change
 	"""
 	yaml_d = kwargs['yaml_d'] # unpacking yaml_d to handle recently created phones
-
 	new_data = {}
 	keys = ['phone', 'release_type', 'user', 'fota', 'activitytracking', 'functional', 'performance', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid', 'deployed', 'status', 'hub', 'port', 'yaml_d', 'call_from_CLI']
 	for key in keys:
@@ -22,12 +22,17 @@ def change_phone(*args, **kwargs)->tuple[str,bool]:
 			print('\t' + yaml_d['phones'][phone]['vendor'] + ' ' + yaml_d['phones'][phone]['family'] + ' ' + str(yaml_d['phones'][phone]['version']))
 		indx = input('? ')
 		try:
-			print("indx =", indx)
-			print("dict_of_phones[int(indx)] =", dict_of_phones[int(indx)])
-			print("new_data['phone'] =", new_data['phone'])
 			new_data['phone'] = dict_of_phones[int(indx)]
-		except:
-			return 'Unknown selection.', False
+		except ValueError as err:
+			error_printing("ValueError: User input do not match selection.", False)
+			if new_data['call_from_CLI']:
+				raise err
+			return False
+		except KeyError as err:
+			error_printing("KeyError: User input do not match selection.", False)
+			if new_data['call_from_CLI']:
+				raise err
+			return False
 	if new_data['call_from_CLI']:
 		try:
 			for attribute in ['release_type', 'user', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid', 'deployed']:
@@ -35,8 +40,11 @@ def change_phone(*args, **kwargs)->tuple[str,bool]:
 			if new_data['status'] != '' or new_data['hub'] != '' or new_data['port'] != '':
 				for deployment_path_attribute in ['status', 'hub', 'port']:
 					yaml_d['phones'][new_data['phone']]['deployment_path'][deployment_path_attribute] = new_data[deployment_path_attribute] if new_data[deployment_path_attribute] != '' else yaml_d['phones'][new_data['phone']]['deployment_path'][deployment_path_attribute]
-		except KeyError:
-			return f"Phone {new_data['phone']} not found.", False
+		except KeyError as err:
+			error_printing(f"Phone {new_data['phone']} not found.", False)
+			if new_data['call_from_CLI']:
+				raise err
+			return False
 		if new_data['fota'] != '' or new_data['activitytracking'] != '' or new_data['functional'] != '' or new_data['performance'] != '':
 			if not 'testrun_ids' in yaml_d['phones'][new_data['phone']]:
 				yaml_d['phones'][new_data['phone']]['testrun_ids'] = {}
@@ -85,9 +93,12 @@ def change_phone(*args, **kwargs)->tuple[str,bool]:
 			testrun_ids = dict(fota = new_data['fota'], activitytracking = new_data['activitytracking'], functional = new_data['functional'], performance = new_data['performance'])
 			yaml_d['phones'][new_data['phone']]['testrun_ids'] = testrun_ids
 		else:
-			return 'Unknown selection.', False
+			error_printing("KeyError: User input do not match selection.", False)
+			return False
 		
 	with open(file_name, 'w') as w:
 		yaml.dump(yaml_d, w)
-		return f'{new_data['phone']} successfully changed.', True
-	return 'Error when writing to the yaml file.', False
+		error_printing(f'{new_data['phone']} successfully changed.', True)
+		return True
+	error_printing('Error when writing to the yaml file.', False)
+	return False

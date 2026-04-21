@@ -1,5 +1,6 @@
 import ruamel.yaml
 from manage_phones import yaml_d, yaml, file_name
+from error_methods import error_printing
 
 # Add phone
 def _get_unused_name(yaml_d: dict = yaml_d, call_from_CLI: bool = False)->str:
@@ -37,7 +38,7 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
 	The informations will be stored in the yaml file
 	"""
 	yaml_phone_name = _get_unused_name(yaml_d, call_from_CLI)
-	print('RTC device name: ' + yaml_phone_name)
+	error_printing('RTC device name: ' + yaml_phone_name, True)
 	if not call_from_CLI:
 		print('Vendor:')
 		vendor = input('? ')
@@ -60,7 +61,7 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
 		platform = 'ios'
 	else:
 		platform = 'android'
-	print('Platform set to: ' + platform)
+	error_printing('Platform set to: ' + platform, True)
 	if releasetype == '':
 		print('Release type:')
 		print('1: PU1')
@@ -76,9 +77,10 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
 			releasetype = 'PU100'
 	ip = _get_ip(yaml_d, call_from_CLI)
 	if ip is None:
-		return "Impossible to add a new phone:\nThere is no ip available at the moment", False
+		error_printing("Impossible to add a new phone:\nThere is no ip available at the moment", False)
+		return False
 	ip = '192.168.5.' + str(ip)
-	print('IP used: ' + ip)
+	error_printing('IP used: ' + ip, True)
 	if not call_from_CLI:
 		print('UDID:')
 		udid = input('? ')
@@ -87,7 +89,8 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
 		udid = input('? ')
 	for phone in yaml_d['phones']:
 		if yaml_d['phones'][phone]['udid'] == udid:
-			return "Error when trying to add the phone:\nthis udid has already been used for another phone.", False
+			error_printing("Error when trying to add the phone:\nThis udid has already been used for another phone.", False)
+			return False
 	user = 'rtc-' + yaml_phone_name + '@cobi.bike'
 	"""
 	New infos in yaml file's 'phone' section: 
@@ -118,14 +121,16 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
 			new_phone_record = ruamel.yaml.CommentedMap(name = yaml_phone_name, manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path, testrun_ids = testrun_ids)
 		else:
 			new_phone_record = ruamel.yaml.CommentedMap(name = yaml_phone_name, manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform, release_type = releasetype, ip = ip, udid = udid, user = user, deployed = deployed, deployment_path = deployment_path)
-	
 	new_phone_record.yaml_set_anchor(yaml_phone_name, always_dump=True)
 
 	if write or input('add entry to yaml? y|n ').lower() == 'y':
 		yaml_d['phones'][yaml_phone_name] = new_phone_record
 		with open(file_name, 'w') as yaml_file:
 			yaml.dump(yaml_d, yaml_file)
-			return f"{yaml_phone_name} successfully added !", True
-		return "Unknown error happened.", False
-	return f"{yaml_phone_name} successfully added, but not saved in yaml file", True
+			error_printing(f"{yaml_phone_name} successfully added.", True)
+			return True
+		error_printing("An unknown error happened.", False)
+		return False
+	error_printing(f"{yaml_phone_name} successfully added, but not saved in yaml file", True)
+	return True
 

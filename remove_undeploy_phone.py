@@ -1,4 +1,5 @@
 from manage_phones import yaml_d, yaml, file_name
+from error_methods import error_printing
 
 # undeploy phone
 def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->tuple[str,bool]:
@@ -17,9 +18,16 @@ def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool =
 		indx = input('? ')
 		try:
 			phone = dict_of_phones[int(indx)]
-		except:
-			return "Unknown selection.", False
-		
+		except ValueError as err:
+			error_printing("Error: User input do not match selection.", False)
+			if call_from_CLI:
+				raise err
+			return False
+		except KeyError as err:
+			error_printing("Error: User input do not match selection.", False)
+			if call_from_CLI:
+				raise err
+			return False
 	try:
 		if yaml_d['phones'][phone]['deployed']:
 			phone_deployment_status = yaml_d['phones'][phone]['deployment_path']['status']
@@ -34,16 +42,21 @@ def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool =
 			yaml_d['phones'][phone]['deployment_path']['port'] = None
 			yaml_d['phones'][phone]['deployed'] = False
 		else:
-			return f"{phone} is not deployed.\nUndeployment is not possible.", False
-	except:
-		return "Key Error when writing to the yaml file.\nUndeployment failed.", False
+			error_printing(f"{phone} is not deployed.\nUndeployment is not possible.", False)
+			return False
+	except KeyError as err:
+		error_printing("Key Error when writing to the yaml file.\nUndeployment failed, please verify phone name.", False)
+		if call_from_CLI:
+			raise err
+		return False
 
 	with open(file_name, 'w') as w:
 		yaml.dump(yaml_d, w)
-		print('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(phone_deployment_hub) + ' at stage ' + str(phone_deployment_status))
-		return f"{phone} successfully undeployed.", True
-	return "Unknown error happened.", False
-	
+		error_printing(f"{phone} successfully undeployed.", True)
+		error_printing('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(hub_name) + ' at stage ' + str(phone_deployment_status), True)
+		return True
+	error_printing("An unknown error happened.", False)
+	return False
 
 # remove phone
 def remove_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->tuple[str,bool]:
@@ -58,16 +71,20 @@ def remove_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = F
 		if not call_from_CLI:
 			print('Sure to remove ' + phone + ' from test inventory?')
 			print('You can just undeploy from test stages.')
+
 		if call_from_CLI or input('enter yes if are sure: ').lower() == 'yes':
 			if yaml_d['phones'][phone]['deployed']:
-				undeploy_phone(phone, yaml_d, call_from_CLI) # passing call_from_CLI argument
+				undeploy_phone(phone, yaml_d, call_from_CLI)
 			del yaml_d['phones'][phone]
 			with open(file_name, 'w') as w:
 				yaml.dump(yaml_d, w)
-				return f'{phone} successfully removed.', True
+				error_printing(f'{phone} successfully removed.', True)
+				return True
 		else:
-			return 'User aborted phone removal.', False
-	return f'{phone} not found.', False
+			error_printing('User aborted phone removal.', False)
+			return False
+	error_printing(f"Error: phone '{phone}' not found.", False)
+	return False
 
 
 

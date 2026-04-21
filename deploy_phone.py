@@ -1,20 +1,27 @@
 import ruamel.yaml
 from manage_phones import yaml_d, yaml, file_name
+from error_methods import error_printing
 
 def _find_free_port(stage: str, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->dict[int, str]:
 	"""
 	return path to the first port of value 'None' found by looping through 'stages'[stage] for a given 'stage'\n
 	the values of 'stage' can only be 'dev' or 'prod'
 	"""
-	for hub_id in range(len(yaml_d['stages'][stage])):
-		try:
-			test_source = yaml_d['stages'][stage][hub_id]['source_name']
-			test_hub = yaml_d['stages'][stage][hub_id]['hub_name']
-			for port in yaml_d['stages'][stage][hub_id]:
-				if yaml_d[test_source][test_hub][port] is None:
-					return dict(hub_id = hub_id, port = port)
-		except KeyError:
-			return f"Error when trying to find a free port in {stage}.", False
+	try:
+		for hub_id in range(len(yaml_d['stages'][stage])):
+			
+				test_source = yaml_d['stages'][stage][hub_id]['source_name']
+				test_hub = yaml_d['stages'][stage][hub_id]['hub_name']
+				for port in yaml_d['stages'][stage][hub_id]:
+					if yaml_d[test_source][test_hub][port] is None:
+						return dict(hub_id = hub_id, port = port)
+				error_printing(f"Error when trying to find a free port:\nNo free port available in stage '{stage}'.", False)
+				return False
+	except KeyError as err:
+		error_printing(f"Error when trying to find a free port:\nPlease make sure the stage '{stage}' exists.", False)
+		if call_from_CLI:
+			raise err
+		return False
 
 # deploy phone
 def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)-> int:
@@ -39,11 +46,11 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
 		elif ret == '2':
 			stage = 'dev'
 		else:
-			print('Unknown selection')
+			print('User input do not match selection')
 			stage = ''
 
 	free_port = _find_free_port(stage, yaml_d, call_from_CLI)
-	if free_port is not None:
+	if free_port is not None and free_port is not False:
 		if phone == '':
 			print('Phone to deploy: ')
 			for phone in yaml_d['phones']:
@@ -57,15 +64,27 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
 			indx = input('? ')
 			try:
 				selected_phone = list_phones[int(indx)]
-			except:
-				return "Unknown selection.", False
+			except ValueError as err:
+				error_printing("ValueError: User input do not match selection.", False)
+				if call_from_CLI:
+					raise err
+				return False
+			except IndexError as err:
+				error_printing("IndexError: User input do not match selection.", False)
+				if call_from_CLI:
+					raise err
+				return False
 		else:
 			try:
 				if yaml_d['phones'][phone]['deployed']:
-					return f'{phone} is already deployed.', False
+					error_printing(f'{phone} is already deployed.', False)
+					return False
 				selected_phone = phone
-			except:
-				return f'No phone named {phone}.', False
+			except KeyError as err:
+				error_printing(f'No phone named {phone}.', False)
+				if call_from_CLI:
+					raise err
+				return False
 
 		yaml_d['phones'][selected_phone]['deployment_path']['status'] = stage
 		yaml_d['phones'][selected_phone]['deployment_path']['hub'] = free_port['hub_id']
@@ -100,13 +119,15 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
 
 		yaml_d['phones'][selected_phone]['deployed'] = True
 
-		print(str(phone) + ' deployed to ' + str(free_port['port']) + ' at hub ' + str(yaml_d['stages'][stage][free_port['hub_id']]['name']))
+		error_printing(str(phone) + ' deployed to ' + str(free_port['port']) + ' at hub ' + str(yaml_d['stages'][stage][free_port['hub_id']]['name']), True)
 		print('Please connect phone as soon as possible')
 
 		with open(file_name, 'w') as yaml_file:
 			yaml.dump(yaml_d, yaml_file)
-			return f'{phone} successfully deployed in {stage}.', True
+			error_printing(f'{selected_phone} successfully deployed in {stage}.', True)
+			return True
 	else:
-		return f'No free port in stage {stage}.', False
-	return 'An unknown error occured.', False
+		return False
+	error_printing('An unknown error occured.', False)
+	return False
 

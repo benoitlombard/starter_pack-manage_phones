@@ -1,5 +1,6 @@
 import sys
 from manage_phones import yaml_d, yaml
+from error_methods import error_printing
 
 def _list_from_yaml(yaml_list_key: str, yaml_d: dict = yaml_d)->bool:
 	"""
@@ -37,7 +38,8 @@ def _ask_user_for_sorting_parameters(phone_attribute: str, selected_vendor: str 
 
 	try:
 		ret = int(ret)
-	except:
+	except ValueError:
+		error_printing("Error: User input do not match selection.", False)
 		return False
 	if ret == atttribute_index + 1:
 		for phone in yaml_d['phones']:
@@ -55,6 +57,9 @@ def _ask_user_for_sorting_parameters(phone_attribute: str, selected_vendor: str 
 				if list_of_selected_attribute[ret] == yaml_d['phones'][phone]['platform']:
 					yaml.dump(yaml_d['phones'][phone], sys.stdout)
 		return list_of_selected_attribute[ret]
+	else:
+		error_printing("Error: User input do not match selection.", False)
+		return False
 
 
 def _list_phones(yaml_d: dict = yaml_d)->bool:
@@ -65,7 +70,6 @@ def _list_phones(yaml_d: dict = yaml_d)->bool:
 	print('2: by model')
 	print('3: by platform')
 	ret = input('? ')
-
 	try:
 		if ret == '1':
 			yaml.dump(yaml_d['phones'], sys.stdout)
@@ -79,12 +83,11 @@ def _list_phones(yaml_d: dict = yaml_d)->bool:
 		elif ret == '3':
 			return _ask_user_for_sorting_parameters('platform', '', '', yaml_d)
 		else:
-			print('Unknown selection')
+			error_printing("Error: User input do not match selection.", False)
 			return False
 	except:
-		print('Unknown selection')
 		return False
-	return
+	return True
 
 def display(yaml_d: dict = yaml_d)->bool:
 	"""
@@ -101,28 +104,29 @@ def display(yaml_d: dict = yaml_d)->bool:
 	match ret:
 		case '1':
 			return _list_phones(yaml_d)
-		case '2':				#new function
-			return _list_from_yaml('bts', yaml_d)
-		case '3':				#new function (same as previous)
-			return _list_from_yaml('biab', yaml_d)
+		case '2':
+			return _list_from_yaml('bts', yaml_d) # new function
+		case '3':
+			return _list_from_yaml('biab', yaml_d) # new function (same as previous)
 		case '4':
 			return _show_stage('prod', yaml_d)
 		case '5':
 			return _show_stage('dev', yaml_d)
-		case '6':				#deleted call to check_deployed (optimizing)
+		case '6':
 			print('Not deployed phones:')
 			for phone in yaml_d['phones']:
 				if not yaml_d['phones'][phone]['deployed']:
 					print(yaml_d['phones'][phone])
 			return True
-		case '7':				#new function
+		case '7':				# new function
 			print('Phone to show: ')
 			ret = input('? ')
 			try:
 				yaml.dump(yaml_d['phones'][ret], sys.stdout)
 				return True
 			except:
-				print("Phone not found.")
+				error_printing(f"Error: phone '{ret}' not found.", False)
 				return False
 		case _:
+			error_printing("User input do not match selection.", False)
 			return False

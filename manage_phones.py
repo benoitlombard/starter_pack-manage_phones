@@ -46,14 +46,14 @@ if __name__ == "__main__":
 		ret = input('? ')
 		match ret:
 			case '1':
-				error_method_menu_version(add_phone.add_phone(releasetype = '', write = False, yaml_d = yaml_d, call_from_CLI= False))
+				add_phone.add_phone(releasetype = '', write = False, yaml_d = yaml_d, call_from_CLI= False)
 			case '2':
-				error_method_menu_version(change_phone.change_phone(yaml_d = yaml_d, call_from_CLI= False))
+				change_phone.change_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '3':
 				deploy_phone.deploy_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '4':
-				error_method_menu_version(remove_undeploy_phone.undeploy_phone(yaml_d = yaml_d, call_from_CLI= False))
+				remove_undeploy_phone.undeploy_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '5':
-				error_method_menu_version(remove_undeploy_phone.remove_phone(yaml_d = yaml_d, call_from_CLI= False))
+				remove_undeploy_phone.remove_phone(yaml_d = yaml_d, call_from_CLI= False)
 			case '6':
 				display_infos.display(yaml_d)
