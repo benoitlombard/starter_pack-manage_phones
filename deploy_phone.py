@@ -17,16 +17,16 @@ def _find_free_port(stage: str, yaml_d: dict = yaml_d, call_from_CLI: bool = Fal
                     if yaml_d[test_source][test_hub][port] is None:
                         return dict(hub_id = hub_id, port = port)
                 error_printing(f"Error when trying to find a free port:\nNo free port available in stage '{stage}'.", False)
-                return False
+                return
     except KeyError as err:
         error_printing(f"Error when trying to find a free port:\nPlease make sure the stage '{stage}' exists.", False)
         if call_from_CLI:
             raise err
-        return False
+        return
 
 # deploy phone
 @decorator_timer
-def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)-> int:
+def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->None:
     """
     Deploy an existing phone by asking user for input\n
     1) Ask user for what stage he wants between 'dev' or 'prod' as deployment stage\n
@@ -51,7 +51,7 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
             stage = ''
 
     free_port = _find_free_port(stage, yaml_d, call_from_CLI)
-    if free_port is not None and free_port is not False:
+    if free_port is not None:
         if phone == '':
             list_of_phones_deployed = set()
             print('Phone to deploy: ')
@@ -70,23 +70,23 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
                 error_printing("ValueError: User input do not match selection.", False)
                 if call_from_CLI:
                     raise err
-                return False
+                return
             except IndexError as err:
                 error_printing("IndexError: User input do not match selection.", False)
                 if call_from_CLI:
                     raise err
-                return False
+                return
         else:
             try:
                 if yaml_d['phones'][phone]['deployed']:
                     error_printing(f'{phone} is already deployed.', False)
-                    return False
+                    return
                 selected_phone = phone
             except KeyError as err:
                 error_printing(f'No phone named {phone}.', False)
                 if call_from_CLI:
                     raise err
-                return False
+                return
 
         yaml_d['phones'][selected_phone]['deployment_path']['status'] = stage
         yaml_d['phones'][selected_phone]['deployment_path']['hub'] = free_port['hub_id']
@@ -127,7 +127,3 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
         with open(file_name, 'w') as yaml_file:
             yaml.dump(yaml_d, yaml_file)
             error_printing(f'{selected_phone} successfully deployed in {stage}.', True)
-            return True
-    else:
-        return False
-

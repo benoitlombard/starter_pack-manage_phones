@@ -34,7 +34,7 @@ def _get_ip(yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int|None:
             return last_digit_ip
 
 @decorator_timer
-def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', releasetype: str = '', write: str = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->tuple[str,bool]:
+def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', releasetype: str = '', write: str = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->None:
     """
     Allows the user to add a new phone by writing phone information\n
     The information will be stored in the yaml file
@@ -80,7 +80,7 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
     ip = _get_ip(yaml_d, call_from_CLI)
     if ip is None:
         error_printing("Impossible to add a new phone:\nThere is no ip available at the moment", False)
-        return False
+        return
     ip = '192.168.5.' + str(ip)
     error_printing('IP used: ' + ip, True)
     if not call_from_CLI:
@@ -92,7 +92,7 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
     for phone in yaml_d['phones']:
         if yaml_d['phones'][phone]['udid'] == udid:
             error_printing(f"Error when trying to add the phone:\nThis udid has already been used for phone '{phone}'.", False)
-            return False
+            return
     user = 'rtc-' + yaml_phone_name + '@cobi.bike'
     """
     New infos in yaml file's 'phone' section: 
@@ -130,9 +130,8 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
         with open(file_name, 'w') as yaml_file:
             yaml.dump(yaml_d, yaml_file)
             error_printing(f"{yaml_phone_name} successfully added.", True)
-            return True
+            return
         error_printing('Error when writing to the yaml file.', False)
-        return False
+        return
     error_printing(f"{yaml_phone_name} successfully added, but not saved in yaml file", True)
-    return True
 

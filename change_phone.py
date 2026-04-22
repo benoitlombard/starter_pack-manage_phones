@@ -5,7 +5,7 @@ from decorators_file import decorator_timer
 
 # change phone
 @decorator_timer
-def change_phone(*args, **kwargs)->tuple[str,bool]:
+def change_phone(*args, **kwargs)->None:
     """
     Allows user to change some information from 'phones' data by asking which phone and what value of attribute he want to change
     """
@@ -29,12 +29,12 @@ def change_phone(*args, **kwargs)->tuple[str,bool]:
             error_printing("ValueError: User input do not match selection.", False)
             if new_data['call_from_CLI']:
                 raise err
-            return False
+            return
         except KeyError as err:
             error_printing("KeyError: User input do not match selection.", False)
             if new_data['call_from_CLI']:
                 raise err
-            return False
+            return
     if new_data['call_from_CLI']:
         try:
             for attribute in ['release_type', 'user', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid', 'deployed']:
@@ -46,7 +46,7 @@ def change_phone(*args, **kwargs)->tuple[str,bool]:
             error_printing(f"Phone {new_data['phone']} not found.", False)
             if new_data['call_from_CLI']:
                 raise err
-            return False
+            return
         if new_data['fota'] != '' or new_data['activitytracking'] != '' or new_data['functional'] != '' or new_data['performance'] != '':
             if not 'testrun_ids' in yaml_d['phones'][new_data['phone']]:
                 yaml_d['phones'][new_data['phone']]['testrun_ids'] = {}
@@ -96,11 +96,10 @@ def change_phone(*args, **kwargs)->tuple[str,bool]:
             yaml_d['phones'][new_data['phone']]['testrun_ids'] = testrun_ids
         else:
             error_printing("KeyError: User input do not match selection.", False)
-            return False
+            return
         
     with open(file_name, 'w') as w:
         yaml.dump(yaml_d, w)
         error_printing(f'{new_data['phone']} successfully changed.', True)
-        return True
+        return
     error_printing('Error when writing to the yaml file.', False)
-    return False

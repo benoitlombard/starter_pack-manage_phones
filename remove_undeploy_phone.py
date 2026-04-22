@@ -4,7 +4,7 @@ from decorators_file import decorator_timer
 
 # undeploy phone
 @decorator_timer
-def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->tuple[str,bool]:
+def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->None:
     """
     Undeploy phone from 'stage', given his name\n
     It particular, values from his 'deployment_path' are set to none, 'deployed' attribute is set to false\n
@@ -24,12 +24,12 @@ def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool =
             error_printing("Error: User input do not match selection.", False)
             if call_from_CLI:
                 raise err
-            return False
+            return
         except KeyError as err:
             error_printing("Error: User input do not match selection.", False)
             if call_from_CLI:
                 raise err
-            return False
+            return
     try:
         if yaml_d['phones'][phone]['deployed']:
             phone_deployment_status = yaml_d['phones'][phone]['deployment_path']['status']
@@ -45,26 +45,24 @@ def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool =
             yaml_d['phones'][phone]['deployed'] = False
         else:
             error_printing(f"{phone} is not deployed.\nUndeployment is not possible.", False)
-            return False
+            return
     except KeyError as err:
         error_printing("Key Error when writing to the yaml file.\nUndeployment failed, please verify phone name.", False)
         if call_from_CLI:
             raise err
-        return False
+        return
 
     with open(file_name, 'w') as w:
         yaml.dump(yaml_d, w)
         error_printing(f"{phone} successfully undeployed.", True)
         error_printing('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(hub_name) + ' at stage ' + str(phone_deployment_status), True)
-        return True
-    return False
 
 # remove phone
 @decorator_timer
-def remove_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->tuple[str,bool]:
+def remove_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->None:
     """
     Remove an existing phone by asking user for input\n
-    remove_phone will check if the phone is deployed and undeploy it if necessary befor removing it 
+    remove_phone will check if the phone is deployed and undeploy it if necessary before removing it 
     """
     while phone == '':
         print('Enter phone name')
@@ -81,12 +79,12 @@ def remove_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = F
             with open(file_name, 'w') as w:
                 yaml.dump(yaml_d, w)
                 error_printing(f'{phone} successfully removed.', True)
-                return True
+                return
         else:
             error_printing('User aborted phone removal.', False)
-            return False
+            return
     error_printing(f"Error: phone '{phone}' not found.", False)
-    return False
+
 
 
 

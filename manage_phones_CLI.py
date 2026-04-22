@@ -15,7 +15,7 @@ phone_management_app = typer.Typer()
 
 # add
 @phone_management_app.command("add")
-def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', release_type: str = 'PU1', write: str = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, mesure_time: bool = True)-> bool:
+def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', release_type: str = 'PU1', write: str = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, mesure_time: bool = True)->None:
     """
     Allows the user to add a new phone through CLI\n
     The information will be stored in the yaml file by default, except if optional argument write is set to False.\n
@@ -23,28 +23,25 @@ def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', u
                          'python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-Arwschio4cb8ac-cc4 --user johnny --release-type PU1 --write True --manufacturer microsoft
                          'python manage_phones_CLI.py add --vendor Microsft --family msft --version 2 --udid udid-Arwschiddddd8888ac-cc4 --user johnny --manufacturer microsoft --fota fota_id_112 --activitytracking 44
     """
-    ret = add_phone(vendor, family, version, udid, user, release_type, write, fota, activitytracking,  functional, performance, manufacturer, model, yaml_d, True)
-    return ret
+    add_phone(vendor, family, version, udid, user, release_type, write, fota, activitytracking,  functional, performance, manufacturer, model, yaml_d, True)
 
 # undeploy
 @phone_management_app.command("undeploy")
-def undeploy(phone: str = '', mesure_time: bool = True)->bool:
+def undeploy(phone: str = '', mesure_time: bool = True)->None:
     """
     Undeploy phone from 'stage', given his name\n
     Examples of use:        'python manage_phones_CLI.py undeploy --phone Aither
     """
-    ret = undeploy_phone(phone, yaml_d, True)
-    return ret
+    undeploy_phone(phone, yaml_d, True)
 
 # remove
 @phone_management_app.command("remove")
-def remove(phone: str = '', mesure_time: bool = True)->bool:
+def remove(phone: str = '', mesure_time: bool = True)->None:
     """
     Remove phone from 'stage' entry, given his name\n
     Examples of use:        'python manage_phones_CLI.py remove --phone Erebos
     """
-    ret = remove_phone(phone, yaml_d, True)
-    return ret
+    remove_phone(phone, yaml_d, True)
 
 # change
 @phone_management_app.command("change")
@@ -52,7 +49,7 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
            functional: str = '', performance: str = '', manufacturer: str = '', model: str = '',
            vendor: str = '', family: str = '', version: str = '', platform: str = '', ip: str = '',
            udid: str = '', deployed: str = '', status: str = '', hub: str = '', port: str = '',
-           mesure_time: bool = True)->bool:
+           mesure_time: bool = True)->None:
     """
     Change one or more value of a phone's data given his name\n
     Examples of use:        'python manage_phones_CLI.py change --phone Chaos --release-type PU100 --user jean
@@ -63,26 +60,24 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
     """
     if release_type == '' and user == '' and fota == '' and activitytracking == '' and functional == '' and performance == '' and manufacturer == '' and model == '' and vendor == '' and family == '' and version == '' and platform == '' and ip == '' and udid == '' and deployed == '' and status == '' and hub == '' and port == '':
         typer.secho('No values to change !', fg=typer.colors.BRIGHT_RED)
-        return False
-    ret = change_phone(phone = phone, release_type = release_type, user = user, fota = fota, functional = functional, activitytracking = activitytracking,
+        return
+    change_phone(phone = phone, release_type = release_type, user = user, fota = fota, functional = functional, activitytracking = activitytracking,
                     performance = performance, manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform,
                     ip = ip, udid = udid, deployed = deployed, status = status, hub = hub, port = port, yaml_d = yaml_d, call_from_CLI = True)
-    return ret
 
 # deploy
 @phone_management_app.command("deploy")
-def deploy(phone: str = '', stage: str = '', mesure_time: bool = True)->bool:
+def deploy(phone: str = '', stage: str = '', mesure_time: bool = True)->None:
     """
     Deploy a phone given his name and the stage it should be deployed at\n
     Examples of use:        'python manage_phones_CLI.py deploy --phone Chaos --stage dev
                             'python manage_phones_CLI.py deploy --phone Chaos --stage prod
     """
-    ret = deploy_phone(phone, stage, yaml_d, True)
-    return ret
+    deploy_phone(phone, stage, yaml_d, True)
 
 # show_config
 @phone_management_app.command("show_config")
-def show_config(phone: str = '', mesure_time: bool = True)->bool:
+def show_config(phone: str = '', mesure_time: bool = True)->None:
     """
     Show the detailed data of a phone data given his name\n
     Examples of use:        'python manage_phones_CLI.py show-config --phone Chaos
@@ -93,16 +88,14 @@ def show_config(phone: str = '', mesure_time: bool = True)->bool:
         yaml.dump(yaml_d['phones'][phone], sys.stdout)
         if mesure_time:
             typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
-        return True
     except:
         typer.secho(f'{phone} not found.', fg=typer.colors.RED)
         if mesure_time:
             typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
-        return False
 
 # lists
 @phone_management_app.command("lists")
-def lists(item_to_show: str = '', stage_to_show: str = '', mesure_time: bool = True)->bool:
+def lists(item_to_show: str = '', stage_to_show: str = '', mesure_time: bool = True)->None:
     """
     Print available data in yaml file given item-to-show parameter and stage-to-show parameter if the item is a stage\n
     Examples of use:        'python manage_phones_CLI.py lists --item-to-show phones
@@ -118,12 +111,11 @@ def lists(item_to_show: str = '', stage_to_show: str = '', mesure_time: bool = T
             yaml.dump(yaml_d['phones'], sys.stdout)
             if mesure_time:
                 typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
-            ret = True
         case 'bts' | 'biab':
-            ret = _list_from_yaml(item_to_show.lower(), yaml_d)
+            _list_from_yaml(item_to_show.lower(), yaml_d)
         case 'stage':
             try:
-                ret = _show_stage(stage_to_show.lower(), yaml_d)
+                _show_stage(stage_to_show.lower(), yaml_d)
             except KeyError as err:
                 typer.secho(f"KeyError: makes sure 'stage' value is either 'dev' or 'prod'.", fg=typer.colors.RED)
                 raise err
@@ -135,12 +127,7 @@ def lists(item_to_show: str = '', stage_to_show: str = '', mesure_time: bool = T
                     print(yaml_d['phones'][phone])
             if mesure_time:
                 typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
-            ret = True
         case _:
             typer.secho(f"Error: User input do not match selection: '{item_to_show}'.", fg=typer.colors.RED)
-            return False
-    if not ret:
-        typer.secho('An unknown error occured.', fg=typer.colors.RED)
-    return ret
 
 phone_management_app()
