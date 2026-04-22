@@ -57,7 +57,6 @@ def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool =
         error_printing(f"{phone} successfully undeployed.", True)
         error_printing('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(hub_name) + ' at stage ' + str(phone_deployment_status), True)
         return True
-    error_printing("An unknown error happened.", False)
     return False
 
 # remove phone

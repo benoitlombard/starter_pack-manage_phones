@@ -1,6 +1,5 @@
 # importing libraries
 import ruamel.yaml
-import typer
 
 file_name = 'test.yaml'    # variables: file_name, yaml, yaml_d have to be declared before importing local modules
 with open(file_name, 'r') as yaml_file:
@@ -13,20 +12,6 @@ import add_phone        # adding a new phone
 import change_phone        # changing phone infos
 import deploy_phone        # deploying a phone
 import remove_undeploy_phone    # removing or undeploying a phone
-
-def error_method_menu_version(args: list['message': str, 'is_success':bool])->bool:
-    """
-    Print error/success message formated GREEN/RED using Typer module.\n
-    parameters of function: tuple= (message: str, is_success: bool)
-    """
-    message = args[0]
-    is_success = args[1]
-    if is_success:
-        typer.secho(message, fg=typer.colors.GREEN)
-        return True
-    else:
-        typer.secho(message, fg=typer.colors.RED)
-        return False
 
 if __name__ == "__main__":
     ret = ''

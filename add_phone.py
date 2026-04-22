@@ -131,7 +131,7 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
             yaml.dump(yaml_d, yaml_file)
             error_printing(f"{yaml_phone_name} successfully added.", True)
             return True
-        error_printing("An unknown error happened.", False)
+        error_printing('Error when writing to the yaml file.', False)
         return False
     error_printing(f"{yaml_phone_name} successfully added, but not saved in yaml file", True)
     return True

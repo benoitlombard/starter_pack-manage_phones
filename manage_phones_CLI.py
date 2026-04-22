@@ -14,7 +14,7 @@ from display_infos import _list_from_yaml, _show_stage    # displaying infos
 phone_management_app = typer.Typer()
 
 # add
-@phone_management_app.command()
+@phone_management_app.command("add")
 def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', release_type: str = 'PU1', write: str = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, mesure_time: bool = True)-> bool:
     """
     Allows the user to add a new phone through CLI\n
@@ -26,8 +26,8 @@ def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', u
     ret = add_phone(vendor, family, version, udid, user, release_type, write, fota, activitytracking,  functional, performance, manufacturer, model, yaml_d, True)
     return ret
 
-#undeploy
-@phone_management_app.command()
+# undeploy
+@phone_management_app.command("undeploy")
 def undeploy(phone: str = '', mesure_time: bool = True)->bool:
     """
     Undeploy phone from 'stage', given his name\n
@@ -36,8 +36,8 @@ def undeploy(phone: str = '', mesure_time: bool = True)->bool:
     ret = undeploy_phone(phone, yaml_d, True)
     return ret
 
-#remove
-@phone_management_app.command()
+# remove
+@phone_management_app.command("remove")
 def remove(phone: str = '', mesure_time: bool = True)->bool:
     """
     Remove phone from 'stage' entry, given his name\n
@@ -47,7 +47,7 @@ def remove(phone: str = '', mesure_time: bool = True)->bool:
     return ret
 
 # change
-@phone_management_app.command()
+@phone_management_app.command("change")
 def change(phone: str = '', release_type: str = '', user: str = '', fota: str = '', activitytracking: str = '',
            functional: str = '', performance: str = '', manufacturer: str = '', model: str = '',
            vendor: str = '', family: str = '', version: str = '', platform: str = '', ip: str = '',
@@ -69,8 +69,8 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
                     ip = ip, udid = udid, deployed = deployed, status = status, hub = hub, port = port, yaml_d = yaml_d, call_from_CLI = True)
     return ret
 
-#deploy
-@phone_management_app.command()
+# deploy
+@phone_management_app.command("deploy")
 def deploy(phone: str = '', stage: str = '', mesure_time: bool = True)->bool:
     """
     Deploy a phone given his name and the stage it should be deployed at\n
@@ -80,8 +80,8 @@ def deploy(phone: str = '', stage: str = '', mesure_time: bool = True)->bool:
     ret = deploy_phone(phone, stage, yaml_d, True)
     return ret
 
-#show_config
-@phone_management_app.command()
+# show_config
+@phone_management_app.command("show_config")
 def show_config(phone: str = '', mesure_time: bool = True)->bool:
     """
     Show the detailed data of a phone data given his name\n
@@ -100,8 +100,8 @@ def show_config(phone: str = '', mesure_time: bool = True)->bool:
             typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
         return False
 
-#lists
-@phone_management_app.command()
+# lists
+@phone_management_app.command("lists")
 def lists(item_to_show: str = '', stage_to_show: str = '', mesure_time: bool = True)->bool:
     """
     Print available data in yaml file given item-to-show parameter and stage-to-show parameter if the item is a stage\n

@@ -130,6 +130,4 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
             return True
     else:
         return False
-    error_printing('An unknown error occured.', False)
-    return False
 
