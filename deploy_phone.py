@@ -38,7 +38,6 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
     7) Update the yaml file according to previous changes.
     """
     while stage == '':
-        list_phones = set()
         print('Stage to deploy:')
         print('1: Production')
         print('2: Development')
@@ -54,18 +53,19 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
     free_port = _find_free_port(stage, yaml_d, call_from_CLI)
     if free_port is not None and free_port is not False:
         if phone == '':
+            list_of_phones_deployed = set()
             print('Phone to deploy: ')
             for phone in yaml_d['phones']:
                 if not yaml_d['phones'][phone]['deployed']:
-                    list_phones.add(phone)
+                    list_of_phones_deployed.add(phone)
 
-            list_phones = list(list_phones)
-            for phone_index, phone in enumerate(list_phones):
+            list_of_phones_deployed = list(list_of_phones_deployed)
+            for phone_index, phone in enumerate(list_of_phones_deployed):
                 print(str(phone_index) + ': ' + yaml_d['phones'][phone]['name'])
                 print('\t' + yaml_d['phones'][phone]['vendor'] + ' ' + yaml_d['phones'][phone]['family'] + ' ' + str(yaml_d['phones'][phone]['version']))
             indx = input('? ')
             try:
-                selected_phone = list_phones[int(indx)]
+                selected_phone = list_of_phones_deployed[int(indx)]
             except ValueError as err:
                 error_printing("ValueError: User input do not match selection.", False)
                 if call_from_CLI:
@@ -121,7 +121,7 @@ def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_f
 
         yaml_d['phones'][selected_phone]['deployed'] = True
 
-        error_printing(str(phone) + ' deployed to ' + str(free_port['port']) + ' at hub ' + str(yaml_d['stages'][stage][free_port['hub_id']]['name']), True)
+        error_printing(str(selected_phone) + ' deployed to ' + str(free_port['port']) + ' at hub ' + str(yaml_d['stages'][stage][free_port['hub_id']]['name']), True)
         print('Please connect phone as soon as possible')
 
         with open(file_name, 'w') as yaml_file:

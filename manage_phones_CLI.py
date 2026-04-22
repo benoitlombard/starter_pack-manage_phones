@@ -75,7 +75,7 @@ def deploy(phone: str = '', stage: str = '', mesure_time: bool = True)->bool:
     """
     Deploy a phone given his name and the stage it should be deployed at\n
     Exemples of use:        'python manage_phones_CLI.py deploy --phone Chaos --stage dev
-                            'python manage_phones_CLI.py deploy --phone Chaos --stage prod --no-mesure-time
+                            'python manage_phones_CLI.py deploy --phone Chaos --stage prod
     """
     ret = deploy_phone(phone, stage, yaml_d, True)
     return ret
