@@ -5,7 +5,7 @@ import sys
 from manage_phones import yaml_d, yaml
 
 # importing other functions
-from add_phone import add_phone		 # CLI function : add
+from add_phone import add_phone		  # CLI function : add
 from remove_undeploy_phone import undeploy_phone, remove_phone	 # CLI function : reploy, remove
 from change_phone import change_phone	 # CLI function : change
 from deploy_phone import deploy_phone	 # CLI function : deploy
@@ -23,11 +23,7 @@ def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', u
                          'python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-Arwschio4cb8ac-cc4 --user johnny --release-type PU1 --write True --manufacturer microsoft
 						 'python manage_phones_CLI.py add --vendor Microsft --family msft --version 2 --udid udid-Arwschiddddd8888ac-cc4 --user johnny --manufacturer microsoft --fota fota_id_112 --activitytracking 44
 	"""
-	if mesure_time:
-		time_origin = time.time()
 	ret = add_phone(vendor, family, version, udid, user, release_type, write, fota, activitytracking,  functional, performance, manufacturer, model, yaml_d, True)
-	if mesure_time:
-		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 	return ret
 
 #undeploy
@@ -37,11 +33,7 @@ def undeploy(phone: str = '', mesure_time: bool = True)->bool:
 	Undeploy phone from 'stage', given his name\n
 	Exemples of use:        'python manage_phones_CLI.py undeploy --phone Aither
 	"""
-	if mesure_time:
-		time_origin = time.time()
 	ret = undeploy_phone(phone, yaml_d, True)
-	if mesure_time:
-		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 	return ret
 
 #remove
@@ -51,11 +43,7 @@ def remove(phone: str = '', mesure_time: bool = True)->bool:
 	Remove phone from 'stage' entry, given his name\n
 	Exemples of use:        'python manage_phones_CLI.py remove --phone Erebos
 	"""
-	if mesure_time:
-		time_origin = time.time()
 	ret = remove_phone(phone, yaml_d, True)
-	if mesure_time:
-		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 	return ret
 
 # change
@@ -76,13 +64,9 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
 	if release_type == '' and user == '' and fota == '' and activitytracking == '' and functional == '' and performance == '' and manufacturer == '' and model == '' and vendor == '' and family == '' and version == '' and platform == '' and ip == '' and udid == '' and deployed == '' and status == '' and hub == '' and port == '':
 		typer.secho('No values to change !', fg=typer.colors.BRIGHT_RED)
 		return False
-	if mesure_time:
-		time_origin = time.time()
 	ret = change_phone(phone = phone, release_type = release_type, user = user, fota = fota, functional = functional, activitytracking = activitytracking,
 					performance = performance, manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform,
 					ip = ip, udid = udid, deployed = deployed, status = status, hub = hub, port = port, yaml_d = yaml_d, call_from_CLI = True)
-	if mesure_time:
-		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 	return ret
 
 #deploy
@@ -93,11 +77,7 @@ def deploy(phone: str = '', stage: str = '', mesure_time: bool = True)->bool:
 	Exemples of use:        'python manage_phones_CLI.py deploy --phone Chaos --stage dev
 	      			        'python manage_phones_CLI.py deploy --phone Chaos --stage prod --no-mesure-time
 	"""
-	if mesure_time:
-		time_origin = time.time()
 	ret = deploy_phone(phone, stage, yaml_d, True)
-	if mesure_time:
-		typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 	return ret
 
 #show_config

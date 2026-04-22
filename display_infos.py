@@ -1,7 +1,10 @@
 import sys
 from manage_phones import yaml_d, yaml
 from error_methods import error_printing
+from decorators_file import decorator_timer
 
+# printing bts or biabs
+@decorator_timer
 def _list_from_yaml(yaml_list_key: str, yaml_d: dict = yaml_d)->bool:
 	"""
 	Function dedicated to print informations in the yaml file that are available with a single key entry: 'biab'/'bts'
@@ -9,6 +12,8 @@ def _list_from_yaml(yaml_list_key: str, yaml_d: dict = yaml_d)->bool:
 	yaml.dump(yaml_d[yaml_list_key], sys.stdout)
 	return True
 
+# printing stages ('dev' or 'prod')
+@decorator_timer
 def _show_stage(stage: str, yaml_d: dict = yaml_d)->bool:
 	"""
 	Display the content of 'stages'['dev'] or 'stages'['prod'] from yaml file
@@ -60,7 +65,6 @@ def _ask_user_for_sorting_parameters(phone_attribute: str, selected_vendor: str 
 	else:
 		error_printing("Error: User input do not match selection.", False)
 		return False
-
 
 def _list_phones(yaml_d: dict = yaml_d)->bool:
 	"""

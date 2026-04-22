@@ -1,7 +1,9 @@
 from manage_phones import yaml_d, yaml, file_name
 from error_methods import error_printing
+from decorators_file import decorator_timer
 
 # undeploy phone
+@decorator_timer
 def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->tuple[str,bool]:
 	"""
 	Undeploy phone from 'stage', given his name\n
@@ -59,6 +61,7 @@ def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool =
 	return False
 
 # remove phone
+@decorator_timer
 def remove_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->tuple[str,bool]:
 	"""
 	Remove an existing phone by asking user for input\n

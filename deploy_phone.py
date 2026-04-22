@@ -1,6 +1,7 @@
 import ruamel.yaml
 from manage_phones import yaml_d, yaml, file_name
 from error_methods import error_printing
+from decorators_file import decorator_timer
 
 def _find_free_port(stage: str, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->dict[int, str]:
 	"""
@@ -24,6 +25,7 @@ def _find_free_port(stage: str, yaml_d: dict = yaml_d, call_from_CLI: bool = Fal
 		return False
 
 # deploy phone
+@decorator_timer
 def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)-> int:
 	"""
 	Deploy an existing phone by asking user for input\n

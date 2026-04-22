@@ -1,6 +1,7 @@
 import ruamel.yaml
 from manage_phones import yaml_d, yaml, file_name
 from error_methods import error_printing
+from decorators_file import decorator_timer
 
 # Add phone
 def _get_unused_name(yaml_d: dict = yaml_d, call_from_CLI: bool = False)->str:
@@ -32,6 +33,7 @@ def _get_ip(yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int|None:
 		if not found :
 			return last_digit_ip
 
+@decorator_timer
 def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', releasetype: str = '', write: str = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->tuple[str,bool]:
 	"""
 	Allows the user to add a new phone by writing phone informations\n

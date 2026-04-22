@@ -1,8 +1,10 @@
 import sys
 from manage_phones import yaml, file_name
 from error_methods import error_printing
+from decorators_file import decorator_timer
 
 # change phone
+@decorator_timer
 def change_phone(*args, **kwargs)->tuple[str,bool]:
 	"""
 	Allows user to change some informations from 'phones' data by asking which phone and what value of attribute he want to change
