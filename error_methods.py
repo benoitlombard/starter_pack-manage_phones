@@ -11,7 +11,7 @@ I made the following choices concerning handling errors:
 
 def error_printing(message: str, is_success: bool)->bool:
     """
-    Print error/success message formated RED/GREEN using Typer module.\n
+    Print error/success message formatted RED/GREEN using Typer module.\n
     parameter of function: 'is_success' defines the color of the output True= Green (success), False= Red (failure)
     """
     if is_success:

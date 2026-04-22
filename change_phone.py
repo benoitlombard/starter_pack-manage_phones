@@ -7,7 +7,7 @@ from decorators_file import decorator_timer
 @decorator_timer
 def change_phone(*args, **kwargs)->tuple[str,bool]:
     """
-    Allows user to change some informations from 'phones' data by asking which phone and what value of attribute he want to change
+    Allows user to change some information from 'phones' data by asking which phone and what value of attribute he want to change
     """
     yaml_d = kwargs['yaml_d'] # unpacking yaml_d to handle recently created phones
     new_data = {}

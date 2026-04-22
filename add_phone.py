@@ -36,8 +36,8 @@ def _get_ip(yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int|None:
 @decorator_timer
 def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', releasetype: str = '', write: str = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->tuple[str,bool]:
     """
-    Allows the user to add a new phone by writing phone informations\n
-    The informations will be stored in the yaml file
+    Allows the user to add a new phone by writing phone information\n
+    The information will be stored in the yaml file
     """
     yaml_phone_name = _get_unused_name(yaml_d, call_from_CLI)
     error_printing('RTC device name: ' + yaml_phone_name, True)
@@ -91,7 +91,7 @@ def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str =
         udid = input('? ')
     for phone in yaml_d['phones']:
         if yaml_d['phones'][phone]['udid'] == udid:
-            error_printing("Error when trying to add the phone:\nThis udid has already been used for another phone.", False)
+            error_printing(f"Error when trying to add the phone:\nThis udid has already been used for phone '{phone}'.", False)
             return False
     user = 'rtc-' + yaml_phone_name + '@cobi.bike'
     """

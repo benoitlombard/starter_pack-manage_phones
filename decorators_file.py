@@ -4,7 +4,7 @@ import time
 def decorator_timer(original_function):
     """
     This function is a decorator that add measurement of delay of execution of a function\n
-    Delay is printed using typer.secho and BRIGHT_BLACK police.
+    Delay is printed using typer.secho() and BRIGHT_BLACK police.
     """
     def wrapper_function(*args, **kwargs):
         if True:

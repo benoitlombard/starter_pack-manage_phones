@@ -7,7 +7,7 @@ from decorators_file import decorator_timer
 @decorator_timer
 def _list_from_yaml(yaml_list_key: str, yaml_d: dict = yaml_d)->bool:
     """
-    Function dedicated to print informations in the yaml file that are available with a single key entry: 'biab'/'bts'
+    Function dedicated to print information in the yaml file that are available with a single key entry: 'biab'/'bts'
     """
     yaml.dump(yaml_d[yaml_list_key], sys.stdout)
     return True
@@ -24,7 +24,7 @@ def _show_stage(stage: str, yaml_d: dict = yaml_d)->bool:
 
 def _ask_user_for_sorting_parameters(phone_attribute: str, selected_vendor: str = '', selected_family: str = '', yaml_d: dict = yaml_d)-> str | bool:
     """
-    Ask user for sorting and filtering parameters and print informations of phones that match the filtering and sorting
+    Ask user for sorting and filtering parameters and print information of phones that match the filtering and sorting
     """
     list_of_selected_attribute = []
     for phone in yaml_d['phones']:
@@ -68,7 +68,7 @@ def _ask_user_for_sorting_parameters(phone_attribute: str, selected_vendor: str 
 
 def _list_phones(yaml_d: dict = yaml_d)->bool:
     """
-    Display phone informations ordered and filtered by asking user choices of sorting and filtering
+    Display phone information ordered and filtered by asking user choices of sorting and filtering
     """
     print('1: all')
     print('2: by model')
@@ -95,7 +95,7 @@ def _list_phones(yaml_d: dict = yaml_d)->bool:
 
 def display(yaml_d: dict = yaml_d)->bool:
     """
-    Display a sub menu dedicated to allow user to list and print informations stored in the yaml file 
+    Display a sub menu dedicated to allow user to list and print information stored in the yaml file 
     """
     print('1: List phones')
     print('2: List all bts')
