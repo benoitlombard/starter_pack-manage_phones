@@ -1,9 +1,9 @@
 import ruamel.yaml
-from manage_phones import yaml_d, yaml, file_name
+from manage_phones import yaml, file_name
 from error_methods import error_printing
 from decorators_file import decorator_timer
 
-def _find_free_port(stage: str, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->dict[int, str]:
+def _find_free_port(stage: str, yaml_d: dict, call_from_CLI: bool = False)->dict[int, str]:
     """
     return path to the first port of value 'None' found by looping through 'stages'[stage] for a given 'stage'\n
     the values of 'stage' can only be 'dev' or 'prod'
@@ -26,7 +26,7 @@ def _find_free_port(stage: str, yaml_d: dict = yaml_d, call_from_CLI: bool = Fal
 
 # deploy phone
 @decorator_timer
-def deploy_phone(phone: str = '', stage: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->None:
+def deploy_phone(yaml_d: dict, phone: str = '', stage: str = '', call_from_CLI: bool = False)->None:
     """
     Deploy an existing phone by asking user for input\n
     1) Ask user for what stage he wants between 'dev' or 'prod' as deployment stage\n

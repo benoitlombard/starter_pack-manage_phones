@@ -1,10 +1,10 @@
-from manage_phones import yaml_d, yaml, file_name
+from manage_phones import yaml, file_name
 from error_methods import error_printing
 from decorators_file import decorator_timer
 
 # undeploy phone
 @decorator_timer
-def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->None:
+def undeploy_phone(yaml_d: dict, phone: str = '', call_from_CLI: bool = False)->None:
     """
     Undeploy phone from 'stage', given his name\n
     It particular, values from his 'deployment_path' are set to none, 'deployed' attribute is set to false\n
@@ -59,7 +59,7 @@ def undeploy_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool =
 
 # remove phone
 @decorator_timer
-def remove_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = False)->None:
+def remove_phone(yaml_d: dict, phone: str = '', call_from_CLI: bool = False)->None:
     """
     Remove an existing phone by asking user for input\n
     remove_phone will check if the phone is deployed and undeploy it if necessary before removing it 
@@ -74,7 +74,7 @@ def remove_phone(phone: str = '', yaml_d: dict = yaml_d, call_from_CLI: bool = F
 
         if call_from_CLI or input('enter yes if are sure: ').lower() == 'yes':
             if yaml_d['phones'][phone]['deployed']:
-                undeploy_phone(phone, yaml_d, call_from_CLI)
+                undeploy_phone(yaml_d, phone, call_from_CLI)
             del yaml_d['phones'][phone]
             with open(file_name, 'w') as w:
                 yaml.dump(yaml_d, w)

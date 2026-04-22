@@ -9,7 +9,7 @@ I made the following choices concerning handling errors:
     we never raise exceptions, and we return True for success and False for failure, sub function is exited and user can retry from main menu.
 """
 
-def error_printing(message: str, is_success: bool)->bool:
+def error_printing(message: str, is_success: bool)->None:
     """
     Print error/success message formatted RED/GREEN using Typer module.\n
     parameter of function: 'is_success' defines the color of the output True= Green (success), False= Red (failure)
@@ -18,4 +18,3 @@ def error_printing(message: str, is_success: bool)->bool:
         typer.secho(message, fg=typer.colors.GREEN)
     else:
         typer.secho(message, fg=typer.colors.RED)
-    return is_success

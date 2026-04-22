@@ -23,7 +23,7 @@ def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', u
                          'python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-Arwschio4cb8ac-cc4 --user johnny --release-type PU1 --write True --manufacturer microsoft
                          'python manage_phones_CLI.py add --vendor Microsft --family msft --version 2 --udid udid-Arwschiddddd8888ac-cc4 --user johnny --manufacturer microsoft --fota fota_id_112 --activitytracking 44
     """
-    add_phone(vendor, family, version, udid, user, release_type, write, fota, activitytracking,  functional, performance, manufacturer, model, yaml_d, True)
+    add_phone(yaml_d, vendor, family, version, udid, user, release_type, write, fota, activitytracking, functional, performance, manufacturer, model, True)
 
 # undeploy
 @phone_management_app.command("undeploy")
@@ -32,7 +32,7 @@ def undeploy(phone: str = '', mesure_time: bool = True)->None:
     Undeploy phone from 'stage', given his name\n
     Examples of use:        'python manage_phones_CLI.py undeploy --phone Aither
     """
-    undeploy_phone(phone, yaml_d, True)
+    undeploy_phone(yaml_d, phone, True)
 
 # remove
 @phone_management_app.command("remove")
@@ -41,7 +41,7 @@ def remove(phone: str = '', mesure_time: bool = True)->None:
     Remove phone from 'stage' entry, given his name\n
     Examples of use:        'python manage_phones_CLI.py remove --phone Erebos
     """
-    remove_phone(phone, yaml_d, True)
+    remove_phone(yaml_d, phone, True)
 
 # change
 @phone_management_app.command("change")
@@ -58,7 +58,7 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
                             'python manage_phones_CLI.py change --version 1.0 --manufacturer Samsung --phone Nyx --release-type PU1 --user jean-claude --udid udid_223 --status dev --activitytracking test_activitytracking --performance 4 --platform android_18.1
                             'python manage_phones_CLI.py change --version 8.1 --manufacturer Ssg --phone Nyx --release-type PU100 --user zidane --udid udid_0 --activitytracking test_2 --performance 11 --platform android_19.0
     """
-    if release_type == '' and user == '' and fota == '' and activitytracking == '' and functional == '' and performance == '' and manufacturer == '' and model == '' and vendor == '' and family == '' and version == '' and platform == '' and ip == '' and udid == '' and deployed == '' and status == '' and hub == '' and port == '':
+    if all(attribute == '' for attribute in [release_type, user, fota, activitytracking, functional, performance, manufacturer, model, vendor, family, version, platform, ip, udid, deployed, status, hub, port]):
         typer.secho('No values to change !', fg=typer.colors.BRIGHT_RED)
         return
     change_phone(phone = phone, release_type = release_type, user = user, fota = fota, functional = functional, activitytracking = activitytracking,
@@ -73,7 +73,7 @@ def deploy(phone: str = '', stage: str = '', mesure_time: bool = True)->None:
     Examples of use:        'python manage_phones_CLI.py deploy --phone Chaos --stage dev
                             'python manage_phones_CLI.py deploy --phone Chaos --stage prod
     """
-    deploy_phone(phone, stage, yaml_d, True)
+    deploy_phone(yaml_d, phone, stage, True)
 
 # show_config
 @phone_management_app.command("show_config")

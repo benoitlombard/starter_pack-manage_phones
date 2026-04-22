@@ -28,7 +28,7 @@ if __name__ == "__main__":
         ret = input('? ')
         match ret:
             case '1':
-                add_phone.add_phone(releasetype = '', write = False, yaml_d = yaml_d, call_from_CLI= False)
+                add_phone.add_phone(yaml_d = yaml_d, write = False, call_from_CLI= False)
             case '2':
                 change_phone.change_phone(yaml_d = yaml_d, call_from_CLI= False)
             case '3':

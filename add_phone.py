@@ -1,10 +1,10 @@
 import ruamel.yaml
-from manage_phones import yaml_d, yaml, file_name
+from manage_phones import yaml, file_name
 from error_methods import error_printing
 from decorators_file import decorator_timer
 
 # Add phone
-def _get_unused_name(yaml_d: dict = yaml_d, call_from_CLI: bool = False)->str:
+def _get_unused_name(yaml_d: dict, call_from_CLI: bool = False)->str:
     """
     Loop through gods in gods.txt file to return the first unused name in 'phones' from gods.txt
     """
@@ -19,7 +19,7 @@ def _get_unused_name(yaml_d: dict = yaml_d, call_from_CLI: bool = False)->str:
                 break
     return unused_name
 
-def _get_ip(yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int|None:
+def _get_ip(yaml_d: dict, call_from_CLI: bool = False)->int|None:
     """
     Loop through values from 'rtc_params'['min_ip'], 'rtc_params'['max_ip']\n
     And return the first 3 digits number unused as ip's last triple in 'phones'
@@ -34,7 +34,7 @@ def _get_ip(yaml_d: dict = yaml_d, call_from_CLI: bool = False)->int|None:
             return last_digit_ip
 
 @decorator_timer
-def add_phone(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', releasetype: str = '', write: str = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, yaml_d: dict = yaml_d, call_from_CLI: bool = False)->None:
+def add_phone(yaml_d: dict, vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', releasetype: str = '', write: str = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, call_from_CLI: bool = False)->None:
     """
     Allows the user to add a new phone by writing phone information\n
     The information will be stored in the yaml file
