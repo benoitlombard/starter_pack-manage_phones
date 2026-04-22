@@ -7,11 +7,11 @@ with open(file_name, 'r') as yaml_file:
     yaml_d = yaml.load(yaml_file)
 
 # importing other files
-import display_infos    # displaying infos
-import add_phone        # adding a new phone
-import change_phone        # changing phone infos
-import deploy_phone        # deploying a phone
-import remove_undeploy_phone    # removing or undeploying a phone
+from display_infos import display   # displaying infos
+from add_phone import add_phone       # adding a new phone
+from change_phone import change_phone       # changing phone infos
+from deploy_phone import deploy_phone        # deploying a phone
+from remove_undeploy_phone import undeploy_phone, remove_phone    # removing or undeploying a phone
 
 if __name__ == "__main__":
     ret = ''
@@ -26,16 +26,17 @@ if __name__ == "__main__":
         print('6: Show configuration')
         print('x: Exit')
         ret = input('? ')
+
         match ret:
             case '1':
-                add_phone.add_phone(yaml_d = yaml_d, write = False, call_from_CLI= False)
+                add_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, write = False, call_from_CLI= False)
             case '2':
-                change_phone.change_phone(yaml_d = yaml_d, call_from_CLI= False)
+                change_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, call_from_CLI= False)
             case '3':
-                deploy_phone.deploy_phone(yaml_d = yaml_d, call_from_CLI= False)
+                deploy_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, call_from_CLI= False)
             case '4':
-                remove_undeploy_phone.undeploy_phone(yaml_d = yaml_d, call_from_CLI= False)
+                undeploy_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, call_from_CLI= False)
             case '5':
-                remove_undeploy_phone.remove_phone(yaml_d = yaml_d, call_from_CLI= False)
+                remove_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, call_from_CLI= False)
             case '6':
-                display_infos.display(yaml_d)
+                display(yaml_d = yaml_d, yaml = yaml)

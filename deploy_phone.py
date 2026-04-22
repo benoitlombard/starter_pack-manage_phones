@@ -1,5 +1,4 @@
 import ruamel.yaml
-from manage_phones import yaml, file_name
 from error_methods import error_printing
 from decorators_file import decorator_timer
 
@@ -26,12 +25,12 @@ def _find_free_port(stage: str, yaml_d: dict, call_from_CLI: bool = False)->dict
 
 # deploy phone
 @decorator_timer
-def deploy_phone(yaml_d: dict, phone: str = '', stage: str = '', call_from_CLI: bool = False)->None:
+def deploy_phone(yaml_d: dict, yaml, file_name: str, phone: str = '', stage: str = '', call_from_CLI: bool = False)->None:
     """
     Deploy an existing phone by asking user for input\n
     1) Ask user for what stage he wants between 'dev' or 'prod' as deployment stage\n
     2) Search for a free port in 'stages'[stage][hubs]\n
-    3) Ask user to chose a phone from undeployed elements of 'phones'\n
+    3) Ask user to chose a phone from list extracted from elements in 'phones' which ['deployed'] attribute is False\n
     4) Update 'deployed' and 'deploy_path' attributes from 'phones'[phone]\n
     5) Copy information of 'phones'[phone] in a new ruamel.yaml commented map\n
     6) Set a ruamel.yaml Anchor and store a reference to it in the free port found in 'stages'[stage][hubs]\n

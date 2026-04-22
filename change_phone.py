@@ -1,5 +1,4 @@
 import sys
-from manage_phones import yaml, file_name
 from error_methods import error_printing
 from decorators_file import decorator_timer
 
@@ -9,7 +8,10 @@ def change_phone(*args, **kwargs)->None:
     """
     Allows user to change some information from 'phones' data by asking which phone and what value of attribute he want to change
     """
-    yaml_d = kwargs['yaml_d'] # unpacking yaml_d to handle recently created phones
+    yaml_d = kwargs['yaml_d']          #
+    yaml = kwargs['yaml']              #  unpacking elements to use yaml and access phone's current data
+    file_name = kwargs['file_name']    #
+
     new_data = {}
     keys = ['phone', 'release_type', 'user', 'fota', 'activitytracking', 'functional', 'performance', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid', 'deployed', 'status', 'hub', 'port', 'yaml_d', 'call_from_CLI']
     for key in keys:

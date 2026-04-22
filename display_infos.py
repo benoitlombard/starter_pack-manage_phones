@@ -1,11 +1,10 @@
 import sys
-from manage_phones import yaml
 from error_methods import error_printing
 from decorators_file import decorator_timer
 
 # printing bts or biabs
 @decorator_timer
-def _list_from_yaml(yaml_list_key: str, yaml_d: dict)->None:
+def _list_from_yaml(yaml_d: dict, yaml, yaml_list_key: str)->None:
     """
     Function dedicated to print information in the yaml file that are available with a single key entry: 'biab'/'bts'
     """
@@ -13,14 +12,14 @@ def _list_from_yaml(yaml_list_key: str, yaml_d: dict)->None:
 
 # printing stages ('dev' or 'prod')
 @decorator_timer
-def _show_stage(stage: str, yaml_d: dict)->None:
+def _show_stage(yaml_d: dict, yaml, stage: str)->None:
     """
     Display the content of ['stages']['dev'] or ['stages']['prod'] entry in yaml file
     """
     for hub in yaml_d['stages'][stage]:
         yaml.dump(hub, sys.stdout)
 
-def _ask_user_for_sorting_parameters(yaml_d: dict, phone_attribute: str, selected_vendor: str = '', selected_family: str = '')-> str | None: ####### change
+def _ask_user_for_sorting_parameters(yaml_d: dict, yaml, phone_attribute: str, selected_vendor: str = '', selected_family: str = '')-> str | None: ####### change
     """
     Ask user for sorting and filtering parameters and print information of phones that match the filtering and sorting
     """
@@ -63,7 +62,7 @@ def _ask_user_for_sorting_parameters(yaml_d: dict, phone_attribute: str, selecte
     else:
         error_printing("Error: User input do not match selection.", False)
 
-def _list_phones(yaml_d: dict)->None: ####### change
+def _list_phones(yaml_d: dict, yaml)->None: ####### change
     """
     Display phone information ordered and filtered by asking user choices of sorting and filtering
     """
@@ -75,19 +74,31 @@ def _list_phones(yaml_d: dict)->None: ####### change
         if ret == '1':
             yaml.dump(yaml_d['phones'], sys.stdout)
         elif ret == '2':
-                sel_vendor = _ask_user_for_sorting_parameters(yaml_d, 'vendor', '', '')
+                sel_vendor = _ask_user_for_sorting_parameters(yaml_d = yaml_d, yaml = yaml,
+                                                              phone_attribute = 'vendor', 
+                                                              selected_vendor = '',
+                                                              selected_family = '')
                 if sel_vendor is not None:
-                    sel_family = _ask_user_for_sorting_parameters(yaml_d, 'family', sel_vendor, '')
+                    sel_family = _ask_user_for_sorting_parameters(yaml_d = yaml_d, yaml = yaml,
+                                                                  phone_attribute = 'family',
+                                                                  selected_vendor = sel_vendor,
+                                                                  selected_family = '')
                     if sel_family is not None:
-                        return _ask_user_for_sorting_parameters(yaml_d, 'version', sel_vendor, sel_family)
+                        return _ask_user_for_sorting_parameters(yaml_d = yaml_d, yaml = yaml,
+                                                                  phone_attribute = 'version',
+                                                                  selected_vendor = sel_vendor,
+                                                                  selected_family = sel_family)
         elif ret == '3':
-            return _ask_user_for_sorting_parameters(yaml_d, 'platform', '', '')
+            return _ask_user_for_sorting_parameters(yaml_d = yaml_d, yaml = yaml,
+                                                    phone_attribute = 'platform',
+                                                    selected_vendor = '',
+                                                    selected_family = '')
         else:
             error_printing("Error: User input do not match selection.", False)
     except:
         error_printing("Error in the function", False)
 
-def display(yaml_d: dict)->None:
+def display(yaml_d: dict, yaml)->None:
     """
     Display a sub menu dedicated to allow user to list and print information stored in the yaml file 
     """
@@ -101,15 +112,24 @@ def display(yaml_d: dict)->None:
     ret = input('? ')
     match ret:
         case '1':
-            _list_phones(yaml_d)
+            _list_phones(yaml_d = yaml_d,
+                         yaml = yaml)
         case '2':
-            _list_from_yaml('bts', yaml_d) # new function
+            _list_from_yaml(yaml_d = yaml_d, 
+                        yaml = yaml, 
+                        yaml_list_key = 'bts') # new function
         case '3':
-            _list_from_yaml('biab', yaml_d) # new function (same as previous)
+            _list_from_yaml(yaml_d = yaml_d,
+                        yaml = yaml,
+                        yaml_list_key = 'biab') # new function (same as previous)
         case '4':
-            _show_stage('prod', yaml_d)
+            _show_stage(yaml_d = yaml_d,
+                        yaml = yaml,
+                        stage = 'prod')
         case '5':
-            _show_stage('dev', yaml_d)
+            _show_stage(yaml_d = yaml_d,
+                        yaml = yaml,
+                        stage = 'dev')
         case '6':
             print('Not deployed phones:')
             for phone in yaml_d['phones']:
