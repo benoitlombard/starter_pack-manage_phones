@@ -7,11 +7,11 @@ with open(file_name, 'r') as yaml_file:
     yaml_d = yaml.load(yaml_file)
 
 # importing other files
-from display_infos import display   # displaying infos
-from add_phone import add_phone       # adding a new phone
-from change_phone import change_phone       # changing phone infos
-from deploy_phone import deploy_phone        # deploying a phone
-from remove_undeploy_phone import undeploy_phone, remove_phone    # removing or undeploying a phone
+from display_infos import display                                   # displaying infos
+from add_phone import add_phone                                     # adding a new phone
+from change_phone import change_phone                               # changing phone infos
+from deploy_phone import deploy_phone                               # deploying a phone
+from remove_undeploy_phone import undeploy_phone, remove_phone      # removing or undeploying a phone
 
 if __name__ == "__main__":
     ret = ''
@@ -28,7 +28,7 @@ if __name__ == "__main__":
         ret = input('? ')
 
         match ret:
-            case '1':
+            case '1':   # parameter write = False mean user will be asked if he wants to write the phone data or not in the yaml file 
                 add_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, write = False, call_from_CLI= False)
             case '2':
                 change_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, call_from_CLI= False)

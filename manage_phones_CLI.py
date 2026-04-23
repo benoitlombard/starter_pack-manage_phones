@@ -15,7 +15,9 @@ phone_management_app = typer.Typer()
 
 # add
 @phone_management_app.command("add")
-def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', release_type: str = 'PU1', write: bool = True, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None)->None:
+def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '',
+        release_type: str = 'PU1', write: bool = True, fota: str = None, activitytracking: str = None,
+        functional: str = None, performance: str = None, manufacturer: str = None, model: str = None)->None:
     """
     Allows the user to add a new phone through CLI\n
     The information will be stored in the yaml file by default, except if optional argument write is set to False.\n
@@ -24,7 +26,10 @@ def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', u
                          'python manage_phones_CLI.py add --vendor Microsft --family msft --version 2 --udid udid-Arwschiddddd8888ac-cc4 --user johnny --manufacturer microsoft --fota fota_id_112 --activitytracking 44
                          'python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-test-cc4 --user johnny --release-type PU1 --manufacturer microsoft --no-write
     """
-    add_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, vendor = vendor, family = family, version = version, udid = udid, user = user, releasetype = release_type, write = write, fota = fota, activitytracking = activitytracking, functional = functional, performance = performance, manufacturer = manufacturer, model = model, call_from_CLI = True)
+    add_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, vendor = vendor, family = family,
+            version = version, udid = udid, user = user, releasetype = release_type, write = write,
+            fota = fota, activitytracking = activitytracking, functional = functional,
+            performance = performance, manufacturer = manufacturer, model = model, call_from_CLI = True)
 
 # undeploy
 @phone_management_app.command("undeploy")
@@ -33,7 +38,9 @@ def undeploy(phone: str = '')->None:
     Undeploy phone from 'stage', given his name\n
     Examples of use:        'python manage_phones_CLI.py undeploy --phone Aither
     """
-    undeploy_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, phone = phone, call_from_CLI = True)
+    undeploy_phone(yaml_d = yaml_d, yaml = yaml,
+                   file_name = file_name, phone = phone,
+                   call_from_CLI = True)
 
 # remove
 @phone_management_app.command("remove")
@@ -42,7 +49,9 @@ def remove(phone: str = '')->None:
     Remove phone from 'stage' entry, given his name\n
     Examples of use:        'python manage_phones_CLI.py remove --phone Erebos
     """
-    remove_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, phone = phone, call_from_CLI = True)
+    remove_phone(yaml_d = yaml_d, yaml = yaml,
+                 file_name = file_name, phone = phone,
+                 call_from_CLI = True)
 
 # change
 @phone_management_app.command("change")
@@ -61,9 +70,10 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
     if all(attribute == '' for attribute in [release_type, user, fota, activitytracking, functional, performance, manufacturer, model, vendor, family, version, platform, ip, udid, deployed, status, hub, port]):
         typer.secho('No values to change !', fg=typer.colors.BRIGHT_RED)
         return
-    change_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, phone = phone, release_type = release_type, user = user, fota = fota, functional = functional, activitytracking = activitytracking,
-                    performance = performance, manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform,
-                    ip = ip, udid = udid, deployed = deployed, status = status, hub = hub, port = port, call_from_CLI = True)
+    change_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, phone = phone, release_type = release_type, user = user,
+                 fota = fota, functional = functional, activitytracking = activitytracking, performance = performance,
+                 manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform,
+                 ip = ip, udid = udid, deployed = deployed, status = status, hub = hub, port = port, call_from_CLI = True)
 
 # deploy
 @phone_management_app.command("deploy")
@@ -73,7 +83,9 @@ def deploy(phone: str = '', stage: str = '')->None:
     Examples of use:        'python manage_phones_CLI.py deploy --phone Chaos --stage dev
                             'python manage_phones_CLI.py deploy --phone Chaos --stage prod
     """
-    deploy_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, phone = phone, stage = stage, call_from_CLI = True)
+    deploy_phone(yaml_d = yaml_d, yaml = yaml,
+                 file_name = file_name, phone = phone,
+                 stage = stage, call_from_CLI = True)
 
 # show_config
 @phone_management_app.command("show_config")
@@ -112,10 +124,14 @@ def lists(item_to_show: str = '', stage_to_show: str = '', mesure_time: bool = T
             if mesure_time:
                 typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
         case 'bts' | 'biab':
-            _list_from_yaml(yaml_d = yaml_d, yaml = yaml, yaml_list_key = item_to_show.lower())
+            _list_from_yaml(yaml_d = yaml_d,
+                            yaml = yaml,
+                            yaml_list_key = item_to_show.lower())
         case 'stage':
             try:
-                _show_stage(yaml_d = yaml_d, yaml = yaml, stage = stage_to_show.lower())
+                _show_stage(yaml_d = yaml_d,
+                            yaml = yaml,
+                            stage = stage_to_show.lower())
             except KeyError as err:
                 typer.secho(f"KeyError: makes sure 'stage' value is either 'dev' or 'prod'.", fg=typer.colors.RED)
                 raise err
