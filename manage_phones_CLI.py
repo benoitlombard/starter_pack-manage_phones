@@ -20,8 +20,8 @@ def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', u
         functional: str = None, performance: str = None, manufacturer: str = None, model: str = None)->None:
     """
     [gold1]Allows the user to add a new phone through CLI[/gold1]\n
-    [bold gold1]The information will be stored in the yaml file by default, except if optional argument --no-write.
-    Examples of use:
+    [bold gold1]The information will be stored in the yaml file by default, except if optional argument --no-write.[/bold gold1]
+    [bold italic gold1]Examples of use:[/bold italic gold1][bold gold1]
     python manage_phones_CLI.py add --vendor Apple --family ios3.0 --version 4.5 --udid Arwschio4cb8ac-cc4 --user john --release-type PU100
     python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-Arwschio4cb8ac-cc4 --user johnny --release-type PU1 --write --manufacturer microsoft
     python manage_phones_CLI.py add --vendor Microsft --family msft --version 2 --udid udid-Arwschiddddd8888ac-cc4 --user johnny --manufacturer microsoft --fota fota_id_112 --activitytracking 44
@@ -40,7 +40,7 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
            udid: str = '', deployed: str = '', status: str = '', hub: str = '', port: str = '')->None:
     """
     [orange1]Change one or more value of a phone's data given his name[/orange1]\n
-    [bold gold1]Examples of use:        
+    [bold italic gold1]Examples of use:[/bold italic gold1][bold gold1]
     python manage_phones_CLI.py change --phone Chaos --release-type PU100 --user jean
     python manage_phones_CLI.py change --phone Chaos --fota fota_id
     python manage_phones_CLI.py change --version 1.0 --manufacturer Samsung --phone Chaos --release-type PU100 --user jean-pierre --udid udid_test --status prod
@@ -60,7 +60,7 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
 def deploy(phone: str = '', stage: str = '')->None:
     """
     [green1]Deploy a phone given his name and the stage it should be deployed at[/green1]\n
-    [bold sea_green2]Examples of use:        
+    [bold italic sea_green2]Examples of use:[/bold italic sea_green2][bold sea_green2]
     python manage_phones_CLI.py deploy --phone Chaos --stage dev
     python manage_phones_CLI.py deploy --phone Chaos --stage prod[/bold sea_green2]
     """
@@ -73,7 +73,7 @@ def deploy(phone: str = '', stage: str = '')->None:
 def undeploy(phone: str = '')->None:
     """
     [green3]Undeploy phone from 'stage', given his name[/green3]\n
-    [bold sea_green2]Examples of use:        
+    [bold italic sea_green2]Examples of use:[/bold italic sea_green2][bold sea_green2]
     python manage_phones_CLI.py undeploy --phone Aither[/bold sea_green2]
     """
     undeploy_phone(yaml_d = yaml_d, yaml = yaml,
@@ -85,7 +85,7 @@ def undeploy(phone: str = '')->None:
 def remove(phone: str = '')->None:
     """
     [orange3]Remove phone from 'stage' entry, given his name[/orange3]\n
-    [bold gold1]Examples of use:        
+    [bold italic gold1]Examples of use:[/bold italic gold1][bold gold1]
     python manage_phones_CLI.py remove --phone Erebos[/bold gold1]
     """
     remove_phone(yaml_d = yaml_d, yaml = yaml,
@@ -97,7 +97,7 @@ def remove(phone: str = '')->None:
 def show_config(phone: str = '', measure_time: bool = True)->None:
     """
     [turquoise2]Show the detailed data of a phone data given his name[/turquoise2]\n
-    [bold turquoise2]Examples of use:
+    [bold italic turquoise2]Examples of use:[/bold italic turquoise2][bold turquoise2]
     python manage_phones_CLI.py show_config --phone Chaos[/bold turquoise2]
     """
     if measure_time:
@@ -116,8 +116,8 @@ def show_config(phone: str = '', measure_time: bool = True)->None:
 def lists(item_to_show: str = '', stage_to_show: str = '', measure_time: bool = True)->None:
     """
     [deep_sky_blue1]Print available data in yaml file given item-to-show parameter and stage-to-show parameter if the item is a stage[/deep_sky_blue1]\n
-    Examples of use:
-    [bold turquoise2]python manage_phones_CLI.py lists --item-to-show phones
+    [bold italic turquoise2]Examples of use:[/bold italic turquoise2][bold turquoise2]
+    python manage_phones_CLI.py lists --item-to-show phones
     python manage_phones_CLI.py lists --item-to-show bts
     python manage_phones_CLI.py lists --item-to-show biab
     python manage_phones_CLI.py lists --item-to-show stage --stage-to-show dev
