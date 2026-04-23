@@ -18,7 +18,7 @@ def _get_unused_name(yaml_d: dict, call_from_CLI: bool = False)->str:
                 break
     return unused_name
 
-def _get_ip(yaml_d: dict, call_from_CLI: bool = False)->int|None:
+def _get_ip(yaml_d: dict, call_from_CLI: bool = False)->int:
     """
     Loop through values from 'rtc_params'['min_ip'], 'rtc_params'['max_ip']\n
     And return the first 3 digits number unused as ip's last triple in 'phones'

@@ -9,7 +9,7 @@ from add_phone import add_phone                                     # CLI functi
 from remove_undeploy_phone import undeploy_phone, remove_phone      # CLI functions : deploy, remove
 from change_phone import change_phone                               # CLI function : change
 from deploy_phone import deploy_phone                               # CLI function : deploy
-from display_infos import _list_from_yaml, _show_stage              # CLI function : lists
+from display_infos import list_from_yaml, show_stage              # CLI function : lists
 
 phone_management_app = typer.Typer()
 
@@ -89,25 +89,25 @@ def deploy(phone: str = '', stage: str = '')->None:
 
 # show_config
 @phone_management_app.command("show_config")
-def show_config(phone: str = '', mesure_time: bool = True)->None:
+def show_config(phone: str = '', measure_time: bool = True)->None:
     """
     Show the detailed data of a phone data given his name\n
     Examples of use:        'python manage_phones_CLI.py show_config --phone Chaos
     """
-    if mesure_time:
+    if measure_time:
         time_origin = time.time()
     try:
         yaml.dump(yaml_d['phones'][phone], sys.stdout)
-        if mesure_time:
+        if measure_time:
             typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
     except:
         typer.secho(f'{phone} not found.', fg=typer.colors.RED)
-        if mesure_time:
+        if measure_time:
             typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
 
 # lists
 @phone_management_app.command("lists")
-def lists(item_to_show: str = '', stage_to_show: str = '', mesure_time: bool = True)->None:
+def lists(item_to_show: str = '', stage_to_show: str = '', measure_time: bool = True)->None:
     """
     Print available data in yaml file given item-to-show parameter and stage-to-show parameter if the item is a stage\n
     Examples of use:        'python manage_phones_CLI.py lists --item-to-show phones
@@ -118,30 +118,30 @@ def lists(item_to_show: str = '', stage_to_show: str = '', mesure_time: bool = T
     """
     match item_to_show.lower():
         case 'phones':
-            if mesure_time:
+            if measure_time:
                 time_origin = time.time()
             yaml.dump(yaml_d['phones'], sys.stdout)
-            if mesure_time:
+            if measure_time:
                 typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
         case 'bts' | 'biab':
-            _list_from_yaml(yaml_d = yaml_d,
+            list_from_yaml(yaml_d = yaml_d,
                             yaml = yaml,
                             yaml_list_key = item_to_show.lower())
         case 'stage':
             try:
-                _show_stage(yaml_d = yaml_d,
+                show_stage(yaml_d = yaml_d,
                             yaml = yaml,
                             stage = stage_to_show.lower())
             except KeyError as err:
                 typer.secho(f"KeyError: makes sure 'stage' value is either 'dev' or 'prod'.", fg=typer.colors.RED)
                 raise err
         case 'undeployed_phones':
-            if mesure_time:
+            if measure_time:
                 time_origin = time.time()
             for phone in yaml_d['phones']:
                 if not yaml_d['phones'][phone]['deployed']:
-                    print(yaml_d['phones'][phone])
-            if mesure_time:
+                    yaml.dump(yaml_d['phones'][phone], sys.stdout)
+            if measure_time:
                 typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
         case _:
             typer.secho(f"Error: User input do not match selection: '{item_to_show}'.", fg=typer.colors.RED)

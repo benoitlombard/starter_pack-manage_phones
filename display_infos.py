@@ -4,7 +4,7 @@ from decorators_file import decorator_timer
 
 # printing bts or biabs
 @decorator_timer
-def _list_from_yaml(yaml_d: dict, yaml, yaml_list_key: str)->None:
+def list_from_yaml(yaml_d: dict, yaml, yaml_list_key: str)->None:
     """
     Function dedicated to print information in the yaml file that are available with a single key entry: 'biab'/'bts'
     """
@@ -12,7 +12,7 @@ def _list_from_yaml(yaml_d: dict, yaml, yaml_list_key: str)->None:
 
 # printing stages ('dev' or 'prod')
 @decorator_timer
-def _show_stage(yaml_d: dict, yaml, stage: str)->None:
+def show_stage(yaml_d: dict, yaml, stage: str)->None:
     """
     Display the content of ['stages']['dev'] or ['stages']['prod'] entry in yaml file
     """
@@ -137,26 +137,26 @@ def display(yaml_d: dict, yaml)->None:
             _list_phones(yaml_d = yaml_d,
                          yaml = yaml)
         case '2':
-            _list_from_yaml(yaml_d = yaml_d, 
+            list_from_yaml(yaml_d = yaml_d, 
                         yaml = yaml, 
                         yaml_list_key = 'bts') # new function
         case '3':
-            _list_from_yaml(yaml_d = yaml_d,
+            list_from_yaml(yaml_d = yaml_d,
                         yaml = yaml,
                         yaml_list_key = 'biab') # new function (same as previous)
         case '4':
-            _show_stage(yaml_d = yaml_d,
+            show_stage(yaml_d = yaml_d,
                         yaml = yaml,
                         stage = 'prod')
         case '5':
-            _show_stage(yaml_d = yaml_d,
+            show_stage(yaml_d = yaml_d,
                         yaml = yaml,
                         stage = 'dev')
         case '6':
             print('Not deployed phones:')
             for phone in yaml_d['phones']:
                 if not yaml_d['phones'][phone]['deployed']:
-                    print(yaml_d['phones'][phone])
+                    yaml.dump(yaml_d['phones'][phone], sys.stdout)
         case '7':                # new function
             print('Phone to show: ')
             ret = input('? ')

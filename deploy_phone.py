@@ -9,19 +9,17 @@ def _find_free_port(stage: str, yaml_d: dict, call_from_CLI: bool = False)->dict
     """
     try:
         for hub_id in range(len(yaml_d['stages'][stage])):
-            
-                test_source = yaml_d['stages'][stage][hub_id]['source_name']
-                test_hub = yaml_d['stages'][stage][hub_id]['hub_name']
-                for port in yaml_d['stages'][stage][hub_id]:
-                    if yaml_d[test_source][test_hub][port] is None:
-                        return dict(hub_id = hub_id, port = port)
-                error_printing(f"Error when trying to find a free port:\nNo free port available in stage '{stage}'.", False)
-                return
+            test_source = yaml_d['stages'][stage][hub_id]['source_name']
+            test_hub = yaml_d['stages'][stage][hub_id]['hub_name']
+            for port in yaml_d['stages'][stage][hub_id]:
+                if yaml_d[test_source][test_hub][port] is None:
+                    return dict(hub_id = hub_id, port = port)
+                
+            error_printing(f"Error when trying to find a free port:\nNo free port available in stage '{stage}'.", False)
     except KeyError as err:
         error_printing(f"Error when trying to find a free port:\nPlease make sure the stage '{stage}' exists.", False)
         if call_from_CLI:
             raise err
-        return
 
 # deploy phone
 @decorator_timer
