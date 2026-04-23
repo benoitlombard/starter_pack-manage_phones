@@ -13,7 +13,10 @@ def change_phone(*args, **kwargs)->None:
     file_name = kwargs['file_name']    #
 
     new_data = {}
-    keys = ['phone', 'release_type', 'user', 'fota', 'activitytracking', 'functional', 'performance', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid', 'deployed', 'status', 'hub', 'port', 'yaml_d', 'call_from_CLI']
+    keys = ['phone', 'release_type', 'user', 'fota', 'activitytracking', 'functional',
+            'performance','manufacturer', 'model', 'vendor', 'family', 'version', 'platform',
+            'ip', 'udid', 'deployed', 'status', 'hub', 'port', 'yaml_d', 'call_from_CLI']
+    
     for key in keys:
         new_data[key] = kwargs[key] if kwargs.get(key) else ''
 
@@ -94,7 +97,10 @@ def change_phone(*args, **kwargs)->None:
             new_data['activitytracking'] = input('activitytracking: ')
             new_data['functional'] = input('functional: ')
             new_data['performance'] = input('performance: ')
-            testrun_ids = dict(fota = new_data['fota'], activitytracking = new_data['activitytracking'], functional = new_data['functional'], performance = new_data['performance'])
+
+            testrun_ids = dict(fota = new_data['fota'], activitytracking = new_data['activitytracking'],
+                               functional = new_data['functional'], performance = new_data['performance'])
+
             yaml_d['phones'][new_data['phone']]['testrun_ids'] = testrun_ids
         else:
             error_printing("KeyError: User input do not match selection.", False)
