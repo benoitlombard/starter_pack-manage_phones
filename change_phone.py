@@ -1,27 +1,27 @@
 import sys
 from error_methods import error_printing
 from decorators_file import decorator_timer
+from ruamel.yaml.comments import CommentedMap
 
 # change phone
 @decorator_timer
-def change_phone(*args, **kwargs)->None:
+def change_phone(yaml_d: CommentedMap, yaml, **kwargs)->None:
     """
     Allows user to change some information from 'phones' data by asking which phone and what value of attribute he want to change
     """
-    yaml_d = kwargs['yaml_d']          #
-    yaml = kwargs['yaml']              #  unpacking elements to use yaml and access phone's current data
-    file_name = kwargs['file_name']    #
+    file_name = kwargs['file_name']
 
     new_data = {}
-    keys = ['phone', 'release_type', 'user', 'fota', 'activitytracking', 'functional', 'performance', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid', 'deployed', 'status', 'hub', 'port', 'yaml_d', 'call_from_CLI']
+    keys = ['phone', 'release_type', 'user', 'fota', 'activitytracking', 'functional', 'performance', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid', 'hub', 'port', 'call_from_CLI']
     for key in keys:
         new_data[key] = kwargs[key] if kwargs.get(key) else ''
 
+    cli = new_data['call_from_CLI']
     while new_data['phone'] == '':
-        dict_of_phones = {}
+        dict_of_phones: list = []
         print('Phone to change: ')
         for phone_index, phone in  enumerate(yaml_d['phones']):
-            dict_of_phones[phone_index] = yaml_d['phones'][phone]['name']
+            dict_of_phones.append(yaml_d['phones'][phone]['name'])
             print(str(phone_index) + ': ' + yaml_d['phones'][phone]['name'])
             print('\t' + yaml_d['phones'][phone]['vendor'] + ' ' + yaml_d['phones'][phone]['family'] + ' ' + str(yaml_d['phones'][phone]['version']))
         indx = input('? ')
@@ -29,42 +29,34 @@ def change_phone(*args, **kwargs)->None:
             new_data['phone'] = dict_of_phones[int(indx)]
         except ValueError as err:
             error_printing("ValueError: User input do not match selection.", False)
-            if new_data['call_from_CLI']:
+            if cli:
                 raise err
             return
         except KeyError as err:
             error_printing("KeyError: User input do not match selection.", False)
-            if new_data['call_from_CLI']:
+            if cli:
                 raise err
             return
-    if new_data['call_from_CLI']:
+
+    if cli:
         try:
-            for attribute in ['release_type', 'user', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid', 'deployed']:
+            for attribute in ['release_type', 'user', 'manufacturer', 'model', 'vendor', 'family', 'version', 'platform', 'ip', 'udid']:
                 yaml_d['phones'][new_data['phone']][attribute] = new_data[attribute] if new_data[attribute] != '' else yaml_d['phones'][new_data['phone']][attribute]
-            if new_data['status'] != '' or new_data['hub'] != '' or new_data['port'] != '':
-                for deployment_path_attribute in ['status', 'hub', 'port']:
+            if new_data['hub'] != '' or new_data['port'] != '':
+                for deployment_path_attribute in ['hub', 'port']:
                     yaml_d['phones'][new_data['phone']]['deployment_path'][deployment_path_attribute] = new_data[deployment_path_attribute] if new_data[deployment_path_attribute] != '' else yaml_d['phones'][new_data['phone']]['deployment_path'][deployment_path_attribute]
         except KeyError as err:
             error_printing(f"Phone {new_data['phone']} not found.", False)
-            if new_data['call_from_CLI']:
+            if cli:
                 raise err
             return
-        if new_data['fota'] != '' or new_data['activitytracking'] != '' or new_data['functional'] != '' or new_data['performance'] != '':
-            if not 'testrun_ids' in yaml_d['phones'][new_data['phone']]:
-                yaml_d['phones'][new_data['phone']]['testrun_ids'] = {}
-                yaml_d['phones'][new_data['phone']]['testrun_ids']['fota'] = new_data['fota'] if new_data['fota'] != '' else None
-                yaml_d['phones'][new_data['phone']]['testrun_ids']['activitytracking'] = new_data['activitytracking'] if new_data['activitytracking'] != '' else None
-                yaml_d['phones'][new_data['phone']]['testrun_ids']['functional'] = new_data['functional'] if new_data['functional'] != '' else None
-                yaml_d['phones'][new_data['phone']]['testrun_ids']['performance'] = new_data['performance'] if new_data['performance'] != '' else None
-            else:
-                if new_data['fota'] != '':
-                    yaml_d['phones'][new_data['phone']]['testrun_ids']['fota'] = new_data['fota']
-                if new_data['activitytracking'] != '':
-                    yaml_d['phones'][new_data['phone']]['testrun_ids']['activitytracking'] = new_data['activitytracking']
-                if new_data['functional'] != '':
-                    yaml_d['phones'][new_data['phone']]['testrun_ids']['functional'] = new_data['functional']
-                if new_data['performance'] != '':
-                    yaml_d['phones'][new_data['phone']]['testrun_ids']['performance'] = new_data['performance']
+
+        testrun_keys = ("fota", "activitytracking", "functional", "performance")
+        updates = {key: new_data[key] for key in testrun_keys if new_data[key] != ""}
+        if updates:
+            yaml_d["phones"][new_data["phone"]].setdefault("testrun_ids", {})
+            yaml_d["phones"][new_data["phone"]]["testrun_ids"].update(updates)
+
     else:
         yaml.dump(new_data['phone'], sys.stdout)
         print('What to change')
@@ -80,15 +72,14 @@ def change_phone(*args, **kwargs)->None:
             while ret != '1' and ret != '2':
                 print('Please select a for PU1 or b for PU100')
                 ret = input('? ')
-            if ret == '1':
-                release_type = 'PU1'
-            elif ret == '2':
-                release_type = 'PU100'
+            release_type = "PU1" if ret == "1" else "PU100"
             yaml_d['phones'][new_data['phone']]['release_type'] = release_type
+
         elif ret == '2':
             print('New user: (complete string)')
             user = input('? ')
             yaml_d['phones'][new_data['phone']]['user'] = user
+
         elif ret == '3':
             new_data['fota'] = input('fota: ')
             new_data['activitytracking'] = input('activitytracking: ')
@@ -96,12 +87,12 @@ def change_phone(*args, **kwargs)->None:
             new_data['performance'] = input('performance: ')
             testrun_ids = dict(fota = new_data['fota'], activitytracking = new_data['activitytracking'], functional = new_data['functional'], performance = new_data['performance'])
             yaml_d['phones'][new_data['phone']]['testrun_ids'] = testrun_ids
+
         else:
             error_printing("KeyError: User input do not match selection.", False)
             return
-        
+
     with open(file_name, 'w') as w:
         yaml.dump(yaml_d, w)
-        error_printing(f'{new_data['phone']} successfully changed.', True)
+        error_printing(f"{new_data['phone']} successfully changed.", True)
         return
-    error_printing('Error when writing to the yaml file.', False)
