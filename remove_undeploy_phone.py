@@ -1,9 +1,10 @@
 from error_methods import error_printing
 from decorators_file import decorator_timer
+from ruamel.yaml.comments import CommentedMap
 
 # undeploy phone
 @decorator_timer
-def undeploy_phone(yaml_d: dict, yaml, file_name: str, phone: str = '', call_from_CLI: bool = False)->None:
+def undeploy_phone(yaml_d: CommentedMap, yaml, file_name: str, phone: str = '', call_from_CLI: bool = False)->None:
     """
     Undeploy phone from 'stage', given his name\n
     It particular, values from his 'deployment_path' are set to none, 'deployed' attribute is set to false\n
@@ -13,7 +14,7 @@ def undeploy_phone(yaml_d: dict, yaml, file_name: str, phone: str = '', call_fro
         dict_of_phones = {}
         print('Phone to undeploy: ')
         for phone_index, inspected_phone in  enumerate(yaml_d['phones']):
-            if yaml_d['phones'][inspected_phone]['deployed']:
+            if yaml_d['phones'][inspected_phone]['deployment_path']["hub"]:
                 dict_of_phones[phone_index] = yaml_d['phones'][inspected_phone]['name']
                 print(str(phone_index) + ': ' + yaml_d['phones'][inspected_phone]['name'])
         indx = input('? ')
@@ -30,21 +31,24 @@ def undeploy_phone(yaml_d: dict, yaml, file_name: str, phone: str = '', call_fro
                 raise err
             return
     try:
-        if yaml_d['phones'][phone]['deployed']:
-            phone_deployment_status = yaml_d['phones'][phone]['deployment_path']['status']
+        hubs = ["switch", "usb_hub"]
+        phone_deployment_hub = ""
+        phone_deployment_port = ""
+        if yaml_d['phones'][phone]["deployment_path"]["hub"]:
             phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']
             phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
-            source_name = yaml_d['stages'][phone_deployment_status][phone_deployment_hub]['source_name']
-            hub_name = yaml_d['stages'][phone_deployment_status][phone_deployment_hub]['hub_name']
-            yaml_d[str(source_name)][str(hub_name)][phone_deployment_port] = None
+            for hub in hubs:
+                if yaml_d[hub].get(phone_deployment_hub):
+                    hub_deployed = yaml_d[hub][phone_deployment_hub]
 
-            yaml_d['phones'][phone]['deployment_path']['status'] = None
+            hub_deployed[phone_deployment_port] = None
             yaml_d['phones'][phone]['deployment_path']['hub'] = None
             yaml_d['phones'][phone]['deployment_path']['port'] = None
-            yaml_d['phones'][phone]['deployed'] = False
+
         else:
             error_printing(f"{phone} is not deployed.\nUndeployment is not possible.", False)
             return
+
     except KeyError as err:
         error_printing("Key Error when writing to the yaml file.\nUndeployment failed, please verify phone name.", False)
         if call_from_CLI:
@@ -54,14 +58,14 @@ def undeploy_phone(yaml_d: dict, yaml, file_name: str, phone: str = '', call_fro
     with open(file_name, 'w') as w:
         yaml.dump(yaml_d, w)
         error_printing(f"{phone} successfully undeployed.", True)
-        error_printing('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(hub_name) + ' at stage ' + str(phone_deployment_status), True)
+        error_printing('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(phone_deployment_hub), True)
 
 # remove phone
 @decorator_timer
-def remove_phone(yaml_d: dict, yaml, file_name: str, phone: str = '', call_from_CLI: bool = False)->None:
+def remove_phone(yaml_d: CommentedMap, yaml, file_name: str, phone: str = '', call_from_CLI: bool = False)->None:
     """
     Remove an existing phone by asking user for input\n
-    remove_phone will check if the phone is deployed and undeploy it if necessary before removing it 
+    remove_phone will check if the phone is deployed and undeploy it if necessary before removing it
     """
     while phone == '':
         print('Enter phone name')
@@ -72,7 +76,7 @@ def remove_phone(yaml_d: dict, yaml, file_name: str, phone: str = '', call_from_
             print('You can just undeploy from test stages.')
 
         if call_from_CLI or input('enter yes if are sure: ').lower() == 'yes':
-            if yaml_d['phones'][phone]['deployed']:
+            if yaml_d['phones'][phone]['deployment_path']["hub"]:
                 undeploy_phone(yaml_d, yaml, file_name, phone, call_from_CLI)
             del yaml_d['phones'][phone]
             with open(file_name, 'w') as w:
@@ -82,8 +86,5 @@ def remove_phone(yaml_d: dict, yaml, file_name: str, phone: str = '', call_from_
         else:
             error_printing('User aborted phone removal.', False)
             return
+
     error_printing(f"Error: phone '{phone}' not found.", False)
-
-
-
-

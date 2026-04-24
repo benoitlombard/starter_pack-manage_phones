@@ -3,89 +3,82 @@ rtc_params:
   max_ip: 254
 
 phones:
-  zeus: &zeus
-    name: zeus
-    manufacturer: Apple
-    model: iPhone 7
-    vendor: Apple
-    family: ios.3
-    version: '1'
-    platform: ios
-    release_type: PU100
-    ip: 192.168.5.248
-    udid: 004dbf2d1352472f9c40c6cc62da3c5d43ce2672
-    user: rtc+PROD_iPhone7@cobi.bike
-    deployed: true
-    deployment_path:
-      status: dev
-      hub: 0
-      port: port01
-    testrun_ids:
-      fota: qqqq
-      activitytracking: qqq
-      functional: qq
-      performance: q
   Chaos: &Chaos
     name: Chaos
     manufacturer:
     model:
-    vendor: Samsung
-    family: S22
-    version: '4'
-    platform: android
+    vendor: Apple
+    family: iOS
+    version: '6'
+    platform: ios
     release_type: PU1
-    ip: 192.168.5.220
-    udid: SSSS-4444-C
-    user: benoit
-    deployed: true
+    ip: 192.168.5.200
+    udid: e3f43g3
+    user: rtc-Chaos@cobi.bike
     deployment_path:
-      status: dev
-      hub: 0
-      port: port05
+      hub: tp_link_tlsg3424
+      port: port12
   Nyx: &Nyx
     name: Nyx
     manufacturer:
     model:
-    vendor: Nokia
-    family: '0'
-    version: '1'
+    vendor: Samsung
+    family: ST
+    version: '43'
     platform: android
     release_type: PU100
-    ip: 192.168.5.221
-    udid: UUUUU-5
-    user: player1
-    deployed: true
+    ip: 192.168.5.201
+    udid: g433
+    user: rtc-Nyx@cobi.bike
     deployment_path:
-      status: dev
-      hub: 0
-      port: port03
-    testrun_ids:
-      fota: '111'
-      activitytracking: '1'
-      functional: '1'
-      performance: '1'
-  Erebos: &Erebos
+      hub: tp_link_tlsg3424
+      port: port13
+
+  Erebos:
     name: Erebos
     manufacturer:
     model:
     vendor: Apple
-    family: ios.4
-    version: '4.4'
+    family: iOS
+    version: '4'
     platform: ios
     release_type: PU1
-    ip: 192.168.5.222
-    udid: AAAA-HJyba-441
+    ip: 192.168.5.202
+    udid: rg343
     user: rtc-Erebos@cobi.bike
-    deployed: true
     deployment_path:
-      status: prod
-      hub: 0
-      port: port12
-    testrun_ids:
-      fota: aaa
-      activitytracking: a
-      functional: a
-      performance: a
+      hub:
+      port:
+  Hesperiden:
+    name: Hesperiden
+    manufacturer:
+    model:
+    vendor: Apple
+    family: iOS
+    version: '23'
+    platform: ios
+    release_type: PU100
+    ip: 192.168.5.203
+    udid: g4h34h
+    user: rtc-Hesperiden@cobi.bike
+    deployment_path:
+      hub:
+      port:
+  Aither:
+    name: Aither
+    manufacturer:
+    model:
+    vendor: Apple
+    family: nOS
+    version: '3'
+    platform: ios
+    release_type: PU1
+    ip: 192.168.5.204
+    udid: f43g43
+    user: rtc-Aither@cobi.bike
+    deployment_path:
+      hub:
+      port:
 biab:
   ariel: &ariel
     name: Ariel
@@ -229,8 +222,6 @@ access_point:
 switch:
   tp_link_tlsg3424: &tp_link_tlsg3424
     name: TP-Link TLSG3424
-    source_name: switch
-    hub_name: tp_link_tlsg3424
     port01: *bts_black_mask
     port02: *bts_black_flash
     port03: *bts_batwoman
@@ -242,8 +233,8 @@ switch:
     port09: *bts_black_adam
     port10: *bts_beast_boy
     port11: *bts_black_condor
-    port12: *Erebos
-    port13:
+    port12: *Chaos
+    port13: *Nyx
     port14:
     port15:
     port16:
@@ -259,21 +250,17 @@ switch:
 usb_hub:
   exsys_ex_1116hmvs_1: &exsys_ex_1116hmvs_1
     name: ExSys EX-1116HMVS
-    source_name: usb_hub
-    hub_name: exsys_ex_1116hmvs_1
-    port01: *zeus
+    port01:
     port02:
-    port03: *Nyx
+    port03:
     port04:
-    port05: *Chaos
+    port05:
     port06:
     port07:
     port08:
 
   exsys_ex_1116hmvs_2: &exsys_ex_1116hmvs_2
     name: ExSys EX-1116HMVS
-    source_name: usb_hub
-    hub_name: exsys_ex_1116hmvs_2
     port01:
     port02:
     port03:
@@ -293,8 +280,7 @@ usb_hub:
 
 stages:
   prod:
-  - <<: *tp_link_tlsg3424
+  - *tp_link_tlsg3424
   dev:
-  - <<: *exsys_ex_1116hmvs_1
-    port01:
-  - <<: *exsys_ex_1116hmvs_2
+  - *exsys_ex_1116hmvs_1
+  - *exsys_ex_1116hmvs_2

@@ -28,7 +28,7 @@ if __name__ == "__main__":
         ret = input('? ')
 
         match ret:
-            case '1':   # parameter write = False mean user will be asked if he wants to write the phone data or not in the yaml file 
+            case '1':   # parameter write = False mean user will be asked if he wants to write the phone data or not in the yaml file # This info should be inside the method
                 add_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, write = False, call_from_CLI= False)
             case '2':
                 change_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, call_from_CLI= False)
