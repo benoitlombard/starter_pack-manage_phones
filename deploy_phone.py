@@ -1,4 +1,4 @@
-from error_methods import error_printing
+from error_methods import send_custom_msg_success_fail
 from decorators_file import decorator_timer
 from ruamel.yaml.comments import CommentedMap
 
@@ -14,7 +14,7 @@ def _find_free_port(data: CommentedMap, stage: str) -> tuple[str, CommentedMap]:
             if port.startswith("port") and value is None:
                 return port, hub
 
-    error_printing(f"Error when trying to find a free port:\nNo free port available in stage '{stage}'.", False)
+    send_custom_msg_success_fail(f"Error when trying to find a free port:\nNo free port available in stage '{stage}'.", False)
 
 # deploy phone
 @decorator_timer
@@ -41,7 +41,7 @@ def deploy_phone(yaml_d: CommentedMap, yaml, file_name: str, phone: str = '', st
         stage = "prod" if ret == "1" else "dev"
 
     if stage not in stages:
-        error_printing(f"Please select a stage from {stages}.", False)
+        send_custom_msg_success_fail(f"Please select a stage from {stages}.", False)
         return
 
     port, hub = _find_free_port(yaml_d, stage)
@@ -55,7 +55,7 @@ def deploy_phone(yaml_d: CommentedMap, yaml, file_name: str, phone: str = '', st
                 phones_not_deployed.append(phone)
 
         if not phones_not_deployed:
-            error_printing(f"No phones available for deployment", False)
+            send_custom_msg_success_fail(f"No phones available for deployment", False)
             return
 
         print('Phones available to deploy: ')
@@ -71,7 +71,7 @@ def deploy_phone(yaml_d: CommentedMap, yaml, file_name: str, phone: str = '', st
         while True:
             selected_idx = input('? ')
             if int(selected_idx) > len(phones_not_deployed):
-                error_printing("IndexError: User input do not match options.", False)
+                send_custom_msg_success_fail("IndexError: User input do not match options.", False)
             else:
                 break
 
@@ -79,13 +79,13 @@ def deploy_phone(yaml_d: CommentedMap, yaml, file_name: str, phone: str = '', st
 
     else:
         if phone not in yaml_d['phones']:
-            error_printing(f'No phone named {phone}.', False)
+            send_custom_msg_success_fail(f'No phone named {phone}.', False)
             if call_from_CLI:
                 raise KeyError
             return
 
         if yaml_d['phones'][phone]["deployment_path"]["hub"]:
-            error_printing(f'{phone} is already deployed.', False)
+            send_custom_msg_success_fail(f'{phone} is already deployed.', False)
             return
 
         selected_phone = phone
@@ -97,4 +97,4 @@ def deploy_phone(yaml_d: CommentedMap, yaml, file_name: str, phone: str = '', st
     with open(file_name, 'w') as yaml_file:
         yaml.dump(yaml_d, yaml_file)
 
-    error_printing(f'{selected_phone} successfully deployed in {stage}.', True)
+    send_custom_msg_success_fail(f'{selected_phone} successfully deployed in {stage}.', True)

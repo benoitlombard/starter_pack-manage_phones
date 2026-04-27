@@ -1,4 +1,4 @@
-from error_methods import error_printing
+from error_methods import send_custom_msg_success_fail
 from decorators_file import decorator_timer
 from ruamel.yaml.comments import CommentedMap
 
@@ -21,12 +21,12 @@ def undeploy_phone(yaml_d: CommentedMap, yaml, file_name: str, phone: str = '', 
         try:
             phone = dict_of_phones[int(indx)]
         except ValueError as err:
-            error_printing("Error: User input do not match selection.", False)
+            send_custom_msg_success_fail("Error: User input do not match selection.", False)
             if call_from_CLI:
                 raise err
             return
         except KeyError as err:
-            error_printing("Error: User input do not match selection.", False)
+            send_custom_msg_success_fail("Error: User input do not match selection.", False)
             if call_from_CLI:
                 raise err
             return
@@ -46,19 +46,19 @@ def undeploy_phone(yaml_d: CommentedMap, yaml, file_name: str, phone: str = '', 
             yaml_d['phones'][phone]['deployment_path']['port'] = None
 
         else:
-            error_printing(f"{phone} is not deployed.\nUndeployment is not possible.", False)
+            send_custom_msg_success_fail(f"{phone} is not deployed.\nUndeployment is not possible.", False)
             return
 
     except KeyError as err:
-        error_printing("Key Error when writing to the yaml file.\nUndeployment failed, please verify phone name.", False)
+        send_custom_msg_success_fail("Key Error when writing to the yaml file.\nUndeployment failed, please verify phone name.", False)
         if call_from_CLI:
             raise err
         return
 
     with open(file_name, 'w') as w:
         yaml.dump(yaml_d, w)
-        error_printing(f"{phone} successfully undeployed.", True)
-        error_printing('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(phone_deployment_hub), True)
+        send_custom_msg_success_fail(f"{phone} successfully undeployed.", True)
+        send_custom_msg_success_fail('Please unplug ' + str(phone) + ' from ' + str(phone_deployment_port) + ' at hub ' + str(phone_deployment_hub), True)
 
 # remove phone
 @decorator_timer
@@ -81,10 +81,10 @@ def remove_phone(yaml_d: CommentedMap, yaml, file_name: str, phone: str = '', ca
             del yaml_d['phones'][phone]
             with open(file_name, 'w') as w:
                 yaml.dump(yaml_d, w)
-                error_printing(f'{phone} successfully removed.', True)
+                send_custom_msg_success_fail(f'{phone} successfully removed.', True)
                 return
         else:
-            error_printing('User aborted phone removal.', False)
+            send_custom_msg_success_fail('User aborted phone removal.', False)
             return
 
-    error_printing(f"Error: phone '{phone}' not found.", False)
+    send_custom_msg_success_fail(f"Error: phone '{phone}' not found.", False)

@@ -1,5 +1,5 @@
 import sys
-from error_methods import error_printing
+from error_methods import send_custom_msg_success_fail
 from decorators_file import decorator_timer
 from ruamel.yaml.comments import CommentedMap
 
@@ -28,12 +28,12 @@ def change_phone(yaml_d: CommentedMap, yaml, **kwargs)->None:
         try:
             new_data['phone'] = dict_of_phones[int(indx)]
         except ValueError as err:
-            error_printing("ValueError: User input do not match selection.", False)
+            send_custom_msg_success_fail("ValueError: User input do not match selection.", False)
             if cli:
                 raise err
             return
         except KeyError as err:
-            error_printing("KeyError: User input do not match selection.", False)
+            send_custom_msg_success_fail("KeyError: User input do not match selection.", False)
             if cli:
                 raise err
             return
@@ -46,7 +46,7 @@ def change_phone(yaml_d: CommentedMap, yaml, **kwargs)->None:
                 for deployment_path_attribute in ['hub', 'port']:
                     yaml_d['phones'][new_data['phone']]['deployment_path'][deployment_path_attribute] = new_data[deployment_path_attribute] if new_data[deployment_path_attribute] != '' else yaml_d['phones'][new_data['phone']]['deployment_path'][deployment_path_attribute]
         except KeyError as err:
-            error_printing(f"Phone {new_data['phone']} not found.", False)
+            send_custom_msg_success_fail(f"Phone {new_data['phone']} not found.", False)
             if cli:
                 raise err
             return
@@ -92,10 +92,10 @@ def change_phone(yaml_d: CommentedMap, yaml, **kwargs)->None:
             yaml_d['phones'][new_data['phone']]['testrun_ids'] = testrun_ids
 
         else:
-            error_printing("KeyError: User input do not match selection.", False)
+            send_custom_msg_success_fail("KeyError: User input do not match selection.", False)
             return
 
     with open(file_name, 'w') as w:
         yaml.dump(yaml_d, w)
-        error_printing(f"{new_data['phone']} successfully changed.", True)
+        send_custom_msg_success_fail(f"{new_data['phone']} successfully changed.", True)
         return

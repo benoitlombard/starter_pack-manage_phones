@@ -9,7 +9,7 @@ I made the following choices concerning handling errors:
     we never raise exceptions, and we return True for success and False for failure, sub function is exited and user can retry from main menu.
 """
 # Change name of method, as not only prints errors
-def error_printing(message: str, is_success: bool)->None:
+def send_custom_msg_success_fail(message: str, is_success: bool)->None:
     """
     Print error/success message formatted RED/GREEN using Typer module.\n
     parameter of function: 'is_success' defines the color of the output True= Green (success), False= Red (failure)

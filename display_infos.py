@@ -1,5 +1,5 @@
 import sys
-from error_methods import error_printing
+from error_methods import send_custom_msg_success_fail
 from decorators_file import decorator_timer
 from ruamel.yaml.comments import CommentedMap
 
@@ -50,7 +50,7 @@ def _list_phones(yaml_d: dict, yaml)->None:
         try:
             ret = int(ret)
         except ValueError:
-            error_printing("Error: User input do not match selection.", False)
+            send_custom_msg_success_fail("Error: User input do not match selection.", False)
             return
 
         if ret == len(list_of_vendors):
@@ -74,7 +74,7 @@ def _list_phones(yaml_d: dict, yaml)->None:
             try:
                 ret = int(ret)
             except ValueError:
-                error_printing("Error: User input do not match selection.", False)
+                send_custom_msg_success_fail("Error: User input do not match selection.", False)
                 return
 
             if ret == len(list_of_families):
@@ -100,7 +100,7 @@ def _list_phones(yaml_d: dict, yaml)->None:
                 try:
                     ret = int(ret)
                 except ValueError:
-                    error_printing("Error: User input do not match selection.", False)
+                    send_custom_msg_success_fail("Error: User input do not match selection.", False)
                     return
 
                 if ret == len(list_of_versions):
@@ -128,7 +128,7 @@ def _list_phones(yaml_d: dict, yaml)->None:
             ret = int(ret)
             selected_platform =  list_of_platform[ret]
         except ValueError:
-            error_printing("Error: User input do not match selection.", False)
+            send_custom_msg_success_fail("Error: User input do not match selection.", False)
             return
 
         for phone in yaml_d['phones']:
@@ -136,7 +136,7 @@ def _list_phones(yaml_d: dict, yaml)->None:
                 yaml.dump(yaml_d['phones'][phone], sys.stdout)
         return
 
-    error_printing("Error: User input do not match selection.", False) # handling every case of 'input > max' with this single line and by returning after yaml.dump
+    send_custom_msg_success_fail("Error: User input do not match selection.", False) # handling every case of 'input > max' with this single line and by returning after yaml.dump
 
 def display(yaml_d: dict, yaml)->None:
     """
@@ -173,7 +173,7 @@ def display(yaml_d: dict, yaml)->None:
         case '6':
             print('Not deployed phones:')
             for phone in yaml_d['phones']:
-                if not yaml_d['phones'][phone]['deployed']:
+                if yaml_d['phones'][phone]['deployment_path']['hub'] is not None:
                     yaml.dump(yaml_d['phones'][phone], sys.stdout)
         case '7':                # new function
             print('Phone to show: ')
@@ -181,6 +181,6 @@ def display(yaml_d: dict, yaml)->None:
             try:
                 yaml.dump(yaml_d['phones'][ret], sys.stdout)
             except:
-                error_printing(f"Error: phone '{ret}' not found.", False)
+                send_custom_msg_success_fail(f"Error: phone '{ret}' not found.", False)
         case _:
-            error_printing("User input do not match selection.", False)
+            send_custom_msg_success_fail("User input do not match selection.", False)
