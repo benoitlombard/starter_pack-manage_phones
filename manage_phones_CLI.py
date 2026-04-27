@@ -14,22 +14,27 @@ from display_infos import list_from_yaml, show_stage                # CLI functi
 phone_management_app = typer.Typer()
 
 # add
-@phone_management_app.command(name = "add", rich_help_panel = "[orange1]Update data[/orange1]")
+@phone_management_app.command(name="add", epilog="""Examples of use:
+
+                        'python manage_phones_CLI.py add --vendor Apple --family ios3.0 --version 4.5 --udid Arwschio4cb8ac-cc4 --user john --release-type PU100
+
+                        'python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-Arwschio4cb8ac-cc4 --user johnny --release-type PU1 --write --manufacturer microsoft
+
+                        'python manage_phones_CLI.py add --vendor Microsft --family msft --version 2 --udid udid-Arwschiddddd8888ac-cc4 --user johnny --manufacturer microsoft --fota fota_id_112 --activitytracking 44
+
+                        'python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-test-cc4 --user johnny --release-type PU1 --manufacturer microsoft --no-write"""
+                        )
 def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '',
         release_type: str = 'PU1', write: bool = True, fota: str = None, activitytracking: str = None,
         functional: str = None, performance: str = None, manufacturer: str = None, model: str = None)->None:
     """
-    [gold1]Allows the user to add a new phone through CLI[/gold1]\n
-    [bold gold1]The information will be stored in the yaml file by default, except if optional argument --no-write.[/bold gold1]
-    [bold italic gold1]Examples of use:[/bold italic gold1][bold gold1]
-    python manage_phones_CLI.py add --vendor Apple --family ios3.0 --version 4.5 --udid Arwschio4cb8ac-cc4 --user john --release-type PU100
-    python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-Arwschio4cb8ac-cc4 --user johnny --release-type PU1 --write --manufacturer microsoft
-    python manage_phones_CLI.py add --vendor Microsft --family msft --version 2 --udid udid-Arwschiddddd8888ac-cc4 --user johnny --manufacturer microsoft --fota fota_id_112 --activitytracking 44
-    python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-test-cc4 --user johnny --release-type PU1 --manufacturer microsoft --no-write[/bold gold1]
+    Allows the user to add a new phone through CLI.
+
+    The information will be stored in the yaml file by default, except if optional argument write is set to False.
     """
     add_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, vendor = vendor, family = family,
-            version = version, udid = udid, user = user, releasetype = release_type, write = write,
-            fota = fota, activitytracking = activitytracking, functional = functional,
+            version = version, udid = udid, user = user, release_type = release_type, write = write,
+            fota = fota, activityTracking = activitytracking, functional = functional,
             performance = performance, manufacturer = manufacturer, model = model, call_from_CLI = True)
 
 # change
@@ -37,7 +42,7 @@ def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', u
 def change(phone: str = '', release_type: str = '', user: str = '', fota: str = '', activitytracking: str = '',
            functional: str = '', performance: str = '', manufacturer: str = '', model: str = '',
            vendor: str = '', family: str = '', version: str = '', platform: str = '', ip: str = '',
-           udid: str = '', deployed: str = '', status: str = '', hub: str = '', port: str = '')->None:
+           udid: str = '', hub: str = '', port: str = '')->None:
     """
     [orange1]Change one or more value of a phone's data given his name[/orange1]\n
     [bold italic gold1]Examples of use:[/bold italic gold1][bold gold1]
@@ -47,13 +52,13 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
     python manage_phones_CLI.py change --version 1.0 --manufacturer Samsung --phone Nyx --release-type PU1 --user jean-claude --udid udid_223 --status dev --activitytracking test_activitytracking --performance 4 --platform android_18.1
     python manage_phones_CLI.py change --version 8.1 --manufacturer Ssg --phone Nyx --release-type PU100 --user zidane --udid udid_0 --activitytracking test_2 --performance 11 --platform android_19.0[/bold gold1]
     """
-    if all(attribute == '' for attribute in [release_type, user, fota, activitytracking, functional, performance, manufacturer, model, vendor, family, version, platform, ip, udid, deployed, status, hub, port]):
+    if all(attribute == '' for attribute in [release_type, user, fota, activitytracking, functional, performance, manufacturer, model, vendor, family, version, platform, ip, udid, hub, port]):
         typer.secho('No values to change !', fg=typer.colors.BRIGHT_RED)
         return
     change_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, phone = phone, release_type = release_type, user = user,
                  fota = fota, functional = functional, activitytracking = activitytracking, performance = performance,
                  manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform,
-                 ip = ip, udid = udid, deployed = deployed, status = status, hub = hub, port = port, call_from_CLI = True)
+                 ip = ip, udid = udid, hub = hub, port = port, call_from_CLI = True)
 
 # deploy
 @phone_management_app.command("deploy", rich_help_panel = "[sea_green2]Deployment[/sea_green2]")
@@ -91,6 +96,40 @@ def remove(phone: str = '')->None:
     remove_phone(yaml_d = yaml_d, yaml = yaml,
                  file_name = file_name, phone = phone,
                  call_from_CLI = True)
+
+# change
+@phone_management_app.command("change")
+def change(phone: str = '', release_type: str = '', user: str = '', fota: str = '', activitytracking: str = '',
+           functional: str = '', performance: str = '', manufacturer: str = '', model: str = '',
+           vendor: str = '', family: str = '', version: str = '', platform: str = '', ip: str = '',
+           udid: str = '', hub: str = '', port: str = '')->None:
+    """
+    Change one or more value of a phone's data given his name\n
+    Examples of use:        'python manage_phones_CLI.py change --phone Chaos --release-type PU100 --user jean
+                            'python manage_phones_CLI.py change --phone Chaos --fota fota_id
+                            'python manage_phones_CLI.py change --version 1.0 --manufacturer Samsung --phone Chaos --release-type PU100 --user jean-pierre --udid udid_test --status prod
+                            'python manage_phones_CLI.py change --version 1.0 --manufacturer Samsung --phone Nyx --release-type PU1 --user jean-claude --udid udid_223 --status dev --activitytracking test_activitytracking --performance 4 --platform android_18.1
+                            'python manage_phones_CLI.py change --version 8.1 --manufacturer Ssg --phone Nyx --release-type PU100 --user zidane --udid udid_0 --activitytracking test_2 --performance 11 --platform android_19.0
+    """
+    if all(attribute == '' for attribute in [release_type, user, fota, activitytracking, functional, performance, manufacturer, model, vendor, family, version, platform, ip, udid, hub, port]):
+        typer.secho('No values to change !', fg=typer.colors.BRIGHT_RED)
+        return
+    change_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, phone = phone, release_type = release_type, user = user,
+                 fota = fota, functional = functional, activitytracking = activitytracking, performance = performance,
+                 manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform,
+                 ip = ip, udid = udid, hub = hub, port = port, call_from_CLI = True)
+
+# deploy
+@phone_management_app.command("deploy")
+def deploy(phone: str = '', stage: str = '')->None:
+    """
+    Deploy a phone given his name and the stage it should be deployed at\n
+    Examples of use:        'python manage_phones_CLI.py deploy --phone Chaos --stage dev
+                            'python manage_phones_CLI.py deploy --phone Chaos --stage prod
+    """
+    deploy_phone(yaml_d = yaml_d, yaml = yaml,
+                 file_name = file_name, phone = phone,
+                 stage = stage, call_from_CLI = True)
 
 # show_config
 @phone_management_app.command("show_config", rich_help_panel = "[deep_sky_blue1]Show data[/deep_sky_blue1]")
@@ -153,4 +192,6 @@ def lists(item_to_show: str = '', stage_to_show: str = '', measure_time: bool = 
         case _:
             typer.secho(f"Error: User input do not match selection: '{item_to_show}'.", fg=typer.colors.RED)
 
-phone_management_app()
+
+if __name__ == "__main__":
+    phone_management_app()
