@@ -1,6 +1,5 @@
 pipeline {
     agent any  // Run on any available agent
-
     stages {
         stage("Clone Code") {
             steps {
@@ -8,27 +7,27 @@ pipeline {
                 git url: "https://github.com/benoitlombard/starter_pack-manage_phones", branch: "main"
             }
         }
+        environment {
+            PYTHON_VERSION = "3.12"
+            VIRTUAL_ENV = "myVirtualEnv"
+        }
         stage('Setup vritual Environment') {
             steps {
-                sh 'python3 -m venv myVirtualEnv'
-                sh 'ls'
-                sh 'source myVirtualEnv/bin/activate'
+                sh '''
+                    python${PYTHON_VERSION} -m venv ${VIRTUAL_ENV}'
+                    source ${VIRTUAL_ENV}/bin/activate
+                    pip install --upgrade pip
+                '''
             }
         }
         stage('Install Dependencies') {
             steps {
                 script {
-                    echo "installing typer"
-                    sh 'pip install -r typer'
+                    sh '''
+                        source venv/bin/activate
+                        pip install -r typer
+                    '''
                     echo "typer installed"
-
-                    echo "installing ruamel.yaml"
-                    sh 'pip install -r ruamel.yaml'
-                    echo "ruamel.yaml installed"
-
-                    echo "installing pytest"
-                    sh 'pip install -r pytest'
-                    echo "pytest installed"
                 }
             }
         }
