@@ -5,7 +5,7 @@ pipeline {
         stage("Clone Code") {
             steps {
                 echo "Cloning the code"
-                git fetch url: "https://github.com/benoitlombard/starter_pack-manage_phones", branch: "main"
+                git url: "https://github.com/benoitlombard/starter_pack-manage_phones", branch: "main"
             }
         }
         stage('Setup vritual Environment') {
