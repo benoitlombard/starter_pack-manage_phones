@@ -17,7 +17,7 @@ COPY . /app
 EXPOSE 8000
 
 # Apply migrations to set up the database (SQLite)
-RUN python manage_phones_CLI.py
+RUN python app/manage_phones_CLI.py
 
 # Run the Django application
-CMD python manage_phones_CLI.py runserver 0.0.0.0:8000
+CMD python manage_phones_CLI.py lists --item-to-show phones runserver 0.0.0.0:8000
