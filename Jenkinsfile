@@ -19,6 +19,7 @@ pipeline {
                             sh """
                             source venv/bin/activate
                             pip install -r ${req}
+                            echo req= ${req}
                             """
                         }
                     }
