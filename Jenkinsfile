@@ -8,25 +8,26 @@ pipeline {
                 git url: "https://github.com/benoitlombard/starter_pack-manage_phones", branch: "main"
             }
         }
-        stage('Setup Python Environment') {
+        stage('Setup vritual Environment') {
             steps {
-                sh 'python3 -m venv venv' // Create a virtual environment
-                sh 'source venv/bin/activate' // Activate the virtual environment
+                sh 'python3 -m venv venv'
+                sh '. venv/bin/activate'
+                sh 'pip install --upgrade pip setuptools wheel'
             }
         }
         stage('Install Dependencies') {
             steps {
                 script {
                     echo "installing typer"
-                    sh 'pip install typer'
+                    sh 'pip install -r typer'
                     echo "typer installed"
-                    
+
                     echo "installing ruamel.yaml"
-                    sh 'pip install ruamel.yaml'
+                    sh 'pip install -r ruamel.yaml'
                     echo "ruamel.yaml installed"
 
                     echo "installing pytest"
-                    sh 'pip install pytest'
+                    sh 'pip install -r pytest'
                     echo "pytest installed"
                 }
             }
