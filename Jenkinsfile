@@ -8,7 +8,7 @@ pipeline {
                 git url: "https://github.com/benoitlombard/starter_pack-manage_phones", branch: "main"
             }
         }
-"""
+/*
         stage('Setup Virtual Environment') {
             steps {
                 script {
@@ -28,7 +28,7 @@ pipeline {
                 }
             }
         }
-"""
+*/
         stage('Build') {
             steps {
                 echo 'build part'
