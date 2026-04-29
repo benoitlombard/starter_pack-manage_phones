@@ -8,6 +8,23 @@ pipeline {
                 git url: "https://github.com/benoitlombard/starter_pack-manage_phones", branch: "main"
             }
         }
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    def requirements = [
+                        'requirements.txt'
+                    ]
+                    for (req in requirements) {
+                        if (fileExists(req)) {
+                            sh """
+                            source venv/bin/activate
+                            pip install -r ${req}
+                            """
+                        }
+                    }
+                }
+            }
+        }
 /*
         stage('Setup Virtual Environment') {
             steps {
