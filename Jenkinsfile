@@ -12,16 +12,13 @@ pipeline {
             steps {
                 script {
                     def requirements = [
-                        'requirements.txt'
+                        'requirements.txt',
                     ]
                     for (req in requirements) {
-                        echo "current installtion :"
-                        echo req
                         if (fileExists(req)) {
                             sh """
-                            source venv/bin/activate
-                            pip install -r ${req}
-                            echo req= ${req}
+                                source venv/bin/activate
+                                pip install -r ${req}
                             """
                         }
                     }
