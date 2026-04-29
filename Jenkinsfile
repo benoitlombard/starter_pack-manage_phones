@@ -15,6 +15,8 @@ pipeline {
                         'requirements.txt'
                     ]
                     for (req in requirements) {
+                        echo "current installtion :"
+                        echo req
                         if (fileExists(req)) {
                             sh """
                             source venv/bin/activate
