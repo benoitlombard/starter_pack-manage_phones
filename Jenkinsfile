@@ -1,9 +1,11 @@
 pipeline {
-    agent { any }
+    agent any  // Run on any available agent
+
     stages {
-        stage('build') {
+        stage('Hello') {
             steps {
-                echo "Hello"
+                // Print to Jenkins console log
+                echo 'Hello World'
             }
         }
     }
