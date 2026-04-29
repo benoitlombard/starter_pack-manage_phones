@@ -14,22 +14,19 @@ from display_infos import list_from_yaml, show_stage                # CLI functi
 phone_management_app = typer.Typer()
 
 # add
-@phone_management_app.command(name="add", rich_help_panel = "[orange1]Update data[/orange1]", epilog="""Examples of use:
-
-                        'python manage_phones_CLI.py add --vendor Apple --family ios3.0 --version 4.5 --udid Arwschio4cb8ac-cc4 --user john --release-type PU100
-
-                        'python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-Arwschio4cb8ac-cc4 --user johnny --release-type PU1 --write --manufacturer microsoft
-
-                        'python manage_phones_CLI.py add --vendor Microsft --family msft --version 2 --udid udid-Arwschiddddd8888ac-cc4 --user johnny --manufacturer microsoft --fota fota_id_112 --activitytracking 44
-
-                        'python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-test-cc4 --user johnny --release-type PU1 --manufacturer microsoft --no-write"""
+@phone_management_app.command(name="add", rich_help_panel = "[orange1]Update data[/orange1]", epilog="""Examples of use:\n
+                        
+                        [gold1]python manage_phones_CLI.py add --vendor Apple --family ios3.0 --version 4.5 --udid Arwschio4cb8ac-cc4 --user john --release-type PU100\n
+                        python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-Arwschio4cb8ac-cc4 --user johnny --release-type PU1 --write --manufacturer microsoft\n
+                        python manage_phones_CLI.py add --vendor Microsft --family msft --version 2 --udid udid-Arwschiddddd8888ac-cc4 --user johnny --manufacturer microsoft --fota fota_id_112 --activitytracking 44\n
+                        python manage_phones_CLI.py add --vendor Microsoft --family msft --version 2 --udid udid-test-cc4 --user johnny --release-type PU1 --manufacturer microsoft --no-write[/gold1]"""
                         )
 def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '',
         release_type: str = 'PU1', write: bool = True, fota: str = None, activitytracking: str = None,
         functional: str = None, performance: str = None, manufacturer: str = None, model: str = None)->None:
     """
-    [gold1]Allows the user to add a new phone through CLI.
-
+    [gold1]Allows the user to add a new phone through CLI.[/gold1]
+    [gold1]
     The information will be stored in the yaml file by default, except if optional argument write is set to False.[/gold1]
     """
     add_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, vendor = vendor, family = family,

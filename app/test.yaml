@@ -5,50 +5,39 @@ rtc_params:
 phones:
   Chaos: &Chaos
     name: Chaos
-    manufacturer:
+    manufacturer: Samsung
     model:
     vendor: Apple
     family: iOS
-    version: '6'
+    version: '1.0'
     platform: ios
-    release_type: PU1
+    release_type: PU100
     ip: 192.168.5.200
-    udid: e3f43g3
-    user: rtc-Chaos@cobi.bike
+    udid: udid_test
+    user: jean-pierre
     deployment_path:
       hub: tp_link_tlsg3424
       port: port12
   Nyx: &Nyx
     name: Nyx
-    manufacturer:
+    manufacturer: Samsung
     model:
     vendor: Samsung
     family: ST
-    version: '43'
-    platform: android
-    release_type: PU100
+    version: '1.0'
+    platform: android_18.1
+    release_type: PU1
     ip: 192.168.5.201
-    udid: g433
-    user: rtc-Nyx@cobi.bike
+    udid: udid_223
+    user: jean-claude
     deployment_path:
       hub: tp_link_tlsg3424
       port: port13
-
-  Erebos:
-    name: Erebos
-    manufacturer:
-    model:
-    vendor: Apple
-    family: iOS
-    version: '4'
-    platform: ios
-    release_type: PU1
-    ip: 192.168.5.202
-    udid: rg343
-    user: rtc-Erebos@cobi.bike
-    deployment_path:
-      hub:
-      port:
+    testrun_ids:
+      fota: qqqq
+      activitytracking: test_activitytracking
+      functional: qq
+      performance: '4'
   Hesperiden:
     name: Hesperiden
     manufacturer:
@@ -69,16 +58,51 @@ phones:
     manufacturer:
     model:
     vendor: Apple
-    family: nOS
-    version: '3'
+    family: ios3.0
+    version: '4.5'
     platform: ios
-    release_type: PU1
+    release_type: PU100
     ip: 192.168.5.204
-    udid: f43g43
+    udid: Arwschio4cb8ac-cc4
     user: rtc-Aither@cobi.bike
     deployment_path:
       hub:
       port:
+  Hemera: &Hemera
+    name: Hemera
+    manufacturer: microsoft
+    model:
+    vendor: Microsoft
+    family: msft
+    version: '2'
+    platform: android
+    release_type: PU1
+    ip: 192.168.5.205
+    udid: udid-Arwschio4cb8ac-cc4
+    user: rtc-Hemera@cobi.bike
+    deployment_path:
+      hub: tp_link_tlsg3424
+      port: port14
+  Tartaros:
+    name: Tartaros
+    manufacturer: microsoft
+    model:
+    vendor: Microsft
+    family: msft
+    version: '2'
+    platform: android
+    release_type: PU1
+    ip: 192.168.5.206
+    udid: udid-Arwschiddddd8888ac-cc4
+    user: rtc-Tartaros@cobi.bike
+    deployment_path:
+      hub:
+      port:
+    testrun_ids:
+      fota: fota_id_112
+      activityTracking: '44'
+      functional:
+      performance:
 biab:
   ariel: &ariel
     name: Ariel
@@ -235,7 +259,7 @@ switch:
     port11: *bts_black_condor
     port12: *Chaos
     port13: *Nyx
-    port14:
+    port14: *Hemera
     port15:
     port16:
     port17:

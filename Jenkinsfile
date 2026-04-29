@@ -11,15 +11,23 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Setup Virtual Environment') {
             steps {
-                echo 'installing python'
-                sudo apt update && sudo apt install python3 python3-pip python3-venv -y
-                echo 'finished installing python'
-
-
-
-
+                script {
+                    if (isUnix()) {
+                        sh '''
+                            python3 -m venv venv
+                            source venv/bin/activate
+                            pip install --upgrade pip setuptools wheel
+                        '''
+                    } else {
+                        bat '''
+                            python -m venv venv
+                            call venv\\Scripts\\activate.bat
+                            pip install --upgrade pip setuptools wheel
+                        '''
+                    }
+                }
             }
         }
         stage('Build') {
