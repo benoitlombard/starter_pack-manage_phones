@@ -24,7 +24,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-
+                echo 'build part'
 
 
 
