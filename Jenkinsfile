@@ -11,6 +11,7 @@ pipeline {
         stage('Setup vritual Environment') {
             steps {
                 sh 'python3 -m venv myVirtualEnv'
+                sh 'tree'
                 sh 'myVirtualEnv/bin/activate'
             }
         }
