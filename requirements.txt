@@ -1,0 +1,4 @@
+typer==0.24.1
+ruamel.yaml==0.19.1
+pytest==9.0.3
+
