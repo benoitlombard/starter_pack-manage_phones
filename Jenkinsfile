@@ -10,9 +10,8 @@ pipeline {
         }
         stage('Setup vritual Environment') {
             steps {
-                sh 'python3 -m venv venv'
-                sh '. venv/bin/activate'
-                sh 'pip install --upgrade pip'
+                sh 'python3 -m venv myVirtualEnv'
+                sh 'myVirtualEnv/bin/activate'
             }
         }
         stage('Install Dependencies') {
