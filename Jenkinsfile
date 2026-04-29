@@ -12,7 +12,7 @@ pipeline {
             steps {
                 sh 'python3 -m venv myVirtualEnv'
                 sh 'ls'
-                sh 'myVirtualEnv/bin/activate'
+                sh 'source myVirtualEnv/bin/activate'
             }
         }
         stage('Install Dependencies') {
