@@ -5,12 +5,11 @@ pipeline {
         stage("Clone Code") {
             steps {
                 echo "Cloning the code"
-                git url: "https://github.com/benoitlombard/starter_pack-manage_phones", branch: "main"
+                git fetch url: "https://github.com/benoitlombard/starter_pack-manage_phones", branch: "main"
             }
         }
         stage('Setup vritual Environment') {
             steps {
-                sh './update-plugins.sh'
                 sh 'python3 -m venv venv'
                 sh '. venv/bin/activate'
                 sh 'pip install --upgrade pip'
