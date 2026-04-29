@@ -2,15 +2,13 @@ pipeline {
     agent any  // Run on any available agent
 
     stages {
-        stage('Hello') {
+        stage("Clone Code") {
             steps {
-                echo 'Hello World' // Print to Jenkins console log
-
-
-
+                echo "Cloning the code"
+                git url: "https://github.com/benoitlombard/starter_pack-manage_phones", branch: "main"
             }
         }
-
+"""
         stage('Setup Virtual Environment') {
             steps {
                 script {
@@ -30,6 +28,7 @@ pipeline {
                 }
             }
         }
+"""
         stage('Build') {
             steps {
                 echo 'build part'
