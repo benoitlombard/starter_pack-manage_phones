@@ -29,14 +29,10 @@ pipeline {
             }
         }
 */
-        stage('Build') {
+        stage("Build") {
             steps {
-                echo 'build part'
-
-
-
-
-
+                echo "Building the Docker image"
+                sh "docker build -t pipeline ."
             }
         }
     }
