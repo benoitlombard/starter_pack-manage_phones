@@ -17,4 +17,4 @@ COPY . /
 EXPOSE 8000
 
 # Apply migrations to set up the database (SQLite)
-RUN python app/manage_phones_CLI.py lists --item-to-show phones 
+RUN python manage_phones_CLI.py lists --item-to-show phones 
