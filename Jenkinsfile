@@ -29,7 +29,7 @@ pipeline {
                     cd ..
                     pip install -r requirements.txt
 
-                    python manage_phones_CLI.py --help
+                    python app/manage_phones_CLI.py --help
                     '''
             }
         }
