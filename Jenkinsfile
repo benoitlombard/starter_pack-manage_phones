@@ -1,65 +1,59 @@
 pipeline {
-    agent any  // Run on any available agent
+    agent any
+
     environment {
-            PYTHON_VERSION = "3.12"
-            VIRTUAL_ENV = "myVirtualEnv"
+        // Define Python version and virtual environment path
+        PYTHON = 'python3'
+        VENV_DIR = '.venv'
     }
+
     stages {
-        stage("Clone Code") {
+        stage('Checkout') {
             steps {
-                echo "Cloning the code"
-                git url: "https://github.com/benoitlombard/starter_pack-manage_phones", branch: "main"
+                // Pull the latest code from the repository
+                checkout scm
             }
         }
-        stage('Setup vritual Environment') {
+
+        stage('Setup Python Environment') {
             steps {
-                sh '''#!/bin/bash -e
-                    ls
-                    apt install update
-                    apt install python3-venv python3-virtualenv
-                    python3 -m venv myVirtualEnv
-                    ls
-                    source ${VIRTUAL_ENV}/bin/activate
+                sh """
+                    ${PYTHON} -m venv ${VENV_DIR}
+                    source ${VENV_DIR}/bin/activate
                     pip install --upgrade pip
-                '''
+                    pip install -r requirements.txt
+                """
             }
         }
-        stage('Install Dependencies') {
+
+        stage('Run Tests') {
             steps {
-                script {
-                    sh '''
-                        pip install -r typer
-                    '''
-                    echo "typer installed"
-                }
+                // Run pytest with JUnit XML output for Jenkins
+                sh """
+                    source ${VENV_DIR}/bin/activate
+                    pytest --junitxml=reports/results.xml
+                """
             }
         }
-/*
-        stage('Setup Virtual Environment') {
+
+        stage('Publish Test Results') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh '''
-                            python3 -m venv venv
-                            source venv/bin/activate
-                            pip install --upgrade pip setuptools wheel
-                        '''
-                    } else {
-                        bat '''
-                            python -m venv venv
-                            call venv\\Scripts\\activate.bat
-                            pip install --upgrade pip setuptools wheel
-                        '''
-                    }
-                }
+                // Publish JUnit test results in Jenkins
+                junit 'reports/results.xml'
             }
         }
-*/
-        stage("Build") {
-            steps {
-                echo "Building the Docker image"
-                sh "docker build -t pipeline ."
-            }
+    }
+
+    post {
+        always {
+            // Clean up virtual environment after build
+            sh "rm -rf ${VENV_DIR}"
+        }
+        failure {
+            echo '❌ Tests failed. Check the Jenkins test report.'
+        }
+        success {
+            echo '✅ All tests passed successfully.'
         }
     }
 }
