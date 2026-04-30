@@ -27,7 +27,7 @@ def test002__deploy__ok__yaml_attributes():
     port = yaml_d['phones']['Chaos']['deployment_path']['port']
     assert exit_code == None
     assert hub != None and port != None
-    for hub_number in range(len()):
+    for hub_number in range(len(yaml_d['stages']['dev'])):
         if yaml_d['stages']['dev'][hub_number]['name'] == hub:
             deployment_path = yaml_d['stages']['dev'][hub_number][port]
     assert deployment_path == yaml_d['phones']['Chaos']
@@ -47,6 +47,7 @@ def test004__deploy__ok__output(capsys):
 
 
 
+# a faire lundi : push les changements et faire le build 129 sur jenkins
 
 
 
@@ -54,6 +55,9 @@ def test004__deploy__ok__output(capsys):
 
 
 
+
+
+#####      TO    BE    DELETED    BUT     NEED    IT    FOR     capsys.readouterr()   ////     captured.err   lecture d erreur
 def greet(name):
     print(f"Hello, {name}!")
 
@@ -68,7 +72,5 @@ def test_greet_output(capsys):
     assert captured.out == "Hello, Alice!\n"
     # Assert stderr if needed
     assert captured.err == ""
-
-
 
 
