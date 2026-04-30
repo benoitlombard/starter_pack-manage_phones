@@ -13,9 +13,9 @@ pipeline {
                 sh '''
                     ls
                     echo Installing Python...
-                    python -m venv venv_new
+                    python -m venv app/venv_new
                     ls
-                    source venv_new/bin/activate
+                    source app/venv_new/bin/activate
                     pip install --upgrade pip
                     '''
             }
