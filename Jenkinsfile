@@ -1,10 +1,12 @@
 pipeline {
     agent any
-    
+
     environment {
         // Define Python version and virtual environment path
         PYTHON = 'python3'
         VENV_DIR = '.venv'
+    } options {
+        skipStagesAfterUnstable()
     }
 
     stages {
@@ -21,9 +23,11 @@ pipeline {
             }
         } stage('Build') {
             steps {
-                sh 'python3 -m py_compile app/manage_phones_CLI.py'
+                sh 'python3 -m py_compile app/manage_phones_CLI'
             }
-        } stage('Run Tests') {
+        }
+
+        stage('Run Tests') {
             steps {
                 // Run pytest with JUnit XML output for Jenkins
                 sh """
