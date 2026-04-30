@@ -25,7 +25,7 @@ pipeline {
                     . venv_new/bin/activate
                     pip install --upgrade pip
 
-                    echo activating venv_new & pip upgrade:
+                    echo activating venv_new and pip upgrade:
                     cd ..
                     pip install -r requirements.txt
 
