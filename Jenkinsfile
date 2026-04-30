@@ -10,13 +10,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Pull the latest code from the repository
-                checkout scm
-            }
-        }
-
         stage('Setup Python Environment') {
             steps {
                 sh """
@@ -28,9 +21,11 @@ pipeline {
                     pip install -r requirements.txt
                 """
             }
-        }
-
-        stage('Run Tests') {
+        } stage('Build') {
+            steps {
+                sh 'python3 -m py_compile app/manage_phones_CLI.py'
+            }
+        } stage('Run Tests') {
             steps {
                 // Run pytest with JUnit XML output for Jenkins
                 sh """
