@@ -16,17 +16,20 @@ pipeline {
                     rm -rf venv_new
                     rm -rf app/venv_new
                     rm -rf app/app
-                    ls
+
+                    echo creating venv_new:
                     python -m venv app/venv_new
+
+                    echo activating venv_new & pip upgrade:
                     cd app
-                    ls
                     . venv_new/bin/activate
                     pip install --upgrade pip
 
-                    pwd
+                    echo activating venv_new & pip upgrade:
                     cd ..
-                    pwd
                     pip install -r requirements.txt
+
+                    python manage_phones_CLI.py --help
                     '''
             }
         }
