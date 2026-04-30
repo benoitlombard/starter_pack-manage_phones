@@ -1,8 +1,11 @@
 pipeline {
-    
-docker {
+
+    agent {
+        docker {
             image 'python:3.12-slim'
         }
+    }
+
 
     stages {
         stage('Setup Python Environment') {
