@@ -1,47 +1,39 @@
 pipeline {
-    agent any
-
-    environment {
-        // Define Python version and virtual environment path
-        PYTHON = 'python3'
-        VENV_DIR = '.venv'
+    agent {
+        docker {
+            image 'python:3.11-slim'
+            reuseNode true
+        }
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Pull the latest code from the repository
                 checkout scm
             }
         }
 
-        stage('Setup Python Environment') {
+        stage('Install Dependencies') {
             steps {
-                sh """
-                    ${PYTHON} --version
-                    ${PYTHON} -m venv ${VENV_DIR}
-
-                    . ${VENV_DIR}/bin/activate
-
-                    pip install --upgrade pip
+                sh '''
+                    python --version
+                    python -m pip install --upgrade pip
                     pip install -r requirements.txt
-                """
+                    mkdir -p reports
+                '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                // Run pytest with JUnit XML output for Jenkins
-                sh """
-                    source ${VENV_DIR}/bin/activate
+                sh '''
                     pytest --junitxml=reports/results.xml
-                """
+                '''
             }
         }
 
         stage('Publish Test Results') {
             steps {
-                // Publish JUnit test results in Jenkins
                 junit 'reports/results.xml'
             }
         }
@@ -49,8 +41,7 @@ pipeline {
 
     post {
         always {
-            // Clean up virtual environment after build
-            sh "rm -rf ${VENV_DIR}"
+            echo 'Pipeline finished.'
         }
         failure {
             echo '❌ Tests failed. Check the Jenkins test report.'
