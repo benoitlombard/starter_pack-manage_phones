@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage {
+        stage('Setup Python Environment') {
             steps {
                 sh {
                     echo 'Installing Python...'
