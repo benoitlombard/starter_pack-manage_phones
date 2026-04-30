@@ -22,6 +22,7 @@ pipeline {
 
                     echo activating venv_new and pip upgrade:
                     cd app
+                    ls
                     . venv_new/bin/activate
                     pip install --upgrade pip
 
