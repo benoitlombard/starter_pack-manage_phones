@@ -15,7 +15,9 @@ pipeline {
             steps {
                 sh '''
                     ls
-                    
+                    python3 -m venv myVirtualEnv
+                    source ${VIRTUAL_ENV}/bin/activate
+                    pip install --upgrade pip
                 '''
             }
         }
