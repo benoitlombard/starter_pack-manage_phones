@@ -14,8 +14,9 @@ pipeline {
         stage('Setup vritual Environment') {
             steps {
                 sh '''#!/bin/bash -e
-                    ls
+                    echo ello
                     python3 -m venv myVirtualEnv
+                    echo hello
                     source ${VIRTUAL_ENV}/bin/activate
                     pip install --upgrade pip
                 '''
@@ -24,8 +25,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh '''#!/bin/bash -e
-                        source venv/bin/activate
+                    sh '''
                         pip install -r typer
                     '''
                     echo "typer installed"
