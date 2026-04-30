@@ -17,7 +17,10 @@ def test001_undeploy_good_infos(capsys):  # verifying deploy
     captured = capsys.readouterr()
     print(captured.out)
 
-    assert exit_code == None and hub == None and port == None
+    assert exit_code == None
+    assert hub == None and port == None
+    assert "Chaos successfully undeployed." in captured.out
+    assert "Please unplug Chaos from port12 at hub tp_link_tlsg3424" in captured.out
 
 def test002_deploy_good_infos():  # verifying deploy 
     exit_code = deploy(phone = "Chaos", stage = 'dev')
