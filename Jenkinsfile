@@ -1,38 +1,46 @@
 pipeline {
-    agent true    agent {
-        }
+    agent any
+
+    environment {
+        // Define Python version and virtual environment path
+        PYTHON = 'python3'
+        VENV_DIR = '.venv'
     }
 
     stages {
         stage('Checkout') {
             steps {
+                // Pull the latest code from the repository
                 checkout scm
             }
         }
 
-        stage('Install') {
+        stage('Setup Python Environment') {
             steps {
-                sh '''
-                    python -m venv .venv
-                    . .venv/bin/activate
-                    python -m pip install --upgrade pip
+                sh """
+                    ls
+                    ${PYTHON} -m venv ${VENV_DIR}
+                    ls
+                    source ${VENV_DIR}/bin/activate
+                    pip install --upgrade pip
                     pip install -r requirements.txt
-                    mkdir -p reports
-                '''
+                """
             }
         }
 
-        stage('Test') {
+        stage('Run Tests') {
             steps {
-                sh '''
-                    . .venv/bin/activate
+                // Run pytest with JUnit XML output for Jenkins
+                sh """
+                    source ${VENV_DIR}/bin/activate
                     pytest --junitxml=reports/results.xml
-                '''
+                """
             }
         }
 
-        stage('Results') {
+        stage('Publish Test Results') {
             steps {
+                // Publish JUnit test results in Jenkins
                 junit 'reports/results.xml'
             }
         }
@@ -40,9 +48,14 @@ pipeline {
 
     post {
         always {
-            sh 'rm -rf .venv .pip-cache'
+            // Clean up virtual environment after build
+            sh "rm -rf ${VENV_DIR}"
+        }
+        failure {
+            echo '❌ Tests failed. Check the Jenkins test report.'
+        }
+        success {
+            echo '✅ All tests passed successfully.'
         }
     }
 }
-        docker {
-            image 'python:3.11-slim'
