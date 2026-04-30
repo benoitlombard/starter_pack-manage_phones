@@ -23,6 +23,9 @@ pipeline {
                     . venv_new/bin/activate
                     pip install --upgrade pip
 
+                    pwd
+                    cd ..
+                    pwd
                     pip install -r requirements.txt
                     '''
             }
