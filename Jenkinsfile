@@ -11,6 +11,7 @@ pipeline {
         stage('Setup Python Environment') {
             steps {
                 sh '''
+                    deactivate
                     ls
                     echo Installing Python...
                     python -m venv app/venv_new
