@@ -22,7 +22,6 @@ pipeline {
 
                     echo activating venv_new and pip upgrade:
                     cd app
-                    ls
                     . venv_new/bin/activate
                     pip install --upgrade pip
 
@@ -30,7 +29,8 @@ pipeline {
                     cd ..
                     pip install -r requirements.txt
 
-                    python app/manage_phones_CLI.py --help
+                    cd app
+                    python manage_phones_CLI.py --help
                     '''
             }
         }
