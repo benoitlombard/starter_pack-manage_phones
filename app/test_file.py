@@ -4,6 +4,7 @@ import pytest
 
 def test_001_deploy():
     assert 2 + 2 == 4
+    return "whatever i returned"
 
 
 
