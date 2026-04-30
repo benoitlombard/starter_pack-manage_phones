@@ -1,12 +1,11 @@
 pipeline {
     agent any
-
-    environment {
+    options {
+        skipStagesAfterUnstable()
+    } environment {
         // Define Python version and virtual environment path
         PYTHON = 'python3'
         VENV_DIR = '.venv'
-    } options {
-        skipStagesAfterUnstable()
     }
 
     stages {
