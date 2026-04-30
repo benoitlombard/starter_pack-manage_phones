@@ -33,7 +33,14 @@ pipeline {
                     cd app
                     python manage_phones_CLI.py --help
                     python manage_phones_CLI.py add --help
+
+                    pytest --junitxml=pytest-report.xml'
                     '''
+            }
+            post {
+                always {
+                    junit 'pytest-report.xml'
+                }
             }
         }
     }
