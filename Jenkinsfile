@@ -15,7 +15,8 @@ pipeline {
             steps {
                 sh '''#!/bin/bash -e
                     ls
-                    apt install python3-venv python3-virtualenv
+                    sudo apt install update
+                    sudo apt install python3-venv python3-virtualenv
                     python3 -m venv myVirtualEnv
                     ls
                     source ${VIRTUAL_ENV}/bin/activate
