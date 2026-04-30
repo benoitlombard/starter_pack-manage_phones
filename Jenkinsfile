@@ -1,15 +1,15 @@
 pipeline {
     agent any  // Run on any available agent
+    environment {
+            PYTHON_VERSION = "3.12"
+            VIRTUAL_ENV = "myVirtualEnv"
+    }
     stages {
         stage("Clone Code") {
             steps {
                 echo "Cloning the code"
                 git url: "https://github.com/benoitlombard/starter_pack-manage_phones", branch: "main"
             }
-        }
-        environment {
-            PYTHON_VERSION = "3.12"
-            VIRTUAL_ENV = "myVirtualEnv"
         }
         stage('Setup vritual Environment') {
             steps {
