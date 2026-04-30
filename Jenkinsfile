@@ -21,7 +21,7 @@ pipeline {
                     ls
                     cd bin
                     ls
-                    source app/venv_new/bin/activate
+                    . app/venv_new/bin/activate
                     pip install --upgrade pip
                     '''
             }
