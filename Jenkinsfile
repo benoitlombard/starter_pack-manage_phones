@@ -22,6 +22,8 @@ pipeline {
                     ls
                     . venv_new/bin/activate
                     pip install --upgrade pip
+
+                    pip install -r requirements.txt
                     '''
             }
         }
