@@ -41,7 +41,7 @@ pipeline {
                 always {
                     sh    'pwd'
                     sh    'ls'
-                    junit 'pytest-report.xml'
+                    junit 'app/pytest-report.xml'
                 }
             }
         }
