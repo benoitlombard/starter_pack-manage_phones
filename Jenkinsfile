@@ -10,23 +10,17 @@ pipeline {
     stages {
         stage('Setup Python Environment') {
             steps {
-                sudo sh '''
-                    ls
+                sh '''
+                    echo deleting virtual envs:
                     rm -rf venv_1
                     rm -rf venv_new
                     rm -rf app/venv_new
                     rm -rf app/app
                     ls
-
-
-
-                    echo Installing Python...
-                    pwd
-                    ls
                     python -m venv app/venv_new
-                    ls
                     cd app
                     ls
+                    
                     pip install --upgrade pip
                     '''
             }
