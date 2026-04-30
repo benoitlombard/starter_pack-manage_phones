@@ -16,7 +16,8 @@ def test_001_deploy(capsys):
     exit_code = deploy(phone = "Chaos", stage = 'dev')
     captured = capsys.readouterr()
     print(captured)
-    assert exit_code == None
+    assert exit_code == 8
+    return "001 fails"
 
 
 
