@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Setup vritual Environment') {
             steps {
-                sh '''
+                sh '''#!/bin/bash -e
                     ls
                     python3 -m venv myVirtualEnv
                     source ${VIRTUAL_ENV}/bin/activate
@@ -24,7 +24,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh '''
+                    sh '''#!/bin/bash -e
                         source venv/bin/activate
                         pip install -r typer
                     '''
