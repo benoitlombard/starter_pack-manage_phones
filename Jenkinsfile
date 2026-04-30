@@ -15,6 +15,7 @@ pipeline {
                     rm -rf venv_1
                     rm -rf venv_new
                     rm -rf app/venv_new
+                    rm -rf app/app
                     ls
 
 
