@@ -9,7 +9,6 @@ pipeline {
                     source venv_1/bin/activate
                     pip install --upgrade pip
                 '''
-                }
             }
         }
     }
