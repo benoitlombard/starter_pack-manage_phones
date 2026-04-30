@@ -14,7 +14,8 @@ pipeline {
         stage('Setup vritual Environment') {
             steps {
                 sh '''
-                    python${PYTHON_VERSION} -m venv ${VIRTUAL_ENV}'
+                    python3 -m venv ${VIRTUAL_ENV}'
+                    ls
                     source ${VIRTUAL_ENV}/bin/activate
                     pip install --upgrade pip
                 '''
