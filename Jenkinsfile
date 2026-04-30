@@ -39,6 +39,8 @@ pipeline {
             }
             post {
                 always {
+                    sh    'pwd'
+                    sh    'ls'
                     junit 'pytest-report.xml'
                 }
             }
