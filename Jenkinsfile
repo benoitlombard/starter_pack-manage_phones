@@ -19,7 +19,7 @@ pipeline {
             steps {
                 sh """
                     ls
-                    virtualenv venv --distribute
+                    venv venv --distribute
                     . venv/bin/activate 
 
                     pip install --upgrade pip
