@@ -12,21 +12,12 @@ pipeline {
             steps {
                 sh '''
                     ls
-                    rm -rf venv
+                    rm -rf venv_1
+                    rm -rf venv_new
+                    rm -rf app/venv_new
                     ls
 
 
-
-                    echo Installing Python...
-                    python -m venv app/venv_new
-                    ls
-                    cd app
-                    ls
-                    cd venv_new
-                    ls
-                    cd bin
-                    ls
-                    . app/venv_new/bin/activate.psl
                     pip install --upgrade pip
                     '''
             }
