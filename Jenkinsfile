@@ -15,10 +15,13 @@ pipeline {
             }
         }
 
-        stage('Setup Python Environment') {
+        stage('Setup Python Environment') { //python3 venv venv
             steps {
                 sh """
                     ls
+                    virtualenv venv --distribute
+                    . venv/bin/activate 
+
                     pip install --upgrade pip
                     pip install -r requirements.txt
                 """
