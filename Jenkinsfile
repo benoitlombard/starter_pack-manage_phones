@@ -27,7 +27,7 @@ pipeline {
                     ls
                     cd app
                     ls
-                    pip install --upgrade pip
+                    sudo pip install --upgrade pip
                     '''
             }
         }
