@@ -1,10 +1,6 @@
-pipeline {        }
-    }
-
-    environment {
-        VENV_DIR = '.venv'
-        HOME = "${WORKSPACE}"
-        PIP_CACHE_DIR = "${WORKSPACE}/.pip-cache"
+pipeline {
+    agent true    agent {
+        }
     }
 
     stages {
@@ -14,36 +10,28 @@ pipeline {        }
             }
         }
 
-        stage('Setup Python Environment') {
+        stage('Install') {
             steps {
                 sh '''
-                    set -e
-
-                    python --version
-                    mkdir -p "$PIP_CACHE_DIR"
-                    mkdir -p reports
-
-                    python -m venv "$VENV_DIR"
-                    . "$VENV_DIR/bin/activate"
-
+                    python -m venv .venv
+                    . .venv/bin/activate
                     python -m pip install --upgrade pip
                     pip install -r requirements.txt
+                    mkdir -p reports
                 '''
             }
         }
 
-        stage('Run Tests') {
+        stage('Test') {
             steps {
                 sh '''
-                    set -e
-
-                    . "$VENV_DIR/bin/activate"
+                    . .venv/bin/activate
                     pytest --junitxml=reports/results.xml
                 '''
             }
         }
 
-        stage('Publish Test Results') {
+        stage('Results') {
             steps {
                 junit 'reports/results.xml'
             }
@@ -52,19 +40,9 @@ pipeline {        }
 
     post {
         always {
-            sh 'rm -rf "$VENV_DIR" "$PIP_CACHE_DIR"'
-            echo 'Pipeline finished.'
-        }
-        failure {
-            echo '❌ Tests failed. Check the Jenkins test report.'
-        }
-        success {
-            echo '✅ All tests passed successfully.'
+            sh 'rm -rf .venv .pip-cache'
         }
     }
 }
-
-    agent {
         docker {
             image 'python:3.11-slim'
-            reuseNode true
