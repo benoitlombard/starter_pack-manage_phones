@@ -2,8 +2,6 @@ pipeline {
     agent any
     options {
         skipStagesAfterUnstable()
-        PYTHON = 'python3'
-        VENV_DIR = '.venv'
     }
 
     stages {
