@@ -30,7 +30,7 @@ pipeline {
                     ls
                     cd bin
                     ls
-                    app/venv_new/bin/activate
+                    
                     pip install --upgrade pip
                     '''
             }
