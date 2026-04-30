@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Setup Python Environment') {
             steps {
-                sh '''
+                sudo sh '''
                     ls
                     rm -rf venv_1
                     rm -rf venv_new
@@ -27,7 +27,7 @@ pipeline {
                     ls
                     cd app
                     ls
-                    sudo pip install --upgrade pip
+                    pip install --upgrade pip
                     '''
             }
         }
