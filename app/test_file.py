@@ -3,30 +3,32 @@ import pytest
 import ruamel.yaml
 
 
-#######   WILL NEED TO BE IMPORTED   #######
-
+#######   MAY NEED TO BE IMPORTED   #######
 file_name = 'test.yaml'
 with open(file_name, 'r') as yaml_file:
     yaml = ruamel.yaml.YAML(typ='rt')
     yaml_d = yaml.load(yaml_file)
+###########################################
 
 
 
-def test_001_deploy():  # verifying deploy 
+
+
+
+def test001_undeploy_good_infos(capsys):  # verifying deploy 
+    exit_code = undeploy(phone = "Chaos")
+    hub = yaml_d['phones']['Chaos']['deployment_path']['hub']
+    port = yaml_d['phones']['Chaos']['deployment_path']['port']
+
+    captured = capsys.readouterr()
+    print(captured.out)
+
+    assert exit_code == None and hub == None and port == None
+
+def test002_deploy_good_infos():  # verifying deploy 
     exit_code = deploy(phone = "Chaos", stage = 'dev')
     assert exit_code == None
 
-
-
-
-
-
-# test cqtching err
-def test_002_deploy(capsys):                                            ###### !!!
-    exit_code = deploy(phone = "wrong_phone_name", stage = 'dev')
-    captured = capsys.readouterr()
-    print(captured)
-    assert exit_code == None
 
 
 
@@ -46,9 +48,6 @@ def test_greet_output(capsys):
     assert captured.out == "Hello, Alice!\n"
     # Assert stderr if needed
     assert captured.err == ""
-
-
-test_001_deploy()
 
 
 
