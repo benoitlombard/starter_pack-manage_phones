@@ -3,14 +3,8 @@ import pytest
 import ruamel.yaml
 
 
-#######   MAY NEED TO BE IMPORTED   #######
-file_name = 'test.yaml'
-with open(file_name, 'r') as yaml_file:
-    yaml = ruamel.yaml.YAML(typ='rt')
-    yaml_d = yaml.load(yaml_file)
-###########################################
 
-
+from manage_phones import yaml_d, yaml, file_name
 
 
 
