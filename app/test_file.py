@@ -27,9 +27,12 @@ def test002__deploy__ok__yaml_attributes():
     port = yaml_d['phones']['Chaos']['deployment_path']['port']
     assert exit_code == None
     assert hub != None and port != None
+
+    hub_nb = 0
     for hub_number in range(len(yaml_d['stages']['dev'])):
         if yaml_d['stages']['dev'][hub_number]['name'] == hub:
-            deployment_path = yaml_d['stages']['dev'][hub_number][port]
+            hub_nb = hub_number
+    deployment_path = yaml_d['stages']['dev'][hub_nb][port]
     assert deployment_path == yaml_d['phones']['Chaos']
 
 def test003__undeploy__ok__output(capsys):
