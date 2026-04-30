@@ -20,12 +20,12 @@ pipeline {
                     echo creating venv_new:
                     python -m venv app/venv_new
 
-                    echo activating venv_new & pip upgrade:
+                    echo activating venv_new and pip upgrade:
                     cd app
                     . venv_new/bin/activate
                     pip install --upgrade pip
 
-                    echo activating venv_new and pip upgrade:
+                    echo installing requirements:
                     cd ..
                     pip install -r requirements.txt
 
