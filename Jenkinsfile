@@ -20,15 +20,12 @@ pipeline {
 
 
                     echo Installing Python...
+                    pwd
+                    ls
                     python -m venv app/venv_new
                     ls
                     cd app
                     ls
-                    cd venv_new
-                    ls
-                    cd bin
-                    ls
-                    pwd
                     pip install --upgrade pip
                     '''
             }
