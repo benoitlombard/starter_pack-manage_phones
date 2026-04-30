@@ -21,7 +21,7 @@ pipeline {
                     ls
                     cd bin
                     ls
-                    . app/venv_new/bin/activate
+                    . app/venv_new/bin/activate.psl
                     pip install --upgrade pip
                     '''
             }
