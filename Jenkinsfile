@@ -16,8 +16,6 @@ pipeline {
                     rm -rf venv_new
                     rm -rf app/venv_new
                     ls
-                    cd app
-                    ls
 
 
 
@@ -30,7 +28,7 @@ pipeline {
                     ls
                     cd bin
                     ls
-                    
+                    pwd
                     pip install --upgrade pip
                     '''
             }
