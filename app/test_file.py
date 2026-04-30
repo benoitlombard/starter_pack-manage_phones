@@ -25,7 +25,7 @@ def test002__deploy__ok__yaml_attributes():
 
     hub = yaml_d['phones']['Chaos']['deployment_path']['hub']
     port = yaml_d['phones']['Chaos']['deployment_path']['port']
-    deployment_path = yaml_d['stage']['dev'][hub][port]
+    deployment_path = yaml_d['stages']['dev'][hub][port]
     assert exit_code == None
     assert hub != None and port != None
     assert deployment_path == yaml_d['phones']['Chaos']
@@ -35,13 +35,19 @@ def test003__undeploy__ok__output(capsys):
 
     captured = capsys.readouterr()
     assert "Chaos successfully undeployed." in captured.out
-    assert "Please unplug Chaos from port12 at hub tp_link_tlsg3424" in captured.out
+    assert "Please unplug Chaos from port01 at hub exsys_ex_1116hmvs_1" in captured.out
 
 def test004__deploy__ok__output(capsys):
     deploy(phone = "Chaos", stage = 'dev')
 
     captured = capsys.readouterr()
     assert "Chaos successfully deployed in dev." in captured.out
+
+
+
+
+
+
 
 
 
