@@ -20,7 +20,7 @@ pipeline {
                     python -m venv app/venv_new
                     cd app
                     ls
-                    
+                    . venv_new/bin/activate
                     pip install --upgrade pip
                     '''
             }
