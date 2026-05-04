@@ -1,35 +1,45 @@
 pipeline {
-    agent any
+
+    agent {
+        docker {
+            image 'python:3.12-slim'
+        }
+    }
+
 
     stages {
-        stage('Install Dependencies') {
+        stage('Setup Python Environment') {
             steps {
                 sh '''
-                    apt-get update && apt-get install -y python3 python3-pip python3-venv docker.io
-                '''
-            }
-        }
-        
-        stage('Setup and Test') {
-            steps {
-                sh '''
-                    set -e
-                    
-                    echo "Installing Python dependencies..."
+                    echo deleting virtual envs:
+                    rm -rf venv_1
+                    rm -rf venv_new
+                    rm -rf app/venv_new
+                    rm -rf app/app
+
+                    echo creating venv_new:
+                    python -m venv app/venv_new
+
+                    echo activating venv_new and pip upgrade:
+                    cd app
+                    . venv_new/bin/activate
                     pip install --upgrade pip
+
+                    echo installing requirements:
+                    cd ..
                     pip install -r requirements.txt
-                    
-                    echo "Testing CLI help commands..."
-                    python3 manage_phones_CLI.py --help
-                    python3 manage_phones_CLI.py add --help
-                    
-                    echo "Running tests..."
+
+
+                    cd app
+                    python manage_phones_CLI.py --help
+                    python manage_phones_CLI.py add --help
+
                     pytest --junitxml=pytest-report.xml
-                '''
+                    '''
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: 'pytest-report.xml'
+                    junit 'app/pytest-report.xml'
                 }
             }
         }
