@@ -5,18 +5,14 @@ pipeline {
             image 'python:3.12-slim'
             args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
-        /*
-        docker {
-            image 'python:3.12-slim'
-        }
-        */
     }
-
 
     stages {
         stage('Setup Python Environment') {
             steps {
                 sh '''
+                    apt-get update && apt-get install -y docker.io
+                    
                     echo deleting virtual envs:
                     rm -rf venv_1
                     rm -rf venv_new
@@ -34,7 +30,6 @@ pipeline {
                     echo installing requirements:
                     cd ..
                     pip install -r requirements.txt
-
 
                     cd app
                     python manage_phones_CLI.py --help
