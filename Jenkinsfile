@@ -1,12 +1,15 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.12-slim'
-            reuseNode true
-        }
-    }
+    agent any
 
     stages {
+        stage('Install Python') {
+            steps {
+                sh '''
+                    apt-get update && apt-get install -y python3 python3-pip python3-venv
+                '''
+            }
+        }
+        
         stage('Setup and Test') {
             steps {
                 sh '''
