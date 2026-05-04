@@ -3,7 +3,6 @@ pipeline {
     agent {
         docker {
             image 'python:3.12-slim'
-            args '-v /var/run/docker.sock:/var/run/docker.sock -u root'
         }
     }
 
@@ -11,7 +10,7 @@ pipeline {
         stage('Setup Python Environment') {
             steps {
                 sh '''
-                    apt-get update && apt-get install -y docker.io
+                    apt-get update && apt-get install -y python3-venv
                     
                     echo deleting virtual envs:
                     rm -rf venv_1
