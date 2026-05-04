@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     stages {
-        stage('Install Python') {
+        stage('Install Dependencies') {
             steps {
                 sh '''
-                    apt-get update && apt-get install -y python3 python3-pip python3-venv
+                    apt-get update && apt-get install -y python3 python3-pip python3-venv docker.io
                 '''
             }
         }
@@ -15,13 +15,13 @@ pipeline {
                 sh '''
                     set -e
                     
-                    echo "Installing dependencies..."
+                    echo "Installing Python dependencies..."
                     pip install --upgrade pip
                     pip install -r requirements.txt
                     
                     echo "Testing CLI help commands..."
-                    python manage_phones_CLI.py --help
-                    python manage_phones_CLI.py add --help
+                    python3 manage_phones_CLI.py --help
+                    python3 manage_phones_CLI.py add --help
                     
                     echo "Running tests..."
                     pytest --junitxml=pytest-report.xml
