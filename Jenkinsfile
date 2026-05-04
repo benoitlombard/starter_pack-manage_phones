@@ -6,12 +6,11 @@ pipeline {
         }
     }
 
+
     stages {
         stage('Setup Python Environment') {
             steps {
                 sh '''
-                    apt-get update && apt-get install -y python3-venv
-                    
                     echo deleting virtual envs:
                     rm -rf venv_1
                     rm -rf venv_new
@@ -29,6 +28,7 @@ pipeline {
                     echo installing requirements:
                     cd ..
                     pip install -r requirements.txt
+
 
                     cd app
                     python manage_phones_CLI.py --help
