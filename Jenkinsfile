@@ -3,7 +3,7 @@ pipeline {
     agent {
         docker {
             image 'python:3.12-slim'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
+            args '-v /var/run/docker.sock:/var/run/docker.sock -u root'
         }
     }
 
