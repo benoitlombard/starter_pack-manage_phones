@@ -1,45 +1,30 @@
 pipeline {
-
-    agent {
-        docker {
-            image 'python:3.12-slim'
-        }
-    }
-
+    agent any
 
     stages {
-        stage('Setup Python Environment') {
+        stage('Setup and Test') {
             steps {
                 sh '''
-                    echo deleting virtual envs:
-                    rm -rf venv_1
-                    rm -rf venv_new
-                    rm -rf app/venv_new
-                    rm -rf app/app
-
-                    echo creating venv_new:
-                    python -m venv app/venv_new
-
-                    echo activating venv_new and pip upgrade:
-                    cd app
-                    . venv_new/bin/activate
+                    set -e
+                    
+                    echo "Creating virtual environment..."
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    
                     pip install --upgrade pip
-
-                    echo installing requirements:
-                    cd ..
                     pip install -r requirements.txt
-
-
-                    cd app
+                    
+                    echo "Testing CLI help commands..."
                     python manage_phones_CLI.py --help
                     python manage_phones_CLI.py add --help
-
+                    
+                    echo "Running tests..."
                     pytest --junitxml=pytest-report.xml
-                    '''
+                '''
             }
             post {
                 always {
-                    junit 'app/pytest-report.xml'
+                    junit 'pytest-report.xml'
                 }
             }
         }
