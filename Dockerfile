@@ -1,18 +1,12 @@
-# Use Python 3.9 as the base image
-FROM python:3.12
+FROM python:3.12-slim
 
-# Set the working directory within the container
 WORKDIR /app
 
-# Copy the requirements.txt file to the container
 COPY requirements.txt .
 
-# Install dependencies using pip
-RUN apt-get update && apt-get install -y docker.io # peut etre pertinent de suppr
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Copy the application to the container
-COPY . /
+COPY . .
 
-# Expose port 8000
 EXPOSE 8000

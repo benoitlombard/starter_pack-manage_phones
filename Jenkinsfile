@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.12-slim'
+            reuseNode true
+        }
+    }
 
     stages {
         stage('Setup and Test') {
@@ -7,10 +12,7 @@ pipeline {
                 sh '''
                     set -e
                     
-                    echo "Creating virtual environment..."
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    
+                    echo "Installing dependencies..."
                     pip install --upgrade pip
                     pip install -r requirements.txt
                     
@@ -24,7 +26,7 @@ pipeline {
             }
             post {
                 always {
-                    junit 'pytest-report.xml'
+                    junit allowEmptyResults: true, testResults: 'pytest-report.xml'
                 }
             }
         }
