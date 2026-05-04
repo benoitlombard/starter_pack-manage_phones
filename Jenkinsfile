@@ -2,8 +2,14 @@ pipeline {
 
     agent {
         docker {
+            filename 'Dockerfile'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+        /*
+        docker {
             image 'python:3.12-slim'
         }
+        */
     }
 
 
