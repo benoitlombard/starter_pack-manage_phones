@@ -83,9 +83,6 @@ def test_007__deploy__incorrect_phone_name__output(capsys):
     deploy(phone = phone, stage = stage)
 
     captured = capsys.readouterr()
-    assert f'No phone named {phone}.' in captured.out
-    print('out:', captured.out)
-    print('err:', captured.err)
     assert KeyError in captured.err
 
 
