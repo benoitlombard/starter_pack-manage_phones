@@ -44,7 +44,8 @@ def test_003__undeploy__ok__output(capsys):
     assert "Please unplug Chaos from port01 at hub exsys_ex_1116hmvs_1" in captured.out
 
 def test_004__deploy__ok__output(capsys):
-    deploy(phone = "Chaos", stage = 'dev')
+    phone, stage = "Chaos", 'incorrect_stage'
+    deploy(phone = phone, stage = stage)
 
     captured = capsys.readouterr()
     assert "Chaos successfully deployed in dev." in captured.out
@@ -69,8 +70,19 @@ def test_005__deploy__incorrect_stage__yaml_attributes_and_output(capsys):
     captured = capsys.readouterr()
     assert "Please select a stage from" in captured.out
 
+def test_006__deploy__phone_already_deployed__output(capsys):
+    phone, stage = "Chaos", "dev"
+    deploy(phone = phone, stage = stage)
 
+    captured = capsys.readouterr()
+    assert " is already deployed." in captured.out
 
+def test_007__deploy__incorrect_phone_name__output(capsys):
+    phone, stage = "incorrect_name", "dev"
+    deploy(phone = phone, stage = stage)
+
+    captured = capsys.readouterr()
+    assert "No phone named " in captured.out
 
 
 
