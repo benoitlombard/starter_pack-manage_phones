@@ -209,7 +209,7 @@ switch:
     port11: *bts_black_condor
     port12:
     port13: *Nyx
-    port14: *Hemera
+    port14: 
     port15:
     port16:
     port17:
