@@ -4,7 +4,7 @@ import pytest
 from manage_phones import yaml_d, yaml, file_name
 
 """
-The naming rule for test functions is:   'test'  +  id(from 001)  +  __  +  function used  +  __  +  important parameters or 'ok' if normal use  +  __  +  asserted features
+The naming rule for test functions is:   'test_'  +  id(from 001)  +  __  +  function used  +  __  +  important parameters or 'ok' if normal use  +  __  +  asserted features
                             exemples :       
                                             test001__undeploy__ok__yaml_attributes
                                             test002__deploy__ok__yaml_attributes
@@ -20,7 +20,7 @@ def test_001__undeploy__ok__yaml_attributes():
     assert exit_code == None
     assert hub == None and port == None
 
-def test002__deploy__ok__yaml_attributes():
+def test_002__deploy__ok__yaml_attributes():
     phone, stage = "Chaos", 'dev'
     exit_code = deploy(phone = phone, stage = stage)
 
@@ -36,20 +36,20 @@ def test002__deploy__ok__yaml_attributes():
     deployment_path = yaml_d['stages'][stage][hub_nb][port]
     assert deployment_path == yaml_d['phones'][phone]
 
-def test003__undeploy__ok__output(capsys):
+def test_003__undeploy__ok__output(capsys):
     undeploy(phone = "Chaos")
 
     captured = capsys.readouterr()
     assert "Chaos successfully undeployed." in captured.out
     assert "Please unplug Chaos from port01 at hub exsys_ex_1116hmvs_1" in captured.out
 
-def test004__deploy__ok__output(capsys):
+def test_004__deploy__ok__output(capsys):
     deploy(phone = "Chaos", stage = 'dev')
 
     captured = capsys.readouterr()
     assert "Chaos successfully deployed in dev." in captured.out
 
-def test005__deploy__incorrect_stage__yaml_attributes_and_output(capsys):
+def test_005__deploy__incorrect_stage__yaml_attributes_and_output(capsys):
     phone, stage = "Chaos", 'incorrect_stage'
     undeploy(phone = phone)
     exit_code = deploy(phone = phone, stage = stage)
@@ -66,6 +66,9 @@ def test005__deploy__incorrect_stage__yaml_attributes_and_output(capsys):
                 if yaml_d['stages'][stage][hub_number][port] == yaml_d['phones'][phone]:
                     phone_found_in_stages = True
     assert not phone_found_in_stages
+    captured = capsys.readouterr()
+    assert "Please select a stage from" in captured.out
+
 
 
 
