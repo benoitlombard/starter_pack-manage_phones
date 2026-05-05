@@ -92,4 +92,4 @@ def test_008__undeploy__incorrect_phone_name__output(capsys):
     with pytest.raises(KeyError):
         undeploy(phone = phone)
     captured = capsys.readouterr()
-    assert f'No phone named {phone}.' in captured.out
+    assert "Key Error when writing to the yaml file.\nUndeployment failed, please verify phone name." in captured.out
