@@ -33,6 +33,7 @@ pipeline {
                     python manage_phones_CLI.py add --help
 
                     pytest --junitxml=pytest-report.xml
+                    pytest --log-cli-level=DEBUG --log-cli-format="%(asctime)s [%(levelname)s] %(message)s" --log-cli-date-format="%Y-%m-%d %H:%M:%S"
                     '''
             }
             post {
