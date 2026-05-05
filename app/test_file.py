@@ -119,7 +119,7 @@ def test_011__add__ok_minimal_infos__yaml_attributes():
     vendor = 'apple'
     family = 'ios4'
     version = '5.6'
-    udid = 'hcefnhwax32-114ce5e'
+    udid = 'hcefnhwax32-114ce5x'
     release_type = 'PU100'
     add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type)
 
