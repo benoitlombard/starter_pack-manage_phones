@@ -139,10 +139,10 @@ def test_012__add__ok_with_testrun_ids__output(capsys):
     udid = 'udid_3'
     release_type = 'PU100'
     fota = 'fota_id'
-    activityTracking = '3a4-e1c'
+    activitytracking = '3a4-e1c'
     functional = '65'
     performance = '124'
-    add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type, fota = fota, activityTracking = activityTracking, functional = functional, performance = performance)
+    add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type, fota = fota, activitytracking = activitytracking, functional = functional, performance = performance)
 
     captured = capsys.readouterr()
     assert "RTC device name: " in captured.out
@@ -157,17 +157,17 @@ def test_013__add__ok_testrun_ids__yaml_attributes():
     udid = 'udid_4'
     release_type = 'PU100'
     fota = 'fota_id'
-    activityTracking = 'activityTracking_id'
+    activitytracking = 'activityTracking_id'
     functional = '65'
     performance = '124'
-    add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type, fota = fota, activityTracking = activityTracking, functional = functional, performance = performance)
-    dict_attributes_found_in_yaml = {'vendor': None, 'family': None, 'version': None, 'udid': None, 'release_type': None, 'fota': None, 'activityTracking': None, 'functional': None, 'performance': None}
+    add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type, fota = fota, activitytracking = activitytracking, functional = functional, performance = performance)
+    dict_attributes_found_in_yaml = {'vendor': None, 'family': None, 'version': None, 'udid': None, 'release_type': None, 'fota': None, 'activitytracking': None, 'functional': None, 'performance': None}
     for phone in yaml_d['phones']:
         if yaml_d['phones'][phone]['udid'] == udid:
             for attribute_key in dict_attributes_found_in_yaml.keys():
                 dict_attributes_found_in_yaml[attribute_key] = yaml_d['phones'][phone][attribute_key]
     
-    dict_attributes = {'vendor': vendor, 'family': family, 'version': version, 'udid': udid, 'release_type': release_type, 'fota': fota, 'activityTracking': activityTracking, 'functional': functional, 'performance': performance}
+    dict_attributes = {'vendor': vendor, 'family': family, 'version': version, 'udid': udid, 'release_type': release_type, 'fota': fota, 'activitytracking': activitytracking, 'functional': functional, 'performance': performance}
     for key, value_found_in_yaml in dict_attributes_found_in_yaml.items():
         assert value_found_in_yaml == dict_attributes[key]
 
