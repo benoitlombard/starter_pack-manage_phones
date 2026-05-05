@@ -80,11 +80,11 @@ def test_006__deploy__phone_already_deployed__output(capsys):
 
 def test_007__deploy__incorrect_phone_name__output(capsys):
     phone, stage = "incorrect_name", "dev"
-    deploy(phone = phone, stage = stage)
 
-    captured = capsys.readouterr()
     with pytest.raises(KeyError):
-        assert f'No phone named {phone}.' in captured.out
+        deploy(phone = phone, stage = stage)
+    captured = capsys.readouterr()
+    assert f'No phone named {phone}.' in captured.out
 
 
 
