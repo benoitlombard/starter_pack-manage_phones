@@ -86,26 +86,10 @@ def test_007__deploy__incorrect_phone_name__output(capsys):
     captured = capsys.readouterr()
     assert f'No phone named {phone}.' in captured.out
 
+def test_008__undeploy__incorrect_phone_name__output(capsys):
+    phone = "incorrect_name"
 
-
-
-
-
-
-#####      TO    BE    DELETED    BUT     NEED    IT    FOR     capsys.readouterr()   ////     captured.err   lecture d erreur
-def greet(name):
-    print(f"Hello, {name}!")
-
-def test_greet_output(capsys):
-    # Call the function that prints
-    greet("Alice")
-
-    # Capture the output
+    with pytest.raises(KeyError):
+        undeploy(phone = phone)
     captured = capsys.readouterr()
-
-    # Assert on stdout
-    assert captured.out == "Hello, Alice!\n"
-    # Assert stderr if needed
-    assert captured.err == ""
-
-
+    assert f'No phone named {phone}.' in captured.out
