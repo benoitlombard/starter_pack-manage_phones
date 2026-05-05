@@ -35,7 +35,7 @@ phones:
       port: port13
     testrun_ids:
       fota: qqqq
-      activitytracking: test_activitytracking
+      activityTracking: test_activitytracking
       functional: qq
       performance: '4'
   Hesperiden:
@@ -53,6 +53,7 @@ phones:
     deployment_path:
       hub:
       port:
+
 biab:
   ariel: &ariel
     name: Ariel
@@ -209,7 +210,7 @@ switch:
     port11: *bts_black_condor
     port12:
     port13: *Nyx
-    port14: 
+    port14:
     port15:
     port16:
     port1/: *ubiquiti_uap_nanohd

@@ -33,7 +33,7 @@ def _get_unused_ip(yaml_d: CommentedMap)->int:
             return last_digit_ip
 
 @decorator_timer
-def add_phone(yaml_d: CommentedMap, yaml, file_name: str, vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', release_type: str = '', write: str = bool, fota: str = None, activityTracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, call_from_CLI: bool = False)->None:
+def add_phone(yaml_d: CommentedMap, yaml, file_name: str, vendor: str = '', family: str = '', version: str = '', udid: str = '', user: str = '', release_type: str = '', write: str = bool, fota: str = None, activitytracking: str = None,  functional: str = None, performance: str = None, manufacturer: str = None, model: str = None, call_from_CLI: bool = False)->None:
     """
     Allows the user to add a new phone by writing phone information\n
     The information will be stored in the yaml file
@@ -95,8 +95,8 @@ def add_phone(yaml_d: CommentedMap, yaml, file_name: str, vendor: str = '', fami
     deployment_path = dict(hub = None, port = None)
 
     if call_from_CLI:
-        if fota is not None or activityTracking  is not None or functional is not None or performance is not None:
-            testrun_ids = dict(fota = fota, activityTracking = activityTracking, functional = functional, performance = performance)
+        if fota is not None or activitytracking  is not None or functional is not None or performance is not None:
+            testrun_ids = dict(fota = fota, activitytracking = activitytracking, functional = functional, performance = performance)
             new_phone_record = ruamel.yaml.CommentedMap(name = yaml_phone_name, manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform, release_type = release_type, ip = ip, udid = udid, user = user, deployment_path = deployment_path, testrun_ids = testrun_ids)
         else:
             new_phone_record = ruamel.yaml.CommentedMap(name = yaml_phone_name, manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform, release_type = release_type, ip = ip, udid = udid, user = user, deployment_path = deployment_path)
@@ -104,10 +104,10 @@ def add_phone(yaml_d: CommentedMap, yaml, file_name: str, vendor: str = '', fami
         print('Add testrun ids?')
         if input('y|n ').lower() == 'y':
             fota = input('fota: ')
-            activityTracking = input('activityTracking: ')
+            activitytracking = input('activitytracking: ')
             functional = input('functional: ')
             performance = input('performance: ')
-            testrun_ids = dict(fota = fota, activityTracking = activityTracking, functional = functional, performance = performance)
+            testrun_ids = dict(fota = fota, activitytracking = activitytracking, functional = functional, performance = performance)
             new_phone_record = ruamel.yaml.CommentedMap(name = yaml_phone_name, manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform, release_type = release_type, ip = ip, udid = udid, user = user, deployment_path = deployment_path, testrun_ids = testrun_ids)
         else:
             new_phone_record = ruamel.yaml.CommentedMap(name = yaml_phone_name, manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version, platform = platform, release_type = release_type, ip = ip, udid = udid, user = user, deployment_path = deployment_path)

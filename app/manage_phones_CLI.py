@@ -31,7 +31,7 @@ def add(vendor: str = '', family: str = '', version: str = '', udid: str = '', u
     """
     add_phone(yaml_d = yaml_d, yaml = yaml, file_name = file_name, vendor = vendor, family = family,
             version = version, udid = udid, user = user, release_type = release_type, write = write,
-            fota = fota, activityTracking = activitytracking, functional = functional,
+            fota = fota, activitytracking = activitytracking, functional = functional,
             performance = performance, manufacturer = manufacturer, model = model, call_from_CLI = True)
 
 # change
