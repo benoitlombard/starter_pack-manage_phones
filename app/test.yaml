@@ -1,6 +1,6 @@
 rtc_params:
   min_ip: 200
-  max_ip: 207
+  max_ip: 206
 
 phones:
   Chaos: &Chaos
@@ -212,14 +212,7 @@ switch:
     port14: 
     port15:
     port16:
-    port17:
-    port18:
-    port19:
-    port20:
-    port21:
-    port22:
-    port23:
-    port24: *ubiquiti_uap_nanohd
+    port1/: *ubiquiti_uap_nanohd
 
 usb_hub:
   exsys_ex_1116hmvs_1: &exsys_ex_1116hmvs_1

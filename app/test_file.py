@@ -22,19 +22,20 @@ def test_001__undeploy__ok__yaml_attributes():
     assert hub == None and port == None
 
 def test002__deploy__ok__yaml_attributes():
-    exit_code = deploy(phone = "Chaos", stage = 'dev')
+    phone, stage = "Chaos", 'dev'
+    exit_code = deploy(phone = phone, stage = stage)
 
-    hub = yaml_d['phones']['Chaos']['deployment_path']['hub']
-    port = yaml_d['phones']['Chaos']['deployment_path']['port']
+    hub = yaml_d['phones'][phone]['deployment_path']['hub']
+    port = yaml_d['phones'][phone]['deployment_path']['port']
     assert exit_code == None
     assert hub != None and port != None
 
     hub_nb = 0
-    for hub_number in range(len(yaml_d['stages']['dev'])):
-        if yaml_d['stages']['dev'][hub_number]['name'] == hub:
+    for hub_number in range(len(yaml_d['stages'][stage])):
+        if yaml_d['stages'][stage][hub_number]['name'] == hub:
             hub_nb = hub_number
-    deployment_path = yaml_d['stages']['dev'][hub_nb][port]
-    assert deployment_path == yaml_d['phones']['Chaos']
+    deployment_path = yaml_d['stages'][stage][hub_nb][port]
+    assert deployment_path == yaml_d['phones'][phone]
 
 def test003__undeploy__ok__output(capsys):
     undeploy(phone = "Chaos")
@@ -49,9 +50,22 @@ def test004__deploy__ok__output(capsys):
     captured = capsys.readouterr()
     assert "Chaos successfully deployed in dev." in captured.out
 
+def test005__deploy__incorrect_stage__yaml_attributes_and_output(capsys):
+    phone, stage = "Chaos", 'incorrect_stage'
+    exit_code = deploy(phone = phone, stage = stage)
 
+    hub = yaml_d['phones']['Chaos']['deployment_path']['hub']
+    port = yaml_d['phones']['Chaos']['deployment_path']['port']
+    assert exit_code == None
+    assert hub == None and port == None
 
-# a faire lundi : push les changements et faire le build 129 sur jenkins
+    phone_found_in_stages = False
+    for stage in ['dev', 'prod']:
+        for hub_number in range(len(yaml_d['stages'][stage])):
+            for port in yaml_d['stages'][stage][hub_number]:
+                if yaml_d['stages'][stage][hub_number][port] == yaml_d['phones'][phone]:
+                    phone_found_in_stages = True
+    assert not phone_found_in_stages
 
 
 
