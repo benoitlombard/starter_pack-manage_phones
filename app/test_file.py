@@ -115,20 +115,46 @@ def test_010__add__ok_minimal_infos__output(capsys):
     assert "IP used: " in captured.out
     assert " successfully added." in captured.out
 
+def test_011__add__ok_minimal_infos__yaml_attributes():
+    vendor = 'apple'
+    family = 'ios4'
+    version = '5.6'
+    udid = 'hcefnhwax32-114ce5e'
+    release_type = 'PU100'
+    add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type)
+
+
+    dict_attributes_found_in_yaml = {vendor: None, family: None, version: None, udid: None, release_type: None}
+    for phone in yaml_d['phones']:
+        if phone['udid'] == udid:
+            for attribute_key in dict_attributes_found_in_yaml.keys():
+                dict_attributes_found_in_yaml[attribute_key] = phone[attribute_key]
+
+    assert 
+
 
 
 
 
 """
-
-
-def test_011__add__ok_minimal_infos__yaml_attributes():
-
 def test_012__add__ok_testrun_ids__output(capsys):
+    vendor = 'apple'
+    family = 'ios4'
+    version = '5.6'
+    udid = 'hcefnhwax32-114ce5e'
+    release_type = 'PU100'
+    add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type)
 
 def test_013__add__ok_testrun_ids__yaml_attributes():
+    
 
 def test_014__add__ok_all_infos__output(capsys):
+    vendor = 'apple'
+    family = 'ios4'
+    version = '5.6'
+    udid = 'hcefnhwax32-114ce5e'
+    release_type = 'PU100'
+    add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type)
 
 def test_015__add__ok_all_infos__yaml_attributes():
 
