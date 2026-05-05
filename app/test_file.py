@@ -44,7 +44,7 @@ def test_003__undeploy__ok__output(capsys):
     assert "Please unplug Chaos from port01 at hub exsys_ex_1116hmvs_1" in captured.out
 
 def test_004__deploy__ok__output(capsys):
-    phone, stage = "Chaos", 'incorrect_stage'
+    phone, stage = "Chaos", 'dev'
     deploy(phone = phone, stage = stage)
 
     captured = capsys.readouterr()
