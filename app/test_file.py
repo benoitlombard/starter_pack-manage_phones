@@ -105,7 +105,7 @@ def test_010__add__ok_minimal_infos__output(capsys):
     vendor = 'apple'
     family = 'ios4'
     version = '5.6'
-    udid = 'hcefnhwax32-114ce5ee'
+    udid = 'hcefnhwax32-114ce5e'
     release_type = 'PU100'
     add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type)
 
@@ -113,8 +113,7 @@ def test_010__add__ok_minimal_infos__output(capsys):
     assert "RTC device name: " in captured.out
     assert "Platform set to: " in captured.out
     assert "IP used: " in captured.out
-    print(captured.out)
-    return captured.out
+    assert "aa" in captured.out
 
 
 
