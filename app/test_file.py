@@ -93,3 +93,10 @@ def test_008__undeploy__incorrect_phone_name__output(capsys):
         undeploy(phone = phone)
     captured = capsys.readouterr()
     assert "Key Error when writing to the yaml file.\nUndeployment failed, please verify phone name." in captured.out
+
+def test_009__undeploy__not_deployed_phone__output(capsys):
+    phone = "Hesperiden"
+    undeploy(phone = phone)
+
+    captured = capsys.readouterr()
+    assert f"{phone} is not deployed.\nUndeployment is not possible." in captured.out
