@@ -78,7 +78,7 @@ def test_006__deploy__phone_already_deployed__output(capsys):
     captured = capsys.readouterr()
     assert f'{phone} is already deployed.' in captured.out
 
-def test_007__deploy__incorrect_phone_name__output(capsys):
+def test_007__deploy__incorrect_phone_name__output_and_error(capsys):
     phone, stage = "incorrect_name", "dev"
 
     with pytest.raises(KeyError):
@@ -86,7 +86,7 @@ def test_007__deploy__incorrect_phone_name__output(capsys):
     captured = capsys.readouterr()
     assert f'No phone named {phone}.' in captured.out
 
-def test_008__undeploy__incorrect_phone_name__output(capsys):
+def test_008__undeploy__incorrect_phone_name__output_and_error(capsys):
     phone = "incorrect_name"
 
     with pytest.raises(KeyError):
@@ -100,3 +100,36 @@ def test_009__undeploy__not_deployed_phone__output(capsys):
 
     captured = capsys.readouterr()
     assert f"{phone} is not deployed.\nUndeployment is not possible." in captured.out
+
+def test_010__add__ok_minimal_infos__output(capsys):
+    vendor = 'apple'
+    family = 'ios4'
+    version = '5.6'
+    udid = 'hcefnhwax32-114ce5'
+    release_type = 'PU100'
+    add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type)
+
+    captured = capsys.readouterr()
+    assert "RTC device name: " in captured.out
+    print(captured.out)
+    return captured.out
+
+
+
+
+
+"""
+
+
+def test_011__add__ok_minimal_infos__yaml_attributes():
+
+def test_012__add__ok_testrun_ids__output(capsys):
+
+def test_013__add__ok_testrun_ids__yaml_attributes():
+
+def test_014__add__ok_all_infos__output(capsys):
+
+def test_015__add__ok_all_infos__yaml_attributes():
+
+
+"""
