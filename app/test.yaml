@@ -1,6 +1,6 @@
 rtc_params:
   min_ip: 200
-  max_ip: 254
+  max_ip: 207
 
 phones:
   Chaos: &Chaos
@@ -16,8 +16,8 @@ phones:
     udid: udid_test
     user: jean-pierre
     deployment_path:
-      hub: tp_link_tlsg3424
-      port: port12
+      hub: exsys_ex_1116hmvs_1
+      port: port01
   Nyx: &Nyx
     name: Nyx
     manufacturer: Samsung
@@ -53,56 +53,6 @@ phones:
     deployment_path:
       hub:
       port:
-  Aither:
-    name: Aither
-    manufacturer:
-    model:
-    vendor: Apple
-    family: ios3.0
-    version: '4.5'
-    platform: ios
-    release_type: PU100
-    ip: 192.168.5.204
-    udid: Arwschio4cb8ac-cc4
-    user: rtc-Aither@cobi.bike
-    deployment_path:
-      hub:
-      port:
-  Hemera: &Hemera
-    name: Hemera
-    manufacturer: microsoft
-    model:
-    vendor: Microsoft
-    family: msft
-    version: '2'
-    platform: android
-    release_type: PU1
-    ip: 192.168.5.205
-    udid: udid-Arwschio4cb8ac-cc4
-    user: rtc-Hemera@cobi.bike
-    deployment_path:
-      hub: tp_link_tlsg3424
-      port: port14
-  Tartaros:
-    name: Tartaros
-    manufacturer: microsoft
-    model:
-    vendor: Microsft
-    family: msft
-    version: '2'
-    platform: android
-    release_type: PU1
-    ip: 192.168.5.206
-    udid: udid-Arwschiddddd8888ac-cc4
-    user: rtc-Tartaros@cobi.bike
-    deployment_path:
-      hub:
-      port:
-    testrun_ids:
-      fota: fota_id_112
-      activityTracking: '44'
-      functional:
-      performance:
 biab:
   ariel: &ariel
     name: Ariel
@@ -257,7 +207,7 @@ switch:
     port09: *bts_black_adam
     port10: *bts_beast_boy
     port11: *bts_black_condor
-    port12: *Chaos
+    port12:
     port13: *Nyx
     port14: *Hemera
     port15:
@@ -274,7 +224,7 @@ switch:
 usb_hub:
   exsys_ex_1116hmvs_1: &exsys_ex_1116hmvs_1
     name: ExSys EX-1116HMVS
-    port01:
+    port01: *Chaos
     port02:
     port03:
     port04:

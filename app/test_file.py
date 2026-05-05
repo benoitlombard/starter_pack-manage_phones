@@ -5,11 +5,12 @@ from manage_phones import yaml_d, yaml, file_name
 
 
 """
-The chosen naming rule for test functions is:   'test'  +  id(from 001)  +  __  +  function used  +  __  +  important parameters or 'ok' if normal use  +  __  +  asserted features
-                               exemples :       
+The naming rule for test functions is:   'test'  +  id(from 001)  +  __  +  function used  +  __  +  important parameters or 'ok' if normal use  +  __  +  asserted features
+                            exemples :       
                                             test001__undeploy__ok__yaml_attributes
                                             test002__deploy__ok__yaml_attributes
                                             test003__undeploy__ok__terminal_output
+                                            test004__deploy__ok__output
 """
 
 def test001__undeploy__ok__yaml_attributes():
