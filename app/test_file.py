@@ -75,14 +75,14 @@ def test_006__deploy__phone_already_deployed__output(capsys):
     deploy(phone = phone, stage = stage)
 
     captured = capsys.readouterr()
-    assert " is already deployed." in captured.out
+    assert f'{phone} is already deployed.' in captured.out
 
 def test_007__deploy__incorrect_phone_name__output(capsys):
     phone, stage = "incorrect_name", "dev"
     deploy(phone = phone, stage = stage)
 
     captured = capsys.readouterr()
-    assert "No phone named " in captured.out
+    assert f'No phone named {phone}.' in captured.out
 
 
 
