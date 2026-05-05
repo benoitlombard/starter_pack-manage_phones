@@ -82,8 +82,7 @@ def test_007__deploy__incorrect_phone_name__output(capsys):
     phone, stage = "incorrect_name", "dev"
     deploy(phone = phone, stage = stage)
 
-    captured = capsys.readouterr()
-    assert KeyError in captured.err
+    pytest.raises(KeyError)
 
 
 
