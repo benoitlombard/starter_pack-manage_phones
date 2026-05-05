@@ -1,15 +1,11 @@
-FROM python:3.12-slim
+FROM jenkins/jenkins:lts
 
-WORKDIR /app
+USER root
 
-COPY requirements.txt .
+RUN apt update && \
+    apt install -y python3 python3-venv python3-pip && \
+    apt clean
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir pytest
 
-COPY . .
-
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
-
-
-COPY . .
+USER jenkins
