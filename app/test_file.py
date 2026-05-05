@@ -111,6 +111,8 @@ def test_010__add__ok_minimal_infos__output(capsys):
 
     captured = capsys.readouterr()
     assert "RTC device name: " in captured.out
+    assert "Platform set to: " in captured.out
+    assert "IP used: " in captured.out
     print(captured.out)
     return captured.out
 
