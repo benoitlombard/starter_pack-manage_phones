@@ -105,7 +105,7 @@ def test_010__add__ok_minimal_infos__output(capsys):
     vendor = 'apple'
     family = 'ios4'
     version = '5.6'
-    udid = 'hcefnhwax32-114ce5'
+    udid = 'hcefnhwax32-114ce5ee'
     release_type = 'PU100'
     add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type)
 
