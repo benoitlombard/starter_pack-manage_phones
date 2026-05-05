@@ -3,7 +3,6 @@ import pytest
 
 from manage_phones import yaml_d, yaml, file_name
 
-
 """
 The naming rule for test functions is:   'test'  +  id(from 001)  +  __  +  function used  +  __  +  important parameters or 'ok' if normal use  +  __  +  asserted features
                             exemples :       
@@ -52,6 +51,7 @@ def test004__deploy__ok__output(capsys):
 
 def test005__deploy__incorrect_stage__yaml_attributes_and_output(capsys):
     phone, stage = "Chaos", 'incorrect_stage'
+    undeploy(phone = phone)
     exit_code = deploy(phone = phone, stage = stage)
 
     hub = yaml_d['phones']['Chaos']['deployment_path']['hub']
