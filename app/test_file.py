@@ -124,7 +124,7 @@ def test_011__add__ok_minimal_infos__yaml_attributes():
     add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type)
 
 
-    dict_attributes_found_in_yaml = {vendor: None, family: None, version: None, udid: None, release_type: None}
+    dict_attributes_found_in_yaml = {'vendor': None, 'family': None, 'version': None, 'udid': None, 'release_type': None}
     for phone in yaml_d['phones']:
         if yaml_d['phones'][phone]['udid'] == udid:
             for attribute_key in dict_attributes_found_in_yaml.keys():
