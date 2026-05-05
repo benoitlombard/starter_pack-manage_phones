@@ -113,7 +113,7 @@ def test_010__add__ok_minimal_infos__output(capsys):
     assert "RTC device name: " in captured.out
     assert "Platform set to: " in captured.out
     assert "IP used: " in captured.out
-    assert "  successfully added." in captured.out
+    assert " successfully added." in captured.out
 
 
 
