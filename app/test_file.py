@@ -19,7 +19,7 @@ def test_001__undeploy__ok__yaml_attributes():
     hub = yaml_d['phones']['Chaos']['deployment_path']['hub']
     port = yaml_d['phones']['Chaos']['deployment_path']['port']
     assert exit_code == None
-    assert hub == None and port == True
+    assert hub == None and port == None
 
 def test002__deploy__ok__yaml_attributes():
     exit_code = deploy(phone = "Chaos", stage = 'dev')
