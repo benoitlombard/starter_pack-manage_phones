@@ -11,7 +11,7 @@ pipeline {
                     rm -rf app/app
 
                     echo creating venv_new:
-                    python -m venv app/venv_new
+                    python3 -m venv app/venv_new
 
                     echo activating venv_new and pip upgrade:
                     cd app
