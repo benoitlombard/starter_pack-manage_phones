@@ -129,8 +129,8 @@ def test_011__add__ok_minimal_infos__yaml_attributes():
         if phone['udid'] == udid:
             for attribute_key in dict_attributes_found_in_yaml.keys():
                 dict_attributes_found_in_yaml[attribute_key] = phone[attribute_key]
-
-    assert 
+    for key, value_found_in_yaml in dict_attributes_found_in_yaml.items():
+        assert value_found_in_yaml == key
 
 
 
