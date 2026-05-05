@@ -73,6 +73,7 @@ def test_005__deploy__incorrect_stage__yaml_attributes_and_output(capsys):
 def test_006__deploy__phone_already_deployed__output(capsys):
     phone, stage = "Chaos", "dev"
     deploy(phone = phone, stage = stage)
+    deploy(phone = phone, stage = stage)
 
     captured = capsys.readouterr()
     assert f'{phone} is already deployed.' in captured.out
@@ -83,6 +84,9 @@ def test_007__deploy__incorrect_phone_name__output(capsys):
 
     captured = capsys.readouterr()
     assert f'No phone named {phone}.' in captured.out
+    print('out:', captured.out)
+    print('err:', captured.err)
+    assert KeyError in captured.err
 
 
 
