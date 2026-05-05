@@ -161,9 +161,11 @@ def test_013__add__ok_testrun_ids__yaml_attributes():
     functional = '65'
     performance = '124'
     add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type, fota = fota, activitytracking = activitytracking, functional = functional, performance = performance)
+
     dict_attributes_found_in_yaml = {'vendor': None, 'family': None, 'version': None, 'udid': None, 'release_type': None, 'fota': None, 'activitytracking': None, 'functional': None, 'performance': None}
     for phone in yaml_d['phones']:
         if yaml_d['phones'][phone]['udid'] == udid:
+            print('trouve', yaml_d['phones'][phone])
             for attribute_key in ['vendor', 'family', 'version', 'udid', 'release_type']:
                 dict_attributes_found_in_yaml[attribute_key] = yaml_d['phones'][phone][attribute_key]
             for attribute_key in ['fota', 'activitytracking', 'functional', 'performance']:
