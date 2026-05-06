@@ -143,7 +143,7 @@ def lists(item_to_show: str = '', stage_to_show: str = '', measure_time: bool = 
                             yaml = yaml,
                             stage = stage_to_show.lower())
             except KeyError as err:
-                typer.secho(f"KeyError: makes sure 'stage' value is either 'dev' or 'prod'.", fg=typer.colors.RED)
+                typer.secho("KeyError: makes sure 'stage' value is either 'dev' or 'prod'.", fg=typer.colors.RED)
                 raise err
         case 'undeployed_phones':
             if measure_time:
