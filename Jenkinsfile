@@ -10,10 +10,8 @@ pipeline {
             steps {
                 sh '''
                     echo deleting virtual envs:
-                    rm -rf venv_1
                     rm -rf venv_new
                     rm -rf app/venv_new
-                    rm -rf app/app
 
                     echo creating venv_new:
                     python3 -m venv app/venv_new
@@ -26,8 +24,12 @@ pipeline {
                     echo installing requirements:
                     cd ..
                     pip install -r requirements.txt
-
-
+                    '''
+            }
+        }
+        stage('Linting') {
+            steps {
+                sh '''
                     cd app
                     python manage_phones_CLI.py --help
                     python manage_phones_CLI.py add --help
@@ -40,14 +42,19 @@ pipeline {
                     ruff check manage_phones_CLI.py
                     ruff check decorators_file.py
                     ruff check error_methods.py
-
+                    '''
+            }
+        }
+        stage('Unit tests') {
+            steps {
+                sh '''
                     pytest --junitxml=pytest-report.xml
                     '''
             }
-            post {
-                always {
-                    junit 'app/pytest-report.xml'
-                }
+        }
+        post {
+            always {
+                junit 'app/pytest-report.xml'
             }
         }
     }
