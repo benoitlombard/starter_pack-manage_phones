@@ -2,19 +2,19 @@ pipeline {
     agent any
     parameters {
         booleanParam(name: 'run full test', defaultValue: true, description: '   Other parameters will be ignored if this parameter is checked.')
-        string(name: 'COMMANDS', defaultValue: 'python manage_phones_CLI.py change --phone Chaos --release-type PU100 --user jean', description: '   Additional commands to execute (separator = ",")')
-        booleanParam(name: 'add a new phone', defaultValue: false, description: '')
-        booleanParam(name: 'change existing phone', defaultValue: false, description: '')
-        booleanParam(name: 'deploy phone', defaultValue: false, description: '')
-        booleanParam(name: 'undeploy phone', defaultValue: false, description: '')
-        booleanParam(name: 'remove phone', defaultValue: false, description: '')
-        booleanParam(name: 'show phone configuration', defaultValue: false, description: '')
-        booleanParam(name: 'display phones', defaultValue: false, description: '')
-        booleanParam(name: 'display bts', defaultValue: false, description: '')
-        booleanParam(name: 'display biabs', defaultValue: false, description: '')
-        booleanParam(name: 'display prod stage', defaultValue: false, description: '')
-        booleanParam(name: 'display dev stage', defaultValue: false, description: '')
-        booleanParam(name: 'display not deployed phones', defaultValue: false, description: '')
+        string(name: 'COMMANDS', defaultValue: 'python manage_phones_CLI.py change --phone Chaos --release-type PU100 --user jean, ', description: '   Additional commands to execute (separator = ",")')
+        booleanParam(name: 'add_a_new_phone', defaultValue: false, description: '')
+        booleanParam(name: 'change_existing_phone', defaultValue: false, description: '')
+        booleanParam(name: 'deploy_phone', defaultValue: false, description: '')
+        booleanParam(name: 'undeploy_phone', defaultValue: false, description: '')
+        booleanParam(name: 'remove_phone', defaultValue: false, description: '')
+        booleanParam(name: 'show_phone_configuration', defaultValue: false, description: '')
+        booleanParam(name: 'display_phones', defaultValue: false, description: '')
+        booleanParam(name: 'display_bts', defaultValue: false, description: '')
+        booleanParam(name: 'display_biabs', defaultValue: false, description: '')
+        booleanParam(name: 'display_prod_stage', defaultValue: false, description: '')
+        booleanParam(name: 'display_dev_stage', defaultValue: false, description: '')
+        booleanParam(name: 'display_not_deployed_phones', defaultValue: false, description: '')
 
     }
     stages {
