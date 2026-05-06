@@ -182,7 +182,7 @@ def test_013__add__ok_testrun_ids__yaml_attributes():
     for key, value_found_in_yaml in dict_attributes_found_in_yaml.items():
         assert value_found_in_yaml == dict_attributes[key]
 
-
+@pytest.mark.deploy_phone
 def test_handler_deploy_phone(capsys, phone: str = "", stage: str = ""):
 
     if phone not in yaml_d['phones']:                   # case: incorrect phone name
