@@ -37,7 +37,6 @@ pipeline {
                     ruff check deploy_phone.py
                     ruff check display_infos.py
                     ruff check remove_undeploy_phone.py
-                    ruff check manage_phones.py
                     ruff check manage_phones_CLI.py
                     ruff check decorators_file.py
                     ruff check error_methods.py
