@@ -192,8 +192,9 @@ def test_handler_deploy_phone(capsys, phone: str, stage: str):
         assert f'No phone named {phone}.' in captured.out
 
     else:
+        exit_code = deploy(phone = phone, stage = stage)
+        captured = capsys.readouterr()
         if stage not in ['dev', 'prod']:                    # case: incorrect stage 
-            captured = capsys.readouterr()
             assert "Please select a stage from" in captured.out
             return
         
