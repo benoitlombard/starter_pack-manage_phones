@@ -179,7 +179,7 @@ def display(yaml_d: dict, yaml)->None:
             ret = input('? ')
             try:
                 yaml.dump(yaml_d['phones'][ret], sys.stdout)
-            except:
+            except KeyError:
                 send_custom_msg_success_fail(f"Error: phone '{ret}' not found.", False)
         case _:
             send_custom_msg_success_fail("User input do not match selection.", False)
