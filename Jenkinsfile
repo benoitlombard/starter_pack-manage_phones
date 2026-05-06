@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        booleanParam(name: 'run full test', defaultValue: true, description: '   Other parameters will be ignored if this parameter is checked.')
+        booleanParam(name: 'run_all_tests', defaultValue: true, description: '   Other parameters will be ignored if this parameter is checked.')
         string(name: 'COMMANDS', defaultValue: 'python manage_phones_CLI.py change --phone Chaos --release-type PU100 --user jean, ', description: '   Additional commands to execute (separator = ",")')
         booleanParam(name: 'add_a_new_phone', defaultValue: false, description: '')
         booleanParam(name: 'change_existing_phone', defaultValue: false, description: '')
@@ -77,6 +77,24 @@ pipeline {
 
                     cd app
                     . venv_new/bin/activate
+
+                    if [add_a_new_phone || run_all_tests]; then
+                        pytest -m "add_a_new_phone_marker"
+                    fi
+
+
+
+
+
+                    
+                    if [deploy_phone || run_all_tests]; then
+                        pytest -m "add_a_new_phone_marker"
+                    fi
+
+
+
+
+
 
                     pytest --junitxml=pytest-report.xml
                     '''
