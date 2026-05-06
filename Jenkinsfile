@@ -2,6 +2,7 @@ pipeline {
     agent any
     parameters {
         booleanParam(name: 'run full test', defaultValue: true, description: '   Other parameters will be ignored if this parameter is checked.')
+        string(name: 'COMMANDS', defaultValue: '', description: '   Additional commands to execute, separator = "," ')
         booleanParam(name: 'add a new phone', defaultValue: false, description: '')
         booleanParam(name: 'change existing phone', defaultValue: false, description: '')
         booleanParam(name: 'deploy phone', defaultValue: false, description: '')
@@ -14,7 +15,6 @@ pipeline {
         booleanParam(name: 'display prod stage', defaultValue: false, description: '')
         booleanParam(name: 'display dev stage', defaultValue: false, description: '')
         booleanParam(name: 'display not deployed phones', defaultValue: false, description: '')
-        string(name: 'COMMANDS', defaultValue: '', description: '   Additional commands to execute, separator: , ')
 
     }
     stages {
