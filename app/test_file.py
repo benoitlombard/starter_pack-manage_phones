@@ -189,6 +189,7 @@ def test_handler_deploy_phone(capsys, phone: str, stage: str):
     if phone not in yaml_d['phones']:                   # case: incorrect phone name
         with pytest.raises(KeyError):
             exit_code = deploy(phone = phone, stage = stage)
+        captured = capsys.readouterr()
         assert f'No phone named {phone}.' in captured.out
 
     else:
