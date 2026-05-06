@@ -31,8 +31,16 @@ pipeline {
                     cd app
                     python manage_phones_CLI.py --help
                     python manage_phones_CLI.py add --help
-                    ls
+
                     ruff check add_phone.py
+                    ruff check change_phone.py.py
+                    ruff check deploy_phone.py
+                    ruff check display_infos.py
+                    ruff check remove_undeploy_phone.py
+                    ruff check manage_phones.py
+                    ruff check manage_phones_CLI.py
+                    ruff check decorators_file.py
+                    ruff check error_methods.py
 
                     pytest --junitxml=pytest-report.xml
                     '''
