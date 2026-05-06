@@ -183,6 +183,7 @@ def test_013__add__ok_testrun_ids__yaml_attributes():
         assert value_found_in_yaml == dict_attributes[key]
 
 @pytest.mark.deploy_phone
+@pytest.mark.parametrize("phone,stage", [("Chaos", "dev"), ("dwdds", "dev")])
 def test_handler_deploy_phone(capsys, phone: str = "", stage: str = ""):
 
     if phone not in yaml_d['phones']:                   # case: incorrect phone name
