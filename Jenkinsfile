@@ -33,7 +33,7 @@ pipeline {
                     python manage_phones_CLI.py add --help
 
                     ruff check add_phone.py
-                    ruff check change_phone.py.py
+                    ruff check change_phone.py
                     ruff check deploy_phone.py
                     ruff check display_infos.py
                     ruff check remove_undeploy_phone.py
