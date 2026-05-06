@@ -14,7 +14,7 @@ pipeline {
         booleanParam(name: 'display prod stage', defaultValue: false, description: '')
         booleanParam(name: 'display dev stage', defaultValue: false, description: '')
         booleanParam(name: 'display not deployed phones', defaultValue: false, description: '')
-        string(NAME: 'COMMANDS', defaultValue: '', description: '   Additional commands to execute, separator: , ')
+        string(name: 'COMMANDS', defaultValue: '', description: '   Additional commands to execute, separator: , ')
 
     }
     stages {
