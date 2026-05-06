@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        booleanParam(name: 'run full test', defaultValue: true, description: 'If this function is checked other parameters will be ignored.')
+        booleanParam(name: 'run full test', defaultValue: true, description: '    If this function is checked other parameters will be ignored.')
         booleanParam(name: 'add_phone', defaultValue: false, description: '')
         booleanParam(name: 'change_phone', defaultValue: false, description: '')
         booleanParam(name: 'deploy_phone', defaultValue: false, description: '')
