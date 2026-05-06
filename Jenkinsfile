@@ -84,7 +84,7 @@ pipeline {
 
 
 
-
+                    echo "ON EST GOOD"
                     pytest --junitxml=pytest-report.xml
                     '''
             }
