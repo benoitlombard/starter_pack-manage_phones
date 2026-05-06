@@ -70,18 +70,15 @@ pipeline {
                     cd app
                     . venv_new/bin/activate
 
-                    if [$add_a_new_phone || $run_all_tests]; then
+
+                    if $add_a_new_phone || $run_all_tests; then
                         pytest -m add_a_new_phone
                     fi
 
-
-
-
-
-
-                    if [$deploy_phone || $run_all_tests]; then
-                        pytest -v -m deploy_phone
+                    if $deploy_phone || $run_all_tests; then
+                        pytest -m deploy_phone -v
                     fi
+
 
 
 
