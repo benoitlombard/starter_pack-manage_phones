@@ -32,8 +32,6 @@ pipeline {
                 sh '''
                     cd app
                     . venv_new/bin/activate
-                    python manage_phones_CLI.py --help
-                    python manage_phones_CLI.py add --help
 
                     ruff check add_phone.py
                     ruff check change_phone.py
@@ -43,14 +41,27 @@ pipeline {
                     ruff check manage_phones_CLI.py
                     ruff check decorators_file.py
                     ruff check error_methods.py
+
+                    python manage_phones_CLI.py --help
+                    python manage_phones_CLI.py add --help
                     '''
             }
         }
         stage('Unit tests') {
             steps {
                 sh '''
+
+                    VARS_FILE="test_requirements.txt"
+                    while IFS='=' read -r key value; do
+                        [[ -z "$key" || "$key" =~ ^# ]] && continue
+                        export "$key=$value"
+
+                    done < "$VARS_FILE"
+                    echo "full_test: $full_test"
+
                     cd app
                     . venv_new/bin/activate
+
                     pytest --junitxml=pytest-report.xml
                     '''
             }
