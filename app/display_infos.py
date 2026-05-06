@@ -1,7 +1,6 @@
 import sys
 from error_methods import send_custom_msg_success_fail
 from decorators_file import decorator_timer
-from ruamel.yaml.comments import CommentedMap
 
 ### Print only name or important info when listing phones
 
