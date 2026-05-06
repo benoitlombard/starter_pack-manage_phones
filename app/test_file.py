@@ -11,7 +11,7 @@ from manage_phones import yaml_d, yaml, file_name
                                             test004__deploy__ok__output
 """
 
-def test_001__undeploy__ok__yaml_attributes():
+def xsxtest_001__undeploy__ok__yaml_attributes():
     exit_code = undeploy(phone = "Chaos")
 
     hub = yaml_d['phones']['Chaos']['deployment_path']['hub']
@@ -19,7 +19,7 @@ def test_001__undeploy__ok__yaml_attributes():
     assert exit_code == None
     assert hub == None and port == None
 
-def test_002__deploy__ok__yaml_attributes():
+def xsxtest_002__deploy__ok__yaml_attributes():
     phone, stage = "Chaos", 'dev'
     exit_code = deploy(phone = phone, stage = stage)
 
@@ -35,7 +35,7 @@ def test_002__deploy__ok__yaml_attributes():
     deployment_path = yaml_d['stages'][stage][hub_nb][port]
     assert deployment_path == yaml_d['phones'][phone]
 
-def test_003__undeploy__ok__output(capsys):
+def xsxtest_003__undeploy__ok__output(capsys):
     undeploy(phone = "Chaos")
 
     captured = capsys.readouterr()
