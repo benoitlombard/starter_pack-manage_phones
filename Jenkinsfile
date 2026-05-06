@@ -49,6 +49,7 @@ pipeline {
         stage('Unit tests') {
             steps {
                 sh '''
+                    cd app
                     . venv_new/bin/activate
                     pytest --junitxml=pytest-report.xml
                     '''
