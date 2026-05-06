@@ -30,7 +30,10 @@ pipeline {
         stage('Linting') {
             steps {
                 sh '''
+                    pwd
+                    ls
                     cd app
+                    ls
                     python manage_phones_CLI.py --help
                     python manage_phones_CLI.py add --help
 
