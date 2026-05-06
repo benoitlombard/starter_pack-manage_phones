@@ -15,7 +15,6 @@ pipeline {
         booleanParam(name: 'display_prod_stage', defaultValue: false, description: '')
         booleanParam(name: 'display_dev_stage', defaultValue: false, description: '')
         booleanParam(name: 'display_not_deployed_phones', defaultValue: false, description: '')
-
     }
     stages {
         stage('Checkout') {
