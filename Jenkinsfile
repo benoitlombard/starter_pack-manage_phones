@@ -1,10 +1,19 @@
 pipeline {
     agent any
     parameters {
-        booleanParam(name: 'run full test', defaultValue: true, description: '   Other parameters will be ignored if this function is checked.')
-        booleanParam(name: 'add_phone', defaultValue: false, description: '')
-        booleanParam(name: 'change_phone', defaultValue: false, description: '')
-        booleanParam(name: 'deploy_phone', defaultValue: false, description: '')
+        booleanParam(name: 'run full test', defaultValue: true, description: '   Other parameters will be ignored if this parameter is checked.')
+        booleanParam(name: 'add a new phone', defaultValue: false, description: '')
+        booleanParam(name: 'change existing phone', defaultValue: false, description: '')
+        booleanParam(name: 'deploy phone', defaultValue: false, description: '')
+        booleanParam(name: 'undeploy phone', defaultValue: false, description: '')
+        booleanParam(name: 'remove phone', defaultValue: false, description: '')
+        booleanParam(name: 'show phone configuration', defaultValue: false, description: '')
+        booleanParam(name: 'display phones', defaultValue: false, description: '')
+        booleanParam(name: 'display bts', defaultValue: false, description: '')
+        booleanParam(name: 'display biabs', defaultValue: false, description: '')
+        booleanParam(name: 'display prod stage', defaultValue: false, description: '')
+        booleanParam(name: 'display dev stage', defaultValue: false, description: '')
+        booleanParam(name: 'display not deployed phones', defaultValue: false, description: '')
     }
     stages {
         stage('Checkout') {
