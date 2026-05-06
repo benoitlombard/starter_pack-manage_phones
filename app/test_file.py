@@ -99,7 +99,6 @@ def test_008__undeploy__incorrect_phone_name__output_and_error(capsys):
         undeploy(phone = phone)
     captured = capsys.readouterr()
     assert "Key Error when writing to the yaml file.\nUndeployment failed, please verify phone name." in captured.out
-
 @pytest.mark.undeploy_phone
 def test_009__undeploy__not_deployed_phone__output(capsys):
     phone = "Hesperiden"
@@ -107,7 +106,6 @@ def test_009__undeploy__not_deployed_phone__output(capsys):
 
     captured = capsys.readouterr()
     assert f"{phone} is not deployed.\nUndeployment is not possible." in captured.out
-
 @pytest.mark.add_a_new_phone
 def test_010__add__ok_minimal_infos__output(capsys):
     vendor = 'apple'
@@ -122,7 +120,6 @@ def test_010__add__ok_minimal_infos__output(capsys):
     assert "Platform set to: " in captured.out
     assert "IP used: " in captured.out
     assert " successfully added." in captured.out
-
 @pytest.mark.add_a_new_phone
 def test_011__add__ok_minimal_infos__yaml_attributes():
     vendor = 'apple'
@@ -141,7 +138,6 @@ def test_011__add__ok_minimal_infos__yaml_attributes():
     dict_attributes = {'vendor': vendor, 'family': family, 'version': version, 'udid': udid, 'release_type': release_type}
     for key, value_found_in_yaml in dict_attributes_found_in_yaml.items():
         assert value_found_in_yaml == dict_attributes[key]
-
 @pytest.mark.add_a_new_phone
 def test_012__add__ok_with_testrun_ids__output(capsys):
     vendor = 'apple'
@@ -160,7 +156,6 @@ def test_012__add__ok_with_testrun_ids__output(capsys):
     assert "Platform set to: " in captured.out
     assert "IP used: " in captured.out
     assert " successfully added." in captured.out
-
 @pytest.mark.add_a_new_phone
 def test_013__add__ok_testrun_ids__yaml_attributes():
     vendor = 'apple'
@@ -188,19 +183,93 @@ def test_013__add__ok_testrun_ids__yaml_attributes():
         assert value_found_in_yaml == dict_attributes[key]
 
 
-### Lets do test_014 and others
+def test_handler_deploy_phone(capsys, phone: str = "", stage: str = ""):
+
+    if phone not in yaml_d['phones']:                   # case: incorrect phone name
+        with pytest.raises(KeyError):
+            exit_code = deploy(phone = phone, stage = stage)
+        assert f'No phone named {phone}.' in captured.out
+
+    else:
+        if stage not in ['dev', 'prod']:                    # case: incorrect stage 
+            captured = capsys.readouterr()
+            assert "Please select a stage from" in captured.out
+            return
+        
+        is_a_port_available = False
+        for hub in yaml_d["stages"][stage]:
+            for port, value in hub.items():
+                if port.startswith("port") and value is None:
+                    is_a_port_available = True
+
+        if not is_a_port_available:                          # case: no port available
+            assert f"Error when trying to find a free port:\nNo free port available in stage '{stage}'." in captured.out
+            return
+
+        elif yaml_d['phones'][phone]["deployment_path"]["hub"] is not None:
+            assert f'{phone} is already deployed.' in captured.out
+            return
+        
+        else:
+            print(yaml_d['stages'][stage])
+            assert f'{phone} successfully deployed in {stage}.' in captured.out
+            assert yaml_d['phones'][phone]["deployment_path"]["hub"] is not None
+            assert yaml_d['phones'][phone]["deployment_path"]["port"] == port
+
+            for hub_number in range(len(yaml_d['stages'][stage])):
+                if yaml_d['stages'][stage][hub_number] == "a changer":   #changer
+                    pass                #changer
+
+            #assert yaml_d['stages'][stage][]
+
+    return
 
 
-"""
-def test_014__add__ok_all_infos__output(capsys):
-    vendor = 'apple'
-    family = 'ios4'
-    version = '5.6'
-    udid = 'hcefnhwax32-114ce5e'
-    release_type = 'PU100'
-    add(vendor = vendor, family = family, version = version, udid = udid, release_type = release_type)
 
-def test_015__add__ok_all_infos__yaml_attributes():
+@pytest.mark.deploy_phone
+def test_002__deploy__ok__yaml_attributes():
+    phone, stage = "Chaos", 'dev'
+    exit_code = deploy(phone = phone, stage = stage)
+
+    hub = yaml_d['phones'][phone]['deployment_path']['hub']
+    port = yaml_d['phones'][phone]['deployment_path']['port']
+    assert exit_code == None
+    assert hub != None and port != None
+
+    hub_nb = 0
+    for hub_number in range(len(yaml_d['stages'][stage])):
+        if yaml_d['stages'][stage][hub_number]['name'] == hub:
+            hub_nb = hub_number
+    deployment_path = yaml_d['stages'][stage][hub_nb][port]
+    assert deployment_path == yaml_d['phones'][phone]
+
+@pytest.mark.deploy_phone
+def test_004__deploy__ok__output(capsys):
+    phone, stage = "Chaos", 'dev'
+    deploy(phone = phone, stage = stage)
+
+    captured = capsys.readouterr()
+    assert "Chaos successfully deployed in dev." in captured.out
+
+@pytest.mark.deploy_phone
+def test_006__deploy__phone_already_deployed__output(capsys):
+    phone, stage = "Chaos", "dev"
+    deploy(phone = phone, stage = stage)
+    deploy(phone = phone, stage = stage)
+
+    captured = capsys.readouterr()
+    assert f'{phone} is already deployed.' in captured.out
+
+@pytest.mark.deploy_phone
+def test_007__deploy__incorrect_phone_name__output_and_error(capsys):
+    phone, stage = "incorrect_name", "dev"
+
+    with pytest.raises(KeyError):
+        deploy(phone = phone, stage = stage)
+    captured = capsys.readouterr()
+    assert f'No phone named {phone}.' in captured.out
 
 
-"""
+
+
+
