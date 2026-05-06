@@ -70,12 +70,44 @@ pipeline {
                     cd app
                     . venv_new/bin/activate
 
-                    if $add_a_new_phone || $run_all_tests; then
+                    if $run_all_tests; then
+                        pytest -m run_all_tests -v
+                    fi
+                    if $add_a_new_phone; then
                         pytest -m add_a_new_phone
                     fi
-
-                    if $deploy_phone || $run_all_tests; then
+                    if $change_existing_phone; then
+                        pytest -m change_existing_phone -v
+                    fi
+                    if $deploy_phone; then
                         pytest -m deploy_phone -v
+                    fi
+                    if $undeploy_phone; then
+                        pytest -m undeploy_phone -v
+                    fi
+                    if $remove_phone; then
+                        pytest -m remove_phone -v
+                    fi
+                    if $show_phone_configuration; then
+                        pytest -m show_phone_configuration -v
+                    fi
+                    if $display_phones; then
+                        pytest -m display_phones -v
+                    fi
+                    if $display_bts; then
+                        pytest -m display_bts -v
+                    fi
+                    if $display_biabs; then
+                        pytest -m display_biabs -v
+                    fi
+                    if $display_prod_stage; then
+                        pytest -m display_prod_stage -v
+                    fi
+                    if $display_dev_stage; then
+                        pytest -m display_dev_stage -v
+                    fi
+                    if $display_not_deployed_phones; then
+                        pytest -m display_not_deployed_phones -v
                     fi
 
                     echo "ON EST GOOD"

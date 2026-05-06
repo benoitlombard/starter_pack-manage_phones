@@ -182,7 +182,7 @@ def test_013__add__ok_testrun_ids__yaml_attributes():
     for key, value_found_in_yaml in dict_attributes_found_in_yaml.items():
         assert value_found_in_yaml == dict_attributes[key]
 
-@pytest.mark.deploy_phone
+@pytest.mark.run_all_tests
 @pytest.mark.parametrize("phone,stage", [("Chaos", "dev"), ("dwdds", "dev")])
 def test_handler_deploy_phone(capsys, phone: str, stage: str):
 
