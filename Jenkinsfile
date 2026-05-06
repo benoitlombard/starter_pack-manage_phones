@@ -109,7 +109,6 @@ pipeline {
                         pytest -m display_not_deployed_phones -v
                     fi
 
-                    echo "ON EST GOOD"
                     #pytest --junitxml=pytest-report.xml
                     '''
             }

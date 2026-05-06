@@ -207,16 +207,20 @@ def test_handler_deploy_phone(capsys, phone: str, stage: str):
             return
         
         else:
-            print(yaml_d['stages'][stage])
             assert f'{phone} successfully deployed in {stage}.' in captured.out
             assert yaml_d['phones'][phone]["deployment_path"]["hub"] is not None
             assert yaml_d['phones'][phone]["deployment_path"]["port"] == port
 
+            used_hub, used_port = None, None
             for hub_number in range(len(yaml_d['stages'][stage])):
-                if yaml_d['stages'][stage][hub_number] == "a changer":   #changer
-                    pass                #changer
+                for port in yaml_d['stages'][stage][hub_number]:
+                    if yaml_d['stages'][stage][hub_number][port] == yaml_d['phones'][phone]:   #changer
+                        used_hub, used_port = hub_number, port
 
-            #assert yaml_d['stages'][stage][]
+            assert used_hub is not None
+            assert used_port is not None
+            assert yaml_d['phones'][phone]['deployment_path']['hub'] == yaml_d['stages'][stage][hub_number]['name']
+            assert yaml_d['phones'][phone]['deployment_path']['port'] != None
 
     return
 
