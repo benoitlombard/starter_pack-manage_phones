@@ -67,14 +67,6 @@ pipeline {
         stage('Unit tests') {
             steps {
                 sh '''
-                    VARS_FILE="test_requirements.txt"
-                    while IFS='=' read -r key value; do
-                        [[ -z "$key" || "$key" =~ ^# ]] && continue
-                        export "$key=$value"
-
-                    done < "$VARS_FILE"
-                    echo "full_test: $full_test"
-
                     cd app
                     . venv_new/bin/activate
 
@@ -86,7 +78,7 @@ pipeline {
 
 
 
-                    
+
                     if [deploy_phone || run_all_tests]; then
                         pytest -m "add_a_new_phone_marker"
                     fi
