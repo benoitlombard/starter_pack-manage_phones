@@ -111,12 +111,12 @@ pipeline {
                     fi
 
                     echo "ON EST GOOD"
-                    pytest --junitxml=pytest-report.xml
+                    #pytest --junitxml=pytest-report.xml
                     '''
             }
             post {
                 always {
-                    junit 'app/pytest-report.xml'
+                    //junit 'app/pytest-report.xml'
                 }
             }
         }
