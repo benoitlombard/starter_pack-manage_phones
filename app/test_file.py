@@ -184,7 +184,7 @@ def test_013__add__ok_testrun_ids__yaml_attributes():
 
 @pytest.mark.deploy_phone
 @pytest.mark.parametrize("phone,stage", [("Chaos", "dev"), ("dwdds", "dev")])
-def test_handler_deploy_phone(capsys, phone: str = "", stage: str = ""):
+def test_handler_deploy_phone(capsys, phone: str, stage: str):
 
     if phone not in yaml_d['phones']:                   # case: incorrect phone name
         with pytest.raises(KeyError):
