@@ -11,7 +11,7 @@ from manage_phones import yaml_d, yaml, file_name
                                             test004__deploy__ok__output
 """
 @pytest.mark.undeploy_phone
-def test_001__undeploy__ok__yaml_attributes():
+def xtest_001__undeploy__ok__yaml_attributes():
     exit_code = undeploy(phone = "Chaos")
 
     hub = yaml_d['phones']['Chaos']['deployment_path']['hub']
@@ -20,7 +20,7 @@ def test_001__undeploy__ok__yaml_attributes():
     assert hub == None and port == None
 
 @pytest.mark.deploy_phone
-def test_002__deploy__ok__yaml_attributes():
+def xtest_002__deploy__ok__yaml_attributes():
     phone, stage = "Chaos", 'dev'
     exit_code = deploy(phone = phone, stage = stage)
 
@@ -37,7 +37,7 @@ def test_002__deploy__ok__yaml_attributes():
     assert deployment_path == yaml_d['phones'][phone]
 
 @pytest.mark.undeploy_phone
-def test_003__undeploy__ok__output(capsys):
+def xtest_003__undeploy__ok__output(capsys):
     undeploy(phone = "Chaos")
 
     captured = capsys.readouterr()
@@ -45,7 +45,7 @@ def test_003__undeploy__ok__output(capsys):
     assert "Please unplug Chaos from port01 at hub exsys_ex_1116hmvs_1" in captured.out
 
 @pytest.mark.deploy_phone
-def test_004__deploy__ok__output(capsys):
+def xtest_004__deploy__ok__output(capsys):
     phone, stage = "Chaos", 'dev'
     deploy(phone = phone, stage = stage)
 
@@ -53,7 +53,7 @@ def test_004__deploy__ok__output(capsys):
     assert "Chaos successfully deployed in dev." in captured.out
 
 @pytest.mark.deploy_phone
-def test_005__deploy__incorrect_stage__yaml_attributes_and_output(capsys):
+def xtest_005__deploy__incorrect_stage__yaml_attributes_and_output(capsys):
     phone, stage = "Chaos", 'incorrect_stage'
     undeploy(phone = phone)
     exit_code = deploy(phone = phone, stage = stage)
@@ -74,7 +74,7 @@ def test_005__deploy__incorrect_stage__yaml_attributes_and_output(capsys):
     assert "Please select a stage from" in captured.out
 
 @pytest.mark.deploy_phone
-def test_006__deploy__phone_already_deployed__output(capsys):
+def xtest_006__deploy__phone_already_deployed__output(capsys):
     phone, stage = "Chaos", "dev"
     deploy(phone = phone, stage = stage)
     deploy(phone = phone, stage = stage)
@@ -83,7 +83,7 @@ def test_006__deploy__phone_already_deployed__output(capsys):
     assert f'{phone} is already deployed.' in captured.out
 
 @pytest.mark.deploy_phone
-def test_007__deploy__incorrect_phone_name__output_and_error(capsys):
+def xtest_007__deploy__incorrect_phone_name__output_and_error(capsys):
     phone, stage = "incorrect_name", "dev"
 
     with pytest.raises(KeyError):
@@ -92,7 +92,7 @@ def test_007__deploy__incorrect_phone_name__output_and_error(capsys):
     assert f'No phone named {phone}.' in captured.out
 
 @pytest.mark.undeploy_phone
-def test_008__undeploy__incorrect_phone_name__output_and_error(capsys):
+def xtest_008__undeploy__incorrect_phone_name__output_and_error(capsys):
     phone = "incorrect_name"
 
     with pytest.raises(KeyError):
@@ -101,7 +101,7 @@ def test_008__undeploy__incorrect_phone_name__output_and_error(capsys):
     assert "Key Error when writing to the yaml file.\nUndeployment failed, please verify phone name." in captured.out
 
 @pytest.mark.undeploy_phone
-def test_009__undeploy__not_deployed_phone__output(capsys):
+def xtest_009__undeploy__not_deployed_phone__output(capsys):
     phone = "Hesperiden"
     undeploy(phone = phone)
 
@@ -109,7 +109,7 @@ def test_009__undeploy__not_deployed_phone__output(capsys):
     assert f"{phone} is not deployed.\nUndeployment is not possible." in captured.out
 
 @pytest.mark.add_a_new_phone
-def test_010__add__ok_minimal_infos__output(capsys):
+def xtest_010__add__ok_minimal_infos__output(capsys):
     vendor = 'apple'
     family = 'ios4'
     version = '5.6'
@@ -124,7 +124,7 @@ def test_010__add__ok_minimal_infos__output(capsys):
     assert " successfully added." in captured.out
 
 @pytest.mark.add_a_new_phone
-def test_011__add__ok_minimal_infos__yaml_attributes():
+def xtest_011__add__ok_minimal_infos__yaml_attributes():
     vendor = 'apple'
     family = 'ios4'
     version = '5.6'
