@@ -176,7 +176,7 @@ def test_013__add__ok_testrun_ids__yaml_attributes():
 
 
 @pytest.mark.deploy_phone
-@pytest.mark.parametrize("phone,stage", [("Chaos", "dev"), ("incorrect_phone", "dev"), ("Nyx", "incorrect_stage"), ("Nyx", "dev"), ("Nyx", "prod"), ("incorrect_phone", "incorrect_stage")])
+@pytest.mark.parametrize("phone,stage", [("Hemera", "dev"), ("Chaos", "dev"), ("incorrect_phone", "dev"), ("Nyx", "incorrect_stage"), ("Nyx", "dev"), ("Nyx", "prod"), ("incorrect_phone", "incorrect_stage")])
 def test_handler_deploy_phone(capsys, phone: str, stage: str):
 
     if phone not in yaml_d['phones'] and stage in ['dev', 'prod']:                   # case: incorrect phone name
@@ -219,47 +219,6 @@ def test_handler_deploy_phone(capsys, phone: str, stage: str):
             #assert yaml_d['stages'][stage][]
 
     return
-
-def test_002__deploy__ok__yaml_attributes():
-    phone, stage = "Chaos", 'dev'
-    exit_code = deploy(phone = phone, stage = stage)
-
-    hub = yaml_d['phones'][phone]['deployment_path']['hub']
-    port = yaml_d['phones'][phone]['deployment_path']['port']
-    assert exit_code == None
-    assert hub != None and port != None
-
-    hub_nb = 0
-    for hub_number in range(len(yaml_d['stages'][stage])):
-        if yaml_d['stages'][stage][hub_number]['name'] == hub:
-            hub_nb = hub_number
-    deployment_path = yaml_d['stages'][stage][hub_nb][port]
-    assert deployment_path == yaml_d['phones'][phone]
-
-def test_004__deploy__ok__output(capsys):
-    phone, stage = "Chaos", 'dev'
-    deploy(phone = phone, stage = stage)
-
-    captured = capsys.readouterr()
-    assert "Chaos successfully deployed in dev." in captured.out
-
-def test_006__deploy__phone_already_deployed__output(capsys):
-    phone, stage = "Chaos", "dev"
-    deploy(phone = phone, stage = stage)
-    deploy(phone = phone, stage = stage)
-
-    captured = capsys.readouterr()
-    assert f'{phone} is already deployed.' in captured.out
-
-def test_007__deploy__incorrect_phone_name__output_and_error(capsys):
-    phone, stage = "incorrect_name", "dev"
-
-    with pytest.raises(KeyError):
-        deploy(phone = phone, stage = stage)
-    captured = capsys.readouterr()
-    assert f'No phone named {phone}.' in captured.out
-
-
 
 
 
