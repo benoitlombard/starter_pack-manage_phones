@@ -109,7 +109,7 @@ def show_config(phone: str = '', measure_time: bool = True)->None:
         yaml.dump(yaml_d['phones'][phone], sys.stdout)
         if measure_time:
             typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
-    except:
+    except KeyError:
         typer.secho(f'{phone} not found.', fg=typer.colors.RED)
         if measure_time:
             typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
