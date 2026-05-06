@@ -55,7 +55,7 @@ def deploy_phone(yaml_d: CommentedMap, yaml, file_name: str, phone: str = '', st
                 phones_not_deployed.append(phone)
 
         if not phones_not_deployed:
-            send_custom_msg_success_fail(f"No phones available for deployment", False)
+            send_custom_msg_success_fail("No phones available for deployment", False)
             return
 
         print('Phones available to deploy: ')
