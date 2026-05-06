@@ -71,7 +71,7 @@ pipeline {
                     . venv_new/bin/activate
 
                     if [add_a_new_phone || run_all_tests]; then
-                        pytest -m "add_a_new_phone_marker"
+                        pytest -m "add_a_new_phone"
                     fi
 
 
@@ -80,7 +80,7 @@ pipeline {
 
 
                     if [deploy_phone || run_all_tests]; then
-                        pytest -m "add_a_new_phone_marker"
+                        pytest -m "deploy_phone"
                     fi
 
 
