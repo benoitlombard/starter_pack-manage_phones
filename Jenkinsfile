@@ -70,11 +70,12 @@ pipeline {
                     cd app
                     . venv_new/bin/activate
 
-
+                    echo "AVANT CONDITION 1"
                     if $add_a_new_phone || $run_all_tests; then
                         pytest -m add_a_new_phone
                     fi
 
+                    echo "ENTRE LES CONDITIONS"
                     if $deploy_phone || $run_all_tests; then
                         pytest -m deploy_phone -v
                     fi
