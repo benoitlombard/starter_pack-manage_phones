@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    parameters {
+        booleanParam(name: 'run full test', defaultValue: true, description: 'tests every output case.')
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -50,7 +53,6 @@ pipeline {
         stage('Unit tests') {
             steps {
                 sh '''
-
                     VARS_FILE="test_requirements.txt"
                     while IFS='=' read -r key value; do
                         [[ -z "$key" || "$key" =~ ^# ]] && continue
