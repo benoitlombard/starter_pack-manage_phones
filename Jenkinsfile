@@ -24,9 +24,14 @@ pipeline {
                     echo installing requirements:
                     cd ..
                     pip install -r requirements.txt
-
-
+                    '''
+            }
+        }
+        stage('Linting') {
+            steps {
+                sh '''
                     cd app
+                    . venv_new/bin/activate
                     python manage_phones_CLI.py --help
                     python manage_phones_CLI.py add --help
 
@@ -41,16 +46,10 @@ pipeline {
                     '''
             }
         }
-        stage('Linting') {
-            steps {
-                sh '''
-                    echo ok
-                    '''
-            }
-        }
         stage('Unit tests') {
             steps {
                 sh '''
+                    . venv_new/bin/activate
                     pytest --junitxml=pytest-report.xml
                     '''
             }
