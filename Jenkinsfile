@@ -79,7 +79,7 @@ pipeline {
                     if $deploy_phone || $run_all_tests; then
                         pytest -m deploy_phone -v
                     fi
-
+                    echo "APRES LES CONDITIONS"
 
 
 
