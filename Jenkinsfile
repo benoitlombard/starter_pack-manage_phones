@@ -24,12 +24,8 @@ pipeline {
                     echo installing requirements:
                     cd ..
                     pip install -r requirements.txt
-                    '''
-            }
-        }
-        stage('Linting') {
-            steps {
-                sh '''
+
+
                     cd app
                     python manage_phones_CLI.py --help
                     python manage_phones_CLI.py add --help
@@ -42,6 +38,13 @@ pipeline {
                     ruff check manage_phones_CLI.py
                     ruff check decorators_file.py
                     ruff check error_methods.py
+                    '''
+            }
+        }
+        stage('Linting') {
+            steps {
+                sh '''
+                    echo ok
                     '''
             }
         }
