@@ -114,11 +114,11 @@ pipeline {
                     #pytest --junitxml=pytest-report.xml
                     '''
             }
-            post {
-                always {
-                    //junit 'app/pytest-report.xml'
-                }
-            }
+            //post {
+            //    always {
+            //        junit 'app/pytest-report.xml'
+            //    }
+            //}
         }
     }
 }
