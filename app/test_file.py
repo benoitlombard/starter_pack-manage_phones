@@ -176,17 +176,17 @@ def test_013__add__ok_testrun_ids__yaml_attributes():
 
 
 @pytest.mark.deploy_phone
-@pytest.mark.parametrize("phone,stage", [("Chaos", "dev"), ("dwdds", "dev")])
+@pytest.mark.parametrize("phone,stage", [("Chaos", "dev"), ("incorrect_phone", "dev"), ("Nyx", "incorrect_stage"), ("Nyx", "dev"), ("Nyx", "prod"), ("incorrect_phone", "incorrect_stage")])
 def test_handler_deploy_phone(capsys, phone: str, stage: str):
 
     if phone not in yaml_d['phones']:                   # case: incorrect phone name
         with pytest.raises(KeyError):
-            exit_code = deploy(phone = phone, stage = stage)
+            deploy(phone = phone, stage = stage)
         captured = capsys.readouterr()
         assert f'No phone named {phone}.' in captured.out
 
     else:
-        exit_code = deploy(phone = phone, stage = stage)
+        deploy(phone = phone, stage = stage)
         captured = capsys.readouterr()
         if stage not in ['dev', 'prod']:                    # case: incorrect stage 
             assert "Please select a stage from" in captured.out
