@@ -386,10 +386,9 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
 @pytest.mark.show_phone_configuration
 @pytest.mark.parametrize("phone", [("Hemera"), ("Chaos"), ("incorrect_phone")]) # Chaos appear 2 times for testing case where phone is not deployed
 def test_undeploy_phone(capsys, phone: str):
+    show_config(phone = phone)
+    captured = capsys.readouterr()
     if phone not in yaml_d['phones']:                   # case: incorrect phone name
-        with pytest.raises(KeyError):
-            show_config(phone = phone)
-        captured = capsys.readouterr()
         assert f'{phone} not found.' in captured.out
     else:
         assert yaml.dump(yaml_d['phones'][phone], sys.stdout) in captured.out
