@@ -1,5 +1,6 @@
-from manage_phones_CLI import add, change, deploy, undeploy, remove, show_config, lists, phone_management_app
+from manage_phones_CLI import add, change, deploy, undeploy, remove, show_config, lists
 import pytest
+import sys
 
 from manage_phones import yaml_d, yaml, file_name
 
@@ -382,6 +383,16 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
         else:
             assert "successfully added, but not saved in yaml file" in captured.out
     
+@pytest.mark.show_phone_configuration
+@pytest.mark.parametrize("phone", [("Hemera"), ("Chaos"), ("incorrect_phone")]) # Chaos appear 2 times for testing case where phone is not deployed
+def test_undeploy_phone(capsys, phone: str):
+    if phone not in yaml_d['phones']:                   # case: incorrect phone name
+        with pytest.raises(KeyError):
+            show_config(phone = phone)
+        captured = capsys.readouterr()
+        assert f'{phone} not found.' in captured.out
+    else:
+        assert yaml.dump(yaml_d['phones'][phone], sys.stdout) in captured.out
 
 
 
