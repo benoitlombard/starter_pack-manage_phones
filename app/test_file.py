@@ -324,7 +324,7 @@ def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: st
             platform = platform, ip = ip, udid = udid, hub = hub, port = port)
         captured = capsys.readouterr()
         assert f"{phone} successfully changed." in captured.out
-        dict_of_attributes = {'phone':phone, 'release_type':release_type, 'user':user, 'fota':fota, 'activitytracking':activitytracking,
+        dict_of_attributes = {'release_type':release_type, 'user':user, 'fota':fota, 'activitytracking':activitytracking,
                           'functional':functional, 'performance':performance, 'manufacturer':manufacturer, 'model':model, 'vendor':vendor,
                           'family':family,'version':version, 'platform':platform, 'ip':ip, 'udid':udid, 'hub':hub, 'port':port}
         for attribute_key, attribute_value in dict_of_attributes.items():
