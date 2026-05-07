@@ -73,7 +73,7 @@ pipeline {
                         pytest -m add_a_new_phone -v
                         pytest -m change_existing_phone -v
                         pytest -m deploy_phone -v
-                        pytest -m undeploy_phone -vv
+                        pytest -m undeploy_phone -v
                         pytest -m remove_phone -v
                         pytest -m show_phone_configuration -v
                         pytest -m display_phones -v
