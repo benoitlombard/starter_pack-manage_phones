@@ -332,7 +332,7 @@ def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: st
                 if attribute_key in ['fota', 'activitytracking', 'functional', 'performance']:
                     assert yaml_d['phones'][phone]['testrun_ids'][attribute_key] == attribute_value
                 elif attribute_key in ['hub', 'port']:
-                    assert yaml_d['phones'][phone]['testrun_ids'][attribute_key] == attribute_value
+                    assert yaml_d['phones'][phone]['deployment_path'][attribute_key] == attribute_value
                 else:
                     assert yaml_d['phones'][phone][attribute_key] == attribute_value
 
