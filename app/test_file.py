@@ -380,6 +380,27 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
             assert "Error when trying to add the phone:\nThis udid has already been used for phone " in captured.out
         elif write:
             assert "successfully added." in captured.out
+
+        phone_name = None
+        for phone in yaml_d['phones']:
+                if yaml_d['phones'][phone]['udid'] == udid:
+                    phone_name = phone
+                    break
+        if any in ['fota', 'activityTracking', 'functional', 'performance'] is not None:
+            dict_of_attributes = {'release_type':release_type, 'user':user, 'fota':fota, 'activitytracking':activitytracking,
+                          'functional':functional, 'performance':performance, 'manufacturer':manufacturer, 'model':model, 'vendor':vendor,
+                          'family':family, 'version':version, 'udid':udid}
+        else:
+            dict_of_attributes = {'release_type':release_type, 'user':user, 'fota':fota, 'activitytracking':activitytracking,
+                          'functional':functional, 'performance':performance, 'manufacturer':manufacturer, 'model':model, 'vendor':vendor,
+                          'family':family, 'version':version, 'udid':udid}
+        for attribute_key, attribute_value in dict_of_attributes.items():
+            if attribute_key in ['fota', 'activityTracking', 'functional', 'performance']:
+                assert yaml_d['phones'][phone]['testrun_ids'][attribute_key] == attribute_value
+            elif attribute_key in ['hub', 'port']:
+                assert yaml_d['phones'][phone]['deployment_path'][attribute_key] == attribute_value
+            else:
+                assert yaml_d['phones'][phone][attribute_key] == attribute_value
         else:
             assert "successfully added, but not saved in yaml file" in captured.out
 
