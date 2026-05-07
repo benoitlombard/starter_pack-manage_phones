@@ -387,11 +387,11 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
                     phone_name = phone
                     break
         if any in ['fota', 'activityTracking', 'functional', 'performance'] is not None:
-            dict_of_attributes = {'release_type':release_type, 'user':user, 'fota':fota, 'activitytracking':activitytracking,
+            dict_of_attributes = {'release_type':release_type, 'fota':fota, 'activitytracking':activitytracking,
                           'functional':functional, 'performance':performance, 'manufacturer':manufacturer, 'model':model, 'vendor':vendor,
                           'family':family, 'version':version, 'udid':udid}
         else:
-            dict_of_attributes = {'release_type':release_type, 'user':user, 'fota':fota, 'activitytracking':activitytracking,
+            dict_of_attributes = {'release_type':release_type, 'fota':fota, 'activitytracking':activitytracking,
                           'functional':functional, 'performance':performance, 'manufacturer':manufacturer, 'model':model, 'vendor':vendor,
                           'family':family, 'version':version, 'udid':udid}
         for attribute_key, attribute_value in dict_of_attributes.items():
