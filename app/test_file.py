@@ -391,7 +391,16 @@ def test_show_config(capsys, phone: str):
     if phone not in yaml_d['phones']:                   # case: incorrect phone name
         assert f'{phone} not found.' in captured.out
     else:
-        assert yaml.dump(yaml_d['phones'][phone], sys.stdout) in captured.out
+        assert f"name: {phone}" in captured.out
+        list_of_attributes = {'release_type', 'user', 'fota', 'activityTracking', 'functional', 'performance', 'manufacturer',
+                                'model', 'vendor','family','version', 'platform', 'ip', 'udid', 'hub', 'port'}
+        for attribute_key in list_of_attributes:
+            if attribute_key in ['fota', 'activitytracking', 'functional', 'performance'] and 'testrun_ids' in yaml_d['phones'][phone]:
+                assert f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out
+            elif attribute_key in ['hub', 'port']:
+                assert f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}"
+            else:
+                assert f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}"
 
 
 
