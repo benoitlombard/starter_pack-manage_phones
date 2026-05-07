@@ -324,6 +324,17 @@ def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: st
             platform = platform, ip = ip, udid = udid, hub = hub, port = port)
         captured = capsys.readouterr()
         assert f"{phone} successfully changed." in captured.out
+        dict_of_attributes = {'phone':phone, 'release_type':release_type, 'user':user, 'fota':fota, 'activitytracking':activitytracking,
+                          'functional':functional, 'performance':performance, 'manufacturer':manufacturer, 'model':model, 'vendor':vendor,
+                          'family':family,'version':version, 'platform':platform, 'ip':ip, 'udid':udid, 'hub':hub, 'port':port}
+        for attribute_key, attribute_value in dict_of_attributes.items():
+            if attribute_value != "":
+                if attribute_key in ['fota', 'activitytracking', 'functional', 'performance']:
+                    assert yaml_d['phones'][phone]['testrun_ids'][attribute_key] == attribute_value
+                elif attribute_key in ['hub', 'port']:
+                    assert yaml_d['phones'][phone]['testrun_ids'][attribute_key] == attribute_value
+                else:
+                    assert yaml_d['phones'][phone][attribute_key] == attribute_value
 
 
 
