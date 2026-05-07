@@ -221,8 +221,6 @@ def test_deploy_phone(capsys, phone: str, stage: str):
             assert used_port is not None
             assert yaml_d['phones'][phone]['deployment_path']['hub'] == yaml_d['stages'][stage][hub_number]['name']
             assert yaml_d['phones'][phone]['deployment_path']['port'] != None
-    return
-
 
 
 @pytest.mark.undeploy_phone
@@ -252,5 +250,31 @@ def test_undeploy_phone(capsys, phone: str):
                         if phone_deployment_port in yaml_d['stages'][stage][hub_number]:
                             assert yaml_d['stages'][stage][hub_number][phone_deployment_port] is None
 
+@pytest.mark.remove_phone
+@pytest.mark.parametrize("phone", [("Hemera"), ("Chaos"), ("incorrect_phone")])
+def test_remove_phone(capsys, phone: str):
+    remove(phone = phone)
+    captured = capsys.readouterr()
+    if phone not in yaml_d['phones']:
+        assert f"Error: phone '{phone}' not found." in captured.out
+    else:
+        phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']
+        phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
+        undeploy(phone = phone)
+        captured = capsys.readouterr()
+        if phone_deployment_hub is None:
+            assert phone_deployment_port is None
+            assert f"{phone} is not deployed.\nUndeployment is not possible." in captured.out
+        else:
+            assert f"{phone} successfully undeployed." in captured.out
+            assert f'Please unplug {phone} from' in captured.out
+            assert yaml_d['phones'][phone]['deployment_path']['hub'] == None
+            assert yaml_d['phones'][phone]['deployment_path']['port'] == None
+            for stage in yaml_d['stages']:
+                for hub_number in range(len(yaml_d['stages'][stage])):
+                    if yaml_d['stages'][stage][hub_number]['name'] == phone_deployment_hub:
+                        if phone_deployment_port in yaml_d['stages'][stage][hub_number]:
+                            assert yaml_d['stages'][stage][hub_number][phone_deployment_port] is None
 
+        
 
