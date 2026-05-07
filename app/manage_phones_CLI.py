@@ -46,7 +46,7 @@ def change(phone: str = '', release_type: str = '', user: str = '', fota: str = 
     [bold italic gold1]Examples of use:[/bold italic gold1][bold gold1]
     python manage_phones_CLI.py change --phone Chaos --release-type PU100 --user jean
     python manage_phones_CLI.py change --phone Chaos --fota fota_id
-    python manage_phones_CLI.py change --version 1.0 --manufacturer Samsung --phone Chaos --release-type PU100 --user jean-pierre --udid udid_test --status prod
+    python manage_phones_CLI.py change --version 1.0 --manufacturer Samsung --phone Chaos --release-type PU100 --user jean-pierre --udid udid_test
     python manage_phones_CLI.py change --version 1.0 --manufacturer Samsung --phone Nyx --release-type PU1 --user jean-claude --udid udid_223 --activitytracking test_activitytracking --performance 4 --platform android_18.1
     python manage_phones_CLI.py change --version 8.1 --manufacturer Ssg --phone Nyx --release-type PU100 --user zidane --udid udid_0 --activitytracking test_2 --performance 11 --platform android_19.0[/bold gold1]
     """

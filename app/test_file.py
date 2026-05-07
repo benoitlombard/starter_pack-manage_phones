@@ -283,7 +283,21 @@ def test_remove_phone(capsys, phone: str):
                         "performance,manufacturer,model,vendor,family,version,platform," \
                         "ip,udid,hub,port", [("Hemera", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
                                              ("Chaos", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
-                                             ("incorrect_phone", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "")])
+                                             ("Chaos", "PU100", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
+                                             ("Chaos", "PU1", "jean", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
+                                             ("Chaos", "", "", "fota_id", "", "", "", "", "", "", "", "", "", "", "", "", ""),
+                                             ("Chaos", "PU100", "", "fota_id", "1", "2", "3", "", "", "", "", "", "", "", "", "", ""),
+                                             ("Chaos", "", "john", "fota_id", "", "", "", "Samsung", "", "", "", "", "", "", "udid_test", "", ""),
+                                             ("Chaos", "whatever", "john", "fota_id", "", "", "", "Samsung", "", "whatever", "", "", "whatever", "", "udid_test", "", ""),
+                                             ("Chaos", "", "whatever", "", "", "", "", "", "", "", "", "", "", "", "", "new_hub", "new_port"),
+                                             ("Nyx", "", "whatever", "", "", "", "", "", "", "", "", "", "", "", "", "new_hub", "new_port"),
+                                             ("Hemera", "", "whatever", "", "", "", "", "", "", "", "", "", "", "", "", "new_hub", "new_port"),
+                                             ("incorrect_phone", "whatever", "john", "fota_id", "", "", "", "Samsung", "", "whatever", "", "", "whatever", "", "udid_test", "", ""),
+                                             ("incorrect_phone", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
+                                             ("incorrect_phone", "", "whatever", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
+                                             ("incorrect_phone", "", "whatever", "", "", "", "", "", "", "", "", "", "", "", "", "new_hub", "new_port"),
+                                             ("incorrect_phone", "whatever", "john", "fota_id", "whatever", "whatever", "", "Samsung", "", "whatever", "whatever", "whatever", "whatever", "", "udid_test", "", "")])
+
 def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: str, activitytracking: str,
            functional: str, performance: str, manufacturer: str, model: str,
            vendor: str, family: str, version: str, platform: str, ip: str,
