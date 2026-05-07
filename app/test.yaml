@@ -1,6 +1,6 @@
 rtc_params:
   min_ip: 200
-  max_ip: 206
+  max_ip: 209
 
 phones:
   Chaos: &Chaos
@@ -14,7 +14,7 @@ phones:
     release_type: PU100
     ip: 192.168.5.200
     udid: udid_test
-    user: jean-pierre
+    user: jean
     deployment_path:
       hub: exsys_ex_1116hmvs_1
       port: port01
@@ -50,6 +50,41 @@ phones:
     ip: 192.168.5.203
     udid: g4h34h
     user: rtc-Hesperiden@cobi.bike
+    deployment_path:
+      hub:
+      port:
+  Erebos:
+    name: Erebos
+    manufacturer: microsoft
+    model:
+    vendor: Microsft
+    family: msft
+    version: '2'
+    platform: android
+    release_type: PU1
+    ip: 192.168.5.202
+    udid: udid-Arwschiddddd8888ac-cc4
+    user: rtc-Erebos@cobi.bike
+    deployment_path:
+      hub:
+      port:
+    testrun_ids:
+      fota: fota_id_112
+      activitytracking: '44'
+      functional:
+      performance:
+  Aither: &Aither
+    name: Aither
+    manufacturer:
+    model:
+    vendor: Apple
+    family: ios3.0
+    version: '4.5'
+    platform: ios
+    release_type: PU100
+    ip: 192.168.5.204
+    udid: Arwschio4cb8ac-cc4
+    user: rtc-Aither@cobi.bike
     deployment_path:
       hub:
       port:
@@ -217,7 +252,7 @@ switch:
 
 usb_hub:
   exsys_ex_1116hmvs_1: &exsys_ex_1116hmvs_1
-    name: ExSys EX-1116HMVS
+    name: exsys_ex_1116hmvs_1
     port01: *Chaos
     port02:
     port03:
@@ -228,7 +263,7 @@ usb_hub:
     port08:
 
   exsys_ex_1116hmvs_2: &exsys_ex_1116hmvs_2
-    name: ExSys EX-1116HMVS
+    name: exsys_ex_1116hmvs_2
     port01:
     port02:
     port03:
