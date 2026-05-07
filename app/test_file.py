@@ -395,7 +395,7 @@ def test_show_config(capsys, phone: str):
         list_of_attributes = {'release_type', 'user', 'fota', 'activityTracking', 'functional', 'performance', 'manufacturer',
                                 'model', 'vendor','family','version', 'platform', 'ip', 'udid', 'hub', 'port'}
         for attribute_key in list_of_attributes:
-            if attribute_key in ['fota', 'activitytracking', 'functional', 'performance'] and 'testrun_ids' in yaml_d['phones'][phone]:
+            if attribute_key in ['fota', 'activityTracking', 'functional', 'performance'] and 'testrun_ids' in yaml_d['phones'][phone]:
                 assert f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out
             elif attribute_key in ['hub', 'port']:
                 assert f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}"
