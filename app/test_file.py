@@ -398,9 +398,9 @@ def test_show_config(capsys, phone: str):
             if attribute_key in ['fota', 'activityTracking', 'functional', 'performance'] and 'testrun_ids' in yaml_d['phones'][phone]:
                 assert f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out
             elif attribute_key in ['hub', 'port']:
-                assert f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}"
+                assert f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out
             else:
-                assert f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}"
+                assert f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out
 
 
 
