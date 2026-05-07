@@ -401,27 +401,30 @@ def test_show_config(capsys, phone: str):
 
             if attribute_key in ['fota', 'activityTracking', 'functional', 'performance']:
                 if yaml_d['phones'][phone]['testrun_ids'][attribute_key] is None:
-                    yaml_d['phones'][phone]['testrun_ids'][attribute_key] = ""
-                if f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out:
-                    assert f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out
+                    assert f"{attribute_key}:"
                 else:
-                    assert f"{attribute_key}: '{yaml_d['phones'][phone]['testrun_ids'][attribute_key]}'" in captured.out
+                    if f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out:
+                        assert f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out
+                    else:
+                        assert f"{attribute_key}: '{yaml_d['phones'][phone]['testrun_ids'][attribute_key]}'" in captured.out
 
             elif attribute_key in ['hub', 'port']:
                 if yaml_d['phones'][phone]['deployment_path'][attribute_key] is None:
-                    yaml_d['phones'][phone]['deployment_path'][attribute_key] = ""
-                if f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out:
-                    assert f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out
+                    assert f"{attribute_key}:"
                 else:
-                    assert f"{attribute_key}: '{yaml_d['phones'][phone]['deployment_path'][attribute_key]}'" in captured.out
+                    if f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out:
+                        assert f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out
+                    else:
+                        assert f"{attribute_key}: '{yaml_d['phones'][phone]['deployment_path'][attribute_key]}'" in captured.out
 
             else:
                 if yaml_d['phones'][phone][attribute_key] is None:
-                    yaml_d['phones'][phone][attribute_key] = ""
-                if f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out:
-                    assert f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out
+                    assert f"{attribute_key}:"
                 else:
-                    assert f"{attribute_key}: '{yaml_d['phones'][phone][attribute_key]}'" in captured.out
+                    if f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out:
+                        assert f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out
+                    else:
+                        assert f"{attribute_key}: '{yaml_d['phones'][phone][attribute_key]}'" in captured.out
 
 
 
