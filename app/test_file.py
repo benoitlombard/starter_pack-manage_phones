@@ -359,6 +359,7 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
         assert 'Platform set to: ios' in captured.out
     else:
         assert 'Platform set to: android' in captured.out
+    last_digit_ip_chosen = None
     for last_digit_ip in range(yaml_d['rtc_params']['min_ip'], yaml_d['rtc_params']['max_ip']+1):
         found = False
         if not yaml_d["phones"]:
@@ -367,9 +368,13 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
             if last_digit_ip == int(yaml_d['phones'][phone]['ip'].split('.')[-1]):
                 found = True
                 break
-    if last_digit_ip is None:
-        assert 'IP used: 192.168.5.' in captured.out
+        if not found:
+            last_digit_ip_chosen = last_digit_ip
+            break
+    if last_digit_ip_chosen is None:
+        assert "Impossible to add a new phone:\nThere is no ip available at the moment" in captured.out
     else:
+        assert 'IP used: 192.168.5.' in captured.out
         if is_udid_used:
             assert "Error when trying to add the phone:\nThis udid has already been used for phone " in captured.out
             assert f"Select new udid different than {udid}" in captured.out
