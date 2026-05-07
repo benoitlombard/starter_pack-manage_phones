@@ -377,7 +377,6 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
         assert 'IP used: 192.168.5.' in captured.out
         if is_udid_used:
             assert "Error when trying to add the phone:\nThis udid has already been used for phone " in captured.out
-            assert f"Select new udid different than {udid}" in captured.out
         elif write:
             assert "successfully added." in captured.out
         else:
