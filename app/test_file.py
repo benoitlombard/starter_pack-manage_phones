@@ -227,7 +227,7 @@ def test_deploy_phone(capsys, phone: str, stage: str):
 
 @pytest.mark.undeploy_phone
 @pytest.mark.parametrize("phone", [("Hemera"), ("Chaos"), ("Chaos"), ("incorrect_phone")]) # Chaos appear 2 times for testing case where phone is not deployed
-def test_undeploy_phone(capsys, phone: str, stage: str):
+def test_undeploy_phone(capsys, phone: str):
     if phone not in yaml_d['phones']:                   # case: incorrect phone name
         with pytest.raises(KeyError):
             undeploy(phone = phone)
