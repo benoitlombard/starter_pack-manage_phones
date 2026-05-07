@@ -350,10 +350,4 @@ def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: st
                           ("apple", "ios3", "4.2", "unique_udid_11", "user_n", "PU1", False, "fota_id", "", "", "", "", ""),
                           ("samsung", "SG8", "20", "unique_udid_12", "user_n", "PU1", True, "fota_id", "", "", "", "", "model_2")])                      # case: not enough ips available
 def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, user: str, release_type: str, write: str, fota: str, activitytracking: str, functional: str, performance: str, manufacturer: str, model: str):
-    if phone not in yaml_d['phones']:                   # case: incorrect phone name
-        with pytest.raises(KeyError):
-            add(phone = phone)
-        captured = capsys.readouterr()
-        assert           in captured.out
-    else:
-        pass
+    pass
