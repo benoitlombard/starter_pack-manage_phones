@@ -252,7 +252,7 @@ def test_undeploy_phone(capsys, phone: str):
 
 @pytest.mark.remove_phone
 @pytest.mark.parametrize("phone", [("Hemera"), ("Chaos"), ("incorrect_phone")])
-def test_remove_phone(capsys, phone: str, call_from_CLI = True):
+def test_remove_phone(capsys, phone: str):
     phone_is_in_yaml = True if phone in yaml_d['phones'] else False
     if not phone_is_in_yaml:
         remove(phone = phone)
@@ -277,4 +277,21 @@ def test_remove_phone(capsys, phone: str, call_from_CLI = True):
                             
             assert f'{phone} successfully removed.' in captured.out
         
+
+@pytest.mark.change_existing_phone
+@pytest.mark.parametrize("phone,release_type,user,fota,functional,activitytracking," \
+                        "performance,manufacturer,model,vendor,family,version,platform," \
+                        "ip,udid,hub,port", [("Hemera"), ("Chaos"), ("incorrect_phone")])
+def test_change_phone(capsys, phone: str = '', release_type: str = '', user: str = '', fota: str = '', activitytracking: str = '',
+           functional: str = '', performance: str = '', manufacturer: str = '', model: str = '',
+           vendor: str = '', family: str = '', version: str = '', platform: str = '', ip: str = '',
+           udid: str = '', hub: str = '', port: str = ''):
+    change(phone = phone, release_type = release_type, user = user,
+            fota = fota, functional = functional, activitytracking = activitytracking, performance = performance,
+            manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version,
+            platform = platform, ip = ip, udid = udid, hub = hub, port = port)
+    captured = capsys.readouterr()
+    if all(attribute == '' for attribute in [release_type, user, fota, activitytracking, functional, performance, manufacturer, model, vendor, family, version, platform, ip, udid, hub, port]):
+        assert 'No values to change !' in captured.out
+
 
