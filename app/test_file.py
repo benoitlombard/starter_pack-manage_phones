@@ -400,10 +400,7 @@ def test_show_config(capsys, phone: str):
             elif attribute_key in ['hub', 'port']:
                 assert f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}"
             else:
-                if type(yaml_d['phones'][phone][attribute_key]) is not str:
-                    assert f"{attribute_key}: '{yaml_d['phones'][phone][attribute_key]}'"
-                else:
-                    assert f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}"
+                assert f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}"
 
 
 
