@@ -379,7 +379,7 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
             assert "Error when trying to add the phone:\nThis udid has already been used for phone " in captured.out
             assert f"Select new udid different than {udid}" in captured.out
         elif write:
-            assert "successfully added, but not saved in yaml file" in captured.out
+            assert "successfully added." in captured.out
         else:
             assert " successfully added, but not saved in yaml file" in captured.out
     
