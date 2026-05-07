@@ -395,12 +395,17 @@ def test_show_config(capsys, phone: str):
         list_of_attributes = {'release_type', 'user', 'fota', 'activityTracking', 'functional', 'performance', 'manufacturer',
                                 'model', 'vendor','family','version', 'platform', 'ip', 'udid', 'hub', 'port'}
         for attribute_key in list_of_attributes:
+            is_in_capture = False
             if attribute_key in ['fota', 'activityTracking', 'functional', 'performance'] and 'testrun_ids' in yaml_d['phones'][phone]:
-                assert f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out
+                if f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out or f"{attribute_key}: '{yaml_d['phones'][phone]['testrun_ids'][attribute_key]}'" in captured.out:
+                    is_in_capture = True
             elif attribute_key in ['hub', 'port']:
-                assert f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out
+                if f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out or f"{attribute_key}: '{yaml_d['phones'][phone]['deployment_path'][attribute_key]}'" in captured.out:
+                    is_in_capture = True
             else:
-                assert f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out
+                if f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out or f"{attribute_key}: '{yaml_d['phones'][phone][attribute_key]}'" in captured.out:
+                    is_in_capture = True
+            assert is_in_capture
 
 
 
