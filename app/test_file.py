@@ -258,8 +258,8 @@ def test_remove_phone(capsys, phone: str):
         captured = capsys.readouterr()
         assert f"Error: phone '{phone}' not found." in captured.out
     else:
-        phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']
-        phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
+        phone_deployment_hub = str(yaml_d['phones'][phone]['deployment_path']['hub'])
+        phone_deployment_port = str(yaml_d['phones'][phone]['deployment_path']['port'])
         remove(phone = phone)
         captured = capsys.readouterr()
         if phone_deployment_hub is None:
