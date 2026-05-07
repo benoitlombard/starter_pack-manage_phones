@@ -384,7 +384,7 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
             assert "successfully added, but not saved in yaml file" in captured.out
     
 @pytest.mark.show_phone_configuration
-@pytest.mark.parametrize("phone", [("Nyx"), ("Chaos"), ("incorrect_phone")]) # Chaos appear 2 times for testing case where phone is not deployed
+@pytest.mark.parametrize("phone", [("Nyx"), ("Chaos"), ("incorrect_phone")])
 def test_show_config(capsys, phone: str):
     show_config(phone = phone)
     captured = capsys.readouterr()
