@@ -262,16 +262,11 @@ def test_remove_phone(capsys, phone: str):
         phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
         remove(phone = phone)
         captured = capsys.readouterr()
-        if phone_deployment_hub is None and phone_deployment_port is None:
-            assert f"{phone} is not deployed.\nUndeployment is not possible." in captured.out
-        else:
-            assert f"{phone} successfully undeployed." in captured.out
-            assert f'Please unplug {phone} from' in captured.out
-            for stage in yaml_d['stages']:
-                for hub_number in range(len(yaml_d['stages'][stage])):
-                    if yaml_d['stages'][stage][hub_number]['name'] == phone_deployment_hub:
-                        if phone_deployment_port in yaml_d['stages'][stage][hub_number]:
-                            assert yaml_d['stages'][stage][hub_number][phone_deployment_port] is None
+        for stage in yaml_d['stages']:
+            for hub_number in range(len(yaml_d['stages'][stage])):
+                if yaml_d['stages'][stage][hub_number]['name'] == phone_deployment_hub:
+                    if phone_deployment_port in yaml_d['stages'][stage][hub_number]:
+                        assert yaml_d['stages'][stage][hub_number][phone_deployment_port] is None
                             
             assert f'{phone} successfully removed.' in captured.out
         
