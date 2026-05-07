@@ -392,11 +392,14 @@ def test_show_config(capsys, phone: str):
         assert f'{phone} not found.' in captured.out
     else:
         assert f"name: {phone}" in captured.out
-        list_of_attributes = {'release_type', 'user', 'fota', 'activityTracking', 'functional', 'performance', 'manufacturer',
-                                'model', 'vendor','family','version', 'platform', 'ip', 'udid', 'hub', 'port'}
+        if 'testrun_ids' in yaml_d['phones'][phone]:
+            list_of_attributes = {'release_type', 'user', 'fota', 'activityTracking', 'functional', 'performance', 'manufacturer',
+                                    'model', 'vendor','family','version', 'platform', 'ip', 'udid', 'hub', 'port'}
+        else:
+            list_of_attributes = {'release_type', 'user', 'manufacturer', 'model', 'vendor','family','version', 'platform', 'ip', 'udid', 'hub', 'port'}
         for attribute_key in list_of_attributes:
             is_in_capture = False
-            if attribute_key in ['fota', 'activityTracking', 'functional', 'performance'] and 'testrun_ids' in yaml_d['phones'][phone]:
+            if attribute_key in ['fota', 'activityTracking', 'functional', 'performance']:
                 if f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out or f"{attribute_key}: '{yaml_d['phones'][phone]['testrun_ids'][attribute_key]}'" in captured.out:
                     is_in_capture = True
             elif attribute_key in ['hub', 'port']:
