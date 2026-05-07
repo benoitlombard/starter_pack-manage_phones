@@ -222,7 +222,6 @@ def test_deploy_phone(capsys, phone: str, stage: str):
             assert yaml_d['phones'][phone]['deployment_path']['hub'] == yaml_d['stages'][stage][hub_number]['name']
             assert yaml_d['phones'][phone]['deployment_path']['port'] != None
 
-
 @pytest.mark.undeploy_phone
 @pytest.mark.parametrize("phone", [("Hemera"), ("Chaos"), ("Chaos"), ("incorrect_phone")]) # Chaos appear 2 times for testing case where phone is not deployed
 def test_undeploy_phone(capsys, phone: str):
@@ -336,4 +335,25 @@ def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: st
                     assert yaml_d['phones'][phone][attribute_key] == attribute_value
 
 
-
+@pytest.mark.add_a_new_phone
+@pytest.mark.parametrize("vendor,family,version,udid,user,release_type,write,fota,activitytracking,functional,performance,manufacturer,model",
+                         [("apple", "ios3", "4.2", "unique_udid_1", "user_n", "PU1", True, "", "", "", "", "", ""),                                                         # case: minimalist attributes and release_type overwritten
+                          ("apple", "ios3", "4.2", "unique_udid_2", "user_n", "", True, "", "", "", "", "", ""),                                                            # case: minimalist attributes and release_type default value
+                          ("apple", "ios3", "4.2", "unique_udid_3", "user_n", "PU1", False, "", "", "", "", "", ""),                                                                # not saving phone to yaml
+                          ("apple", "ios3", "4.2", "unique_udid_5", "user_n", "PU100", True, "", "", "", "", "apple", "model_2"),
+                          ("samsung", "SS4", "17", "unique_udid_6", "user_n", "PU100", True, "fota_id", "activitytracking_id", "functional_id", "", "", ""),
+                          ("apple", "ios3", "4.2", "unique_udid_7", "user_n", "PU1", True, "fota_id", "activitytracking_id", "functional_id", "performance_id", "", ""),
+                          ("apple", "ios3", "4.2", "unique_udid_8", "user_n", "PU1", True, "fota_id", "activitytracking_id", "functional_id", "performance_id", "apple", "model_2"),
+                          ("apple", "ios3", "4.2", "unique_udid_8", "user_n", "PU1", True, "fota_id", "", "", "", "", ""),                                          # case : udid already used
+                          ("apple", "ios3", "4.2", "unique_udid_9", "user_n", "PU1", False, "fota_id", "", "", "", "", ""),
+                          ("apple", "ios3", "4.2", "unique_udid_10", "user_n", "PU1", False, "fota_id", "", "", "", "", "model_n"),
+                          ("apple", "ios3", "4.2", "unique_udid_11", "user_n", "PU1", False, "fota_id", "", "", "", "", ""),
+                          ("samsung", "SG8", "20", "unique_udid_12", "user_n", "PU1", True, "fota_id", "", "", "", "", "model_2")])                      # case: not enough ips available
+def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, user: str, release_type: str, write: str, fota: str, activitytracking: str, functional: str, performance: str, manufacturer: str, model: str):
+    if phone not in yaml_d['phones']:                   # case: incorrect phone name
+        with pytest.raises(KeyError):
+            add(phone = phone)
+        captured = capsys.readouterr()
+        assert           in captured.out
+    else:
+        pass

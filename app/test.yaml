@@ -1,6 +1,6 @@
 rtc_params:
   min_ip: 200
-  max_ip: 209
+  max_ip: 212
 
 phones:
   Chaos: &Chaos
