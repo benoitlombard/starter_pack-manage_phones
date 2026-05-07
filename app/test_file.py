@@ -284,10 +284,10 @@ def test_remove_phone(capsys, phone: str):
                         "ip,udid,hub,port", [("Hemera", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
                                              ("Chaos", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
                                              ("incorrect_phone", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "")])
-def test_change_phone(capsys, phone: str = '', release_type: str = '', user: str = '', fota: str = '', activitytracking: str = '',
-           functional: str = '', performance: str = '', manufacturer: str = '', model: str = '',
-           vendor: str = '', family: str = '', version: str = '', platform: str = '', ip: str = '',
-           udid: str = '', hub: str = '', port: str = ''):
+def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: str, activitytracking: str,
+           functional: str, performance: str, manufacturer: str, model: str,
+           vendor: str, family: str, version: str, platform: str, ip: str,
+           udid: str, hub: str, port: str):
     change(phone = phone, release_type = release_type, user = user,
             fota = fota, functional = functional, activitytracking = activitytracking, performance = performance,
             manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version,
