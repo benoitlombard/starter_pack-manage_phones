@@ -84,9 +84,12 @@ def add_phone(yaml_d: CommentedMap, yaml, file_name: str, vendor: str = '', fami
         for phone in yaml_d['phones']:
             if yaml_d['phones'][phone]['udid'] == udid:
                 send_custom_msg_success_fail(f"Error when trying to add the phone:\nThis udid has already been used for phone '{phone}'.", False)
-                print(f"Select new udid different than {udid}")
-                udid = input('? ')
-                break
+                if not call_from_CLI:
+                    print(f"Select new udid different than {udid}")
+                    udid = input('? ')
+                    break
+                else:
+                    return
         else:
             break
 
@@ -114,18 +117,18 @@ def add_phone(yaml_d: CommentedMap, yaml, file_name: str, vendor: str = '', fami
 
     new_phone_record.yaml_set_anchor(yaml_phone_name, always_dump=True)
 
-    if write or input('add entry to yaml? y|n ').lower() == 'y':
-        if yaml_d["phones"] is None:
-            yaml_d["phones"] = ruamel.yaml.CommentedMap()
+    if call_from_CLI or input('add entry to yaml? y|n ').lower() == 'y':
+        if (call_from_CLI and write) or not call_from_CLI:
+            if yaml_d["phones"] is None:
+                yaml_d["phones"] = ruamel.yaml.CommentedMap()
 
-        yaml_d['phones'][yaml_phone_name] = new_phone_record
-        with open(file_name, 'w') as yaml_file:
-            yaml.dump(yaml_d, yaml_file)
-            send_custom_msg_success_fail(f"{yaml_phone_name} successfully added.", True)
+            yaml_d['phones'][yaml_phone_name] = new_phone_record
+            with open(file_name, 'w') as yaml_file:
+                yaml.dump(yaml_d, yaml_file)
+                send_custom_msg_success_fail(f"{yaml_phone_name} successfully added.", True)
+                return
+
+            # Does this is executed? Try except
+            send_custom_msg_success_fail('Error when writing to the yaml file.', False)
             return
-
-        # Does this is executed? Try except
-        send_custom_msg_success_fail('Error when writing to the yaml file.', False)
-        return
-
     send_custom_msg_success_fail(f"{yaml_phone_name} successfully added, but not saved in yaml file", True)

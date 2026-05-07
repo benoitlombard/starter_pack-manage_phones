@@ -381,7 +381,7 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
         elif write:
             assert "successfully added." in captured.out
         else:
-            assert " successfully added, but not saved in yaml file" in captured.out
+            assert "successfully added, but not saved in yaml file" in captured.out
     
 
 
