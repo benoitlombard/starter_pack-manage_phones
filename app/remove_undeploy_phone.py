@@ -39,9 +39,8 @@ def undeploy_phone(yaml_d: CommentedMap, yaml, file_name: str, phone: str = '', 
             phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
             for hub in hubs:
                 if yaml_d[hub].get(phone_deployment_hub):
-                    hub_deployed = yaml_d[hub][phone_deployment_hub]
+                    yaml_d[hub][phone_deployment_hub][phone_deployment_port] = None
 
-            hub_deployed[phone_deployment_port] = None
             yaml_d['phones'][phone]['deployment_path']['hub'] = None
             yaml_d['phones'][phone]['deployment_path']['port'] = None
 
