@@ -386,7 +386,7 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
                 if yaml_d['phones'][phone]['udid'] == udid:
                     phone_name = phone
                     break
-        if any in ['fota', 'activityTracking', 'functional', 'performance'] is not None:
+        if any in [fota, activitytracking, functional, performance] is not None:
             dict_of_attributes = {'release_type':release_type, 'fota':fota, 'activitytracking':activitytracking,
                           'functional':functional, 'performance':performance, 'manufacturer':manufacturer, 'model':model, 'vendor':vendor,
                           'family':family, 'version':version, 'udid':udid}
