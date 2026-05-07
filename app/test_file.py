@@ -262,7 +262,7 @@ def test_remove_phone(capsys, phone: str):
         phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
         remove(phone = phone)
         captured = capsys.readouterr()
-        if phone_deployment_hub == None:
+        if phone_deployment_hub is None:
             assert phone_deployment_port is None
             assert f"{phone} is not deployed.\nUndeployment is not possible." in captured.out
         else:
