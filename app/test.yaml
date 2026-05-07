@@ -35,7 +35,7 @@ phones:
       port: port13
     testrun_ids:
       fota: qqqq
-      activityTracking: test_activitytracking
+      activitytracking: test_activitytracking
       functional: qq
       performance: '4'
   Hesperiden:
