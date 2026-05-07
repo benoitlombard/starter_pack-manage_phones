@@ -75,7 +75,7 @@ pipeline {
                         pytest -m deploy_phone -v
                         pytest -m undeploy_phone -v
                         pytest -m remove_phone -v
-                        pytest -m show_phone_configuration -vv
+                        pytest -m show_phone_configuration -v
                         pytest -m display_phones -v
                         pytest -m display_bts -v
                         pytest -m display_biabs -v

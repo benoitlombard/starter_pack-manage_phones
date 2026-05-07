@@ -382,7 +382,7 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
             assert "successfully added." in captured.out
         else:
             assert "successfully added, but not saved in yaml file" in captured.out
-    
+
 @pytest.mark.show_phone_configuration
 @pytest.mark.parametrize("phone", [("Nyx"), ("Chaos"), ("incorrect_phone")])
 def test_show_config(capsys, phone: str):
@@ -400,12 +400,18 @@ def test_show_config(capsys, phone: str):
         for attribute_key in list_of_attributes:
             is_in_capture = False
             if attribute_key in ['fota', 'activityTracking', 'functional', 'performance']:
+                if yaml_d['phones'][phone]['testrun_ids'][attribute_key] is None:
+                    yaml_d['phones'][phone]['testrun_ids'][attribute_key] = ""
                 if f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out or f"{attribute_key}: '{yaml_d['phones'][phone]['testrun_ids'][attribute_key]}'" in captured.out:
                     is_in_capture = True
             elif attribute_key in ['hub', 'port']:
+                if yaml_d['phones'][phone]['deployment_path'][attribute_key] is None:
+                    yaml_d['phones'][phone]['deployment_path'][attribute_key] = ""
                 if f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out or f"{attribute_key}: '{yaml_d['phones'][phone]['deployment_path'][attribute_key]}'" in captured.out:
                     is_in_capture = True
             else:
+                if yaml_d['phones'][phone][attribute_key] is None:
+                    yaml_d['phones'][phone][attribute_key] = ""
                 if f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out :
                     is_in_capture = True
             assert is_in_capture
@@ -413,5 +419,3 @@ def test_show_config(capsys, phone: str):
 
 
 
-
-   
