@@ -317,7 +317,8 @@ def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: st
             platform = platform, ip = ip, udid = udid, hub = hub, port = port)
         captured = capsys.readouterr()
         assert f"Phone {phone} not found." in captured.out
-    
+    else:
+        assert f"{new_data['phone']} successfully changed." in captured.out
 
 
 
