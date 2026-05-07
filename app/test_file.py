@@ -234,12 +234,12 @@ def test_undeploy_phone(capsys, phone: str):
         captured = capsys.readouterr()
         assert "Key Error when writing to the yaml file.\nUndeployment failed, please verify phone name." in captured.out
     else:
-        undeploy(phone = phone)
         phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']
         phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
+        undeploy(phone = phone)
         captured = capsys.readouterr()
-        if yaml_d['phones'][phone]["deployment_path"]["hub"] is None:
-            assert yaml_d['phones'][phone]["deployment_path"]["port"] is None
+        if phone_deployment_hub is None:
+            assert phone_deployment_port is None
             assert f"{phone} is not deployed.\nUndeployment is not possible." in captured.out
         else:
             assert f"{phone} successfully undeployed." in captured.out
