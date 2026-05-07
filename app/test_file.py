@@ -403,7 +403,7 @@ def test_show_config(capsys, phone: str):
                 if f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out or f"{attribute_key}: '{yaml_d['phones'][phone]['deployment_path'][attribute_key]}'" in captured.out:
                     is_in_capture = True
             else:
-                if f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out or f"{attribute_key}: '{yaml_d['phones'][phone][attribute_key]}'" in captured.out:
+                if f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out :
                     is_in_capture = True
             assert is_in_capture
 
