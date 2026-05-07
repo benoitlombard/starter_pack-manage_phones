@@ -277,7 +277,6 @@ def test_remove_phone(capsys, phone: str):
                             
             assert f'{phone} successfully removed.' in captured.out
         
-
 @pytest.mark.change_existing_phone
 @pytest.mark.parametrize("phone,release_type,user,fota,functional,activitytracking," \
                         "performance,manufacturer,model,vendor,family,version,platform," \
@@ -297,7 +296,6 @@ def test_remove_phone(capsys, phone: str):
                                              ("incorrect_phone", "", "whatever", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
                                              ("incorrect_phone", "", "whatever", "", "", "", "", "", "", "", "", "", "", "", "", "new_hub", "new_port"),
                                              ("incorrect_phone", "whatever", "john", "fota_id", "whatever", "whatever", "", "Samsung", "", "whatever", "whatever", "whatever", "whatever", "", "udid_test", "", "")])
-
 def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: str, activitytracking: str,
            functional: str, performance: str, manufacturer: str, model: str,
            vendor: str, family: str, version: str, platform: str, ip: str,
@@ -324,6 +322,7 @@ def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: st
             platform = platform, ip = ip, udid = udid, hub = hub, port = port)
         captured = capsys.readouterr()
         assert f"{phone} successfully changed." in captured.out
+
         dict_of_attributes = {'release_type':release_type, 'user':user, 'fota':fota, 'activitytracking':activitytracking,
                           'functional':functional, 'performance':performance, 'manufacturer':manufacturer, 'model':model, 'vendor':vendor,
                           'family':family,'version':version, 'platform':platform, 'ip':ip, 'udid':udid, 'hub':hub, 'port':port}
