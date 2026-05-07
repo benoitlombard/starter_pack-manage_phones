@@ -282,7 +282,7 @@ def test_remove_phone(capsys, phone: str):
 @pytest.mark.parametrize("phone,release_type,user,fota,functional,activitytracking," \
                         "performance,manufacturer,model,vendor,family,version,platform," \
                         "ip,udid,hub,port", [("Hemera", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
-                                             ("Chaos", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "")),
+                                             ("Chaos", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""),
                                              ("incorrect_phone", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "")])
 def test_change_phone(capsys, phone: str = '', release_type: str = '', user: str = '', fota: str = '', activitytracking: str = '',
            functional: str = '', performance: str = '', manufacturer: str = '', model: str = '',
