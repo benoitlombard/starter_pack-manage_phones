@@ -238,8 +238,8 @@ def test_undeploy_phone(capsys, phone: str):
         phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']
         phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
         captured = capsys.readouterr()
-        if not yaml_d['phones'][phone]["deployment_path"]["hub"]:
-            assert yaml_d['phones'][phone]["deployment_path"]["port"] is not None
+        if yaml_d['phones'][phone]["deployment_path"]["hub"] is None:
+            assert yaml_d['phones'][phone]["deployment_path"]["port"] is None
             assert f"{phone} is not deployed.\nUndeployment is not possible." in captured.out
         else:
             assert f"{phone} successfully undeployed." in captured.out

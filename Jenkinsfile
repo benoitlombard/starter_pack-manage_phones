@@ -70,10 +70,21 @@ pipeline {
                     . venv_new/bin/activate
 
                     if $run_all_tests; then
-                        pytest -m run_all_tests -v
+                        pytest -m add_a_new_phone -v
+                        pytest -m change_existing_phone -v
+                        pytest -m deploy_phone -v
+                        pytest -m undeploy_phone -v
+                        pytest -m remove_phone -v
+                        pytest -m show_phone_configuration -v
+                        pytest -m display_phones -v
+                        pytest -m display_bts -v
+                        pytest -m display_biabs -v
+                        pytest -m display_prod_stage -v
+                        pytest -m display_dev_stage -v
+                        pytest -m display_not_deployed_phones -v
                     fi
                     if $add_a_new_phone; then
-                        pytest -m add_a_new_phone
+                        pytest -m add_a_new_phone -v
                     fi
                     if $change_existing_phone; then
                         pytest -m change_existing_phone -v
