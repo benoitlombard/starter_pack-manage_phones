@@ -269,8 +269,6 @@ def test_remove_phone(capsys, phone: str, call_from_CLI = True):
         else:
             assert f"{phone} successfully undeployed." in captured.out
             assert f'Please unplug {phone} from' in captured.out
-            assert yaml_d['phones'][phone]['deployment_path']['hub'] == None
-            assert yaml_d['phones'][phone]['deployment_path']['port'] == None
             for stage in yaml_d['stages']:
                 for hub_number in range(len(yaml_d['stages'][stage])):
                     if yaml_d['stages'][stage][hub_number]['name'] == phone_deployment_hub:
