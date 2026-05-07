@@ -177,7 +177,7 @@ def test_013__add__ok_testrun_ids__yaml_attributes():
 
 @pytest.mark.deploy_phone
 @pytest.mark.parametrize("phone,stage", [("Hemera", "dev"), ("Chaos", "dev"), ("incorrect_phone", "dev"), ("Nyx", "incorrect_stage"), ("Nyx", "dev"), ("Nyx", "prod"), ("incorrect_phone", "incorrect_stage")])
-def test_handler_deploy_phone(capsys, phone: str, stage: str):
+def test_deploy_phone(capsys, phone: str, stage: str):
 
     if phone not in yaml_d['phones'] and stage in ['dev', 'prod']:                   # case: incorrect phone name
         with pytest.raises(KeyError):
@@ -221,8 +221,36 @@ def test_handler_deploy_phone(capsys, phone: str, stage: str):
             assert used_port is not None
             assert yaml_d['phones'][phone]['deployment_path']['hub'] == yaml_d['stages'][stage][hub_number]['name']
             assert yaml_d['phones'][phone]['deployment_path']['port'] != None
-
     return
+
+
+
+@pytest.mark.undeploy_phone
+@pytest.mark.parametrize("phone", [("Hemera"), ("Chaos"), ("Chaos"), ("incorrect_phone")]) # Chaos appear 2 times for testing case where phone is not deployed
+def test_undeploy_phone(capsys, phone: str, stage: str):
+    if phone not in yaml_d['phones']:                   # case: incorrect phone name
+        with pytest.raises(KeyError):
+            undeploy(phone = phone)
+        captured = capsys.readouterr()
+        assert "Key Error when writing to the yaml file.\nUndeployment failed, please verify phone name." in captured.out
+    else:
+        undeploy(phone = phone)
+        phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']
+        phone_deployment_port = yaml_d['phones'][phone]['deployment_path']['port']
+        captured = capsys.readouterr()
+        if not yaml_d['phones'][phone]["deployment_path"]["hub"]:
+            assert yaml_d['phones'][phone]["deployment_path"]["port"] is not None
+            assert f"{phone} is not deployed.\nUndeployment is not possible." in captured.out
+        else:
+            assert f"{phone} successfully undeployed." in captured.out
+            assert f'Please unplug {phone} from' in captured.out
+            assert yaml_d['phones'][phone]['deployment_path']['hub'] == None
+            assert yaml_d['phones'][phone]['deployment_path']['port'] == None
+            for stage in yaml_d['stages']:
+                for hub_number in range(len(yaml_d['stages'][stage])):
+                    if yaml_d['stages'][stage][hub_number]['name'] == phone_deployment_hub:
+                        if phone_deployment_port in yaml_d['stages'][stage][hub_number]:
+                            assert yaml_d['stages'][stage][hub_number][phone_deployment_port] is None
 
 
 
