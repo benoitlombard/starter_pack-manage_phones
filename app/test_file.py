@@ -302,12 +302,22 @@ def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: st
            functional: str, performance: str, manufacturer: str, model: str,
            vendor: str, family: str, version: str, platform: str, ip: str,
            udid: str, hub: str, port: str):
-    change(phone = phone, release_type = release_type, user = user,
+    if all(attribute == '' for attribute in [release_type, user, fota, activitytracking, functional, performance, manufacturer, model, vendor, family, version, platform, ip, udid, hub, port]):
+        change(phone = phone, release_type = release_type, user = user,
             fota = fota, functional = functional, activitytracking = activitytracking, performance = performance,
             manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version,
             platform = platform, ip = ip, udid = udid, hub = hub, port = port)
-    captured = capsys.readouterr()
-    if all(attribute == '' for attribute in [release_type, user, fota, activitytracking, functional, performance, manufacturer, model, vendor, family, version, platform, ip, udid, hub, port]):
+        captured = capsys.readouterr()
         assert 'No values to change !' in captured.out
+    elif phone not in yaml_d['phones']:                   # case: incorrect phone name
+        with pytest.raises(KeyError):
+            change(phone = phone, release_type = release_type, user = user,
+            fota = fota, functional = functional, activitytracking = activitytracking, performance = performance,
+            manufacturer = manufacturer, model = model, vendor = vendor, family = family, version = version,
+            platform = platform, ip = ip, udid = udid, hub = hub, port = port)
+        captured = capsys.readouterr()
+        assert f"Phone {phone} not found." in captured.out
+    
+
 
 
