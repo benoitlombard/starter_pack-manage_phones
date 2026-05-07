@@ -343,8 +343,16 @@ def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: st
                           ("apple", "ios3", "4.2", "unique_udid_10", "user_n", "PU1", False, "fota_id", "", "", "", "", "model_n"),
                           ("apple", "ios3", "4.2", "unique_udid_11", "user_n", "PU1", False, "fota_id", "", "", "", "", ""),
                           ("samsung", "SG8", "20", "unique_udid_12", "user_n", "PU1", True, "fota_id", "", "", "", "", "model_2")])                      # case: not enough ips available
-def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, user: str, release_type: str, write: str, fota: str, activitytracking: str, functional: str, performance: str, manufacturer: str, model: str):
-    add(vendor = vendor, family = family, version = version, udid = udid, user = user, release_type = release_type, write = write, fota = fota, activitytracking = activitytracking, functional = functional, performance = performance, manufacturer = manufacturer, model = model)
+def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, user: str, release_type: str, write: str, fota: str,
+                   activitytracking: str, functional: str, performance: str, manufacturer: str, model: str):
+    is_udid_used = False
+    for phone in yaml_d['phones']:
+        if yaml_d['phones'][phone]['udid'] == udid:
+            is_udid_used = True
+            break
+    add(vendor = vendor, family = family, version = version, udid = udid, user = user, release_type = release_type, write = write, fota = fota,
+        activitytracking = activitytracking, functional = functional, performance = performance, manufacturer = manufacturer, model = model)
+    
     captured = capsys.readouterr()
     assert "RTC device name: " in captured.out
     if vendor.lower() == "apple":
@@ -362,11 +370,6 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
     if last_digit_ip is None:
         assert 'IP used: 192.168.5.' in captured.out
     else:
-        is_udid_used = False
-        for phone in yaml_d['phones']:
-            if yaml_d['phones'][phone]['udid'] == udid:
-                is_udid_used = True
-                break
         if is_udid_used:
             assert "Error when trying to add the phone:\nThis udid has already been used for phone " in captured.out
             assert f"Select new udid different than {udid}" in captured.out
