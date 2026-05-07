@@ -387,15 +387,15 @@ def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, us
                     phone_name = phone
                     break
         if any in [fota, activitytracking, functional, performance] is not None:
-            dict_of_attributes = {'release_type':release_type, 'fota':fota, 'activityTracking':activitytracking,
+            dict_of_attributes = {'release_type':release_type, 'fota':fota, 'activitytracking':activitytracking,
                           'functional':functional, 'performance':performance, 'manufacturer':manufacturer, 'model':model, 'vendor':vendor,
                           'family':family, 'version':version, 'udid':udid}
         else:
-            dict_of_attributes = {'release_type':release_type, 'fota':fota, 'activityTracking':activitytracking,
+            dict_of_attributes = {'release_type':release_type, 'fota':fota, 'activitytracking':activitytracking,
                           'functional':functional, 'performance':performance, 'manufacturer':manufacturer, 'model':model, 'vendor':vendor,
                           'family':family, 'version':version, 'udid':udid}
         for attribute_key, attribute_value in dict_of_attributes.items():
-            if attribute_key in ['fota', 'activityTracking', 'functional', 'performance']:
+            if attribute_key in ['fota', 'activitytracking', 'functional', 'performance']:
                 assert yaml_d['phones'][phone]['testrun_ids'][attribute_key] == attribute_value
             elif attribute_key in ['hub', 'port']:
                 assert yaml_d['phones'][phone]['deployment_path'][attribute_key] == attribute_value
@@ -414,13 +414,13 @@ def test_show_config(capsys, phone: str):
     else:
         assert f"name: {phone}" in captured.out
         if 'testrun_ids' in yaml_d['phones'][phone]:
-            list_of_attributes = {'release_type', 'user', 'fota', 'activityTracking', 'functional', 'performance', 'manufacturer',
+            list_of_attributes = {'release_type', 'user', 'fota', 'activitytracking', 'functional', 'performance', 'manufacturer',
                                     'model', 'vendor','family','version', 'platform', 'ip', 'udid', 'hub', 'port'}
         else:
             list_of_attributes = {'release_type', 'user', 'manufacturer', 'model', 'vendor','family','version', 'platform', 'ip', 'udid', 'hub', 'port'}
         for attribute_key in list_of_attributes:
 
-            if attribute_key in ['fota', 'activityTracking', 'functional', 'performance']:
+            if attribute_key in ['fota', 'activitytracking', 'functional', 'performance']:
                 if yaml_d['phones'][phone]['testrun_ids'][attribute_key] is None:
                     assert f"{attribute_key}:"
                 else:
