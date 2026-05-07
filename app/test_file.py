@@ -254,9 +254,9 @@ def test_undeploy_phone(capsys, phone: str):
 @pytest.mark.parametrize("phone", [("Hemera"), ("Chaos"), ("incorrect_phone")])
 def test_remove_phone(capsys, phone: str, call_from_CLI = True):
     phone_is_in_yaml = True if phone in yaml_d['phones'] else False
-    remove(phone = phone)
-    captured = capsys.readouterr()
     if not phone_is_in_yaml:
+        remove(phone = phone)
+        captured = capsys.readouterr()
         assert f"Error: phone '{phone}' not found." in captured.out
     else:
         phone_deployment_hub = yaml_d['phones'][phone]['deployment_path']['hub']
