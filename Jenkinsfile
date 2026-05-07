@@ -87,7 +87,7 @@ pipeline {
                         pytest -m add_a_new_phone -v
                     fi
                     if $change_existing_phone; then
-                        pytest -m change_existing_phone -v
+                        pytest -m change_existing_phone -vv
                     fi
                     if $deploy_phone; then
                         pytest -m deploy_phone -v
