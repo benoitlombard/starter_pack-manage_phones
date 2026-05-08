@@ -286,7 +286,7 @@ def test_show_config(capsys, phone: str):
                                         ("phones", "incorrect_stage"), ("bts", "incorrect_stage"), ("biab", "incorrect_stage"), ("stage", "incorrect_stage"),
                                         ("stage", "incorrect_stage"), (4, 4),(4, "dev"), ("stage", 4), ("phones", 4), ("biab", 4), ("bts", 4)])
 def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
-    if item_to_show not in [int, float, bool]:
+    if type(item_to_show) not in [int, float, bool]:
         match item_to_show.lower():
             case 'stage':
                 if stage_to_show not in yaml_d['stages']:                   # case: incorrect stage name
