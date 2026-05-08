@@ -286,108 +286,115 @@ def test_show_config(capsys, phone: str):
                                         ("phones", "incorrect_stage"), ("bts", "incorrect_stage"), ("biab", "incorrect_stage"), ("stage", "incorrect_stage"),
                                         ("stage", "incorrect_stage"), (4, 4),(4, "dev"), ("stage", 4), ("phones", 4), ("biab", 4), ("bts", 4)])
 def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
-    match item_to_show.lower():
-        case 'stage':
-            if stage_to_show not in yaml_d['stages']:                   # case: incorrect stage name
-                with pytest.raises(KeyError):
+    if item_to_show is str:
+        match item_to_show.lower():
+            case 'stage':
+                if stage_to_show not in yaml_d['stages']:                   # case: incorrect stage name
+                    with pytest.raises(KeyError):
+                        lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
+                    captured = capsys.readouterr()
+                    assert "KeyError: makes sure 'stage' value is either 'dev' or 'prod'." in captured.out
+                
+                else:
                     lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
-                captured = capsys.readouterr()
-                assert "KeyError: makes sure 'stage' value is either 'dev' or 'prod'." in captured.out
-            
-            else:
-                lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
-                captured = capsys.readouterr()
-                for hub in yaml_d['stages'][stage_to_show]:
-                    for port in hub:
-                        if port == 'name':
-                            assert f"name: {hub[port]}" in captured.out
-                        else:
-                            assert f"{port}:"  in captured.out
-                            if hub[port] is not str and hub[port] is not None:
-                                for attribute in hub[port]:
-                                    if hub[port][attribute] is dict:
-                                        for element in hub[port][attribute]:
-                                            assert f"  {element}: {hub[port][attribute][element]}" in captured.out
-                                    else:
-                                        if type(hub[port][attribute]) is not str and hub[port][attribute] is not None:
-                                            assert f"  {attribute}:" in captured.out
+                    captured = capsys.readouterr()
+                    for hub in yaml_d['stages'][stage_to_show]:
+                        for port in hub:
+                            if port == 'name':
+                                assert f"name: {hub[port]}" in captured.out
+                            else:
+                                assert f"{port}:"  in captured.out
+                                if hub[port] is not str and hub[port] is not None:
+                                    for attribute in hub[port]:
+                                        if hub[port][attribute] is dict:
                                             for element in hub[port][attribute]:
-                                                if hub[port][attribute][element] is not None:
+                                                assert f"  {element}: {hub[port][attribute][element]}" in captured.out
+                                        else:
+                                            if type(hub[port][attribute]) is not str and hub[port][attribute] is not None:
+                                                assert f"  {attribute}:" in captured.out
+                                                for element in hub[port][attribute]:
+                                                    if hub[port][attribute][element] is not None:
+                                                        try:
+                                                            if f"  {element}: '{float(hub[port][attribute][element])}'" in captured.out or f"  {element}: '{int(hub[port][attribute][element])}'" in captured.out:
+                                                                assert True
+                                                            else:
+                                                                assert False
+                                                        except (ValueError):
+                                                            if hub[port][attribute][element] in ["", "false", "true", None]:
+                                                                if f"  {element}: '{hub[port][attribute][element]}'" in captured.out or f"  {element}: {hub[port][attribute][element]}" in captured.out:
+                                                                    assert True
+                                                                else:
+                                                                    assert False
+                                                            else:
+                                                                assert f"  {element}: {hub[port][attribute][element]}" in captured.out  
+                                                    else:
+                                                        assert f"{element}:" in captured.out  
+                                            else:
+                                                if hub[port][attribute] in ["", "false", "true", None]:
+                                                    if f"{attribute}: '{hub[port][attribute]}'" in captured.out or f"  {attribute}: {hub[port][attribute]}" in captured.out or f"  {attribute}:" in captured.out:
+                                                        assert True
+                                                    else:
+                                                        assert False
+                                                else:
                                                     try:
-                                                        if f"  {element}: '{float(hub[port][attribute][element])}'" in captured.out or f"  {element}: '{int(hub[port][attribute][element])}'" in captured.out:
+                                                        if f"  {attribute}: '{float(hub[port][attribute])}'" in captured.out or f"  {attribute}: '{float(hub[port][attribute])}'" in captured.out:
                                                             assert True
                                                         else:
                                                             assert False
                                                     except (ValueError):
-                                                        if hub[port][attribute][element] in ["", "false", "true", None]:
-                                                            if f"  {element}: '{hub[port][attribute][element]}'" in captured.out or f"  {element}: {hub[port][attribute][element]}" in captured.out:
-                                                                assert True
-                                                            else:
-                                                                assert False
-                                                        else:
-                                                            assert f"  {element}: {hub[port][attribute][element]}" in captured.out  
-                                                else:
-                                                    assert f"{element}:" in captured.out  
-                                        else:
-                                            if hub[port][attribute] in ["", "false", "true", None]:
-                                                if f"{attribute}: '{hub[port][attribute]}'" in captured.out or f"  {attribute}: {hub[port][attribute]}" in captured.out or f"  {attribute}:" in captured.out:
-                                                    assert True
-                                                else:
-                                                    assert False
-                                            else:
-                                                try:
-                                                    if f"  {attribute}: '{float(hub[port][attribute])}'" in captured.out or f"  {attribute}: '{float(hub[port][attribute])}'" in captured.out:
-                                                        assert True
-                                                    else:
-                                                        assert False
-                                                except (ValueError):
-                                                    assert f"  {attribute}: {hub[port][attribute]}" in captured.out
+                                                        assert f"  {attribute}: {hub[port][attribute]}" in captured.out
 
-        case 'phones':
-            lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
-            captured = capsys.readouterr()
-            for phone in yaml_d['phones']:
-                _asserting_phone_informations_in_stdout(captured, phone)
-
-        case 'biab':
-            lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
-            captured = capsys.readouterr()
-            for biab in yaml_d['biab']:
-                assert biab in captured.out
-                for attribute in yaml_d['biab'][biab]:
-                    assert yaml_d['biab'][biab][attribute] in captured.out
-
-        case 'bts':
-            lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
-            captured = capsys.readouterr()
-            for bts in yaml_d['bts']:
-                assert f"{bts}:" in captured.out
-                for attribute in yaml_d['bts'][bts]:
-                    if type(yaml_d['bts'][bts][attribute]) is str:
-                        assert f"  {attribute}: {yaml_d['bts'][bts][attribute]}" in captured.out
-                    elif type(yaml_d['bts'][bts][attribute]) is int:
-                        assert f"  {attribute}: '{yaml_d['bts'][bts][attribute]}'" in captured.out
-                    elif type(yaml_d['bts'][bts][attribute]) is bool:
-                        assert f"  {attribute}: {yaml_d['bts'][bts][attribute].lower()}" in captured.out
-                    else:
-                        assert f"  {attribute}:" in captured.out
-                        for attribute_element in yaml_d['bts'][bts][attribute]:
-                            try:
-                                assert f"    {attribute_element}: '{float(yaml_d['bts'][bts][attribute][attribute_element])}'" in captured.out
-                            except ValueError:
-                                if yaml_d['bts'][bts][attribute][attribute_element] in ["", "false", "true"]:
-                                    assert f"    {attribute_element}: '{yaml_d['bts'][bts][attribute][attribute_element]}'" in captured.out
-                                else:
-                                    assert f"    {attribute_element}: {yaml_d['bts'][bts][attribute][attribute_element]}" in captured.out
-
-        case 'undeployed_phones':
-            lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
-            captured = capsys.readouterr()
-            for phone in yaml_d['phones']:
-                if yaml_d['phones'][phone]['deployment_path']['hub'] is None:
+            case 'phones':
+                lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
+                captured = capsys.readouterr()
+                for phone in yaml_d['phones']:
                     _asserting_phone_informations_in_stdout(captured, phone)
 
+            case 'biab':
+                lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
+                captured = capsys.readouterr()
+                for biab in yaml_d['biab']:
+                    assert biab in captured.out
+                    for attribute in yaml_d['biab'][biab]:
+                        assert yaml_d['biab'][biab][attribute] in captured.out
 
+            case 'bts':
+                lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
+                captured = capsys.readouterr()
+                for bts in yaml_d['bts']:
+                    assert f"{bts}:" in captured.out
+                    for attribute in yaml_d['bts'][bts]:
+                        if type(yaml_d['bts'][bts][attribute]) is str:
+                            assert f"  {attribute}: {yaml_d['bts'][bts][attribute]}" in captured.out
+                        elif type(yaml_d['bts'][bts][attribute]) is int:
+                            assert f"  {attribute}: '{yaml_d['bts'][bts][attribute]}'" in captured.out
+                        elif type(yaml_d['bts'][bts][attribute]) is bool:
+                            assert f"  {attribute}: {yaml_d['bts'][bts][attribute].lower()}" in captured.out
+                        else:
+                            assert f"  {attribute}:" in captured.out
+                            for attribute_element in yaml_d['bts'][bts][attribute]:
+                                try:
+                                    assert f"    {attribute_element}: '{float(yaml_d['bts'][bts][attribute][attribute_element])}'" in captured.out
+                                except ValueError:
+                                    if yaml_d['bts'][bts][attribute][attribute_element] in ["", "false", "true"]:
+                                        assert f"    {attribute_element}: '{yaml_d['bts'][bts][attribute][attribute_element]}'" in captured.out
+                                    else:
+                                        assert f"    {attribute_element}: {yaml_d['bts'][bts][attribute][attribute_element]}" in captured.out
 
+            case 'undeployed_phones':
+                lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
+                captured = capsys.readouterr()
+                for phone in yaml_d['phones']:
+                    if yaml_d['phones'][phone]['deployment_path']['hub'] is None:
+                        _asserting_phone_informations_in_stdout(captured, phone)
+
+            case '_':
+                lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
+                captured = capsys.readouterr()
+                assert "Error: User input do not match selection: " in captured.out
+    else:
+        lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
+        captured = capsys.readouterr()
+        assert "Error: User input do not match selection: " in captured.out
     
     
