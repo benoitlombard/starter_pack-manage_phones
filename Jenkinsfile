@@ -9,12 +9,7 @@ pipeline {
         booleanParam(name: 'undeploy_phone', defaultValue: false, description: '')
         booleanParam(name: 'remove_phone', defaultValue: false, description: '')
         booleanParam(name: 'show_phone_configuration', defaultValue: false, description: '')
-        booleanParam(name: 'display_phones', defaultValue: false, description: '')
-        booleanParam(name: 'display_bts', defaultValue: false, description: '')
-        booleanParam(name: 'display_biabs', defaultValue: false, description: '')
-        booleanParam(name: 'display_prod_stage', defaultValue: false, description: '')
-        booleanParam(name: 'display_dev_stage', defaultValue: false, description: '')
-        booleanParam(name: 'display_not_deployed_phones', defaultValue: false, description: '')
+        booleanParam(name: 'display', defaultValue: false, description: '')
     }
     stages {
         stage('Checkout') {
