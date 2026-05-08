@@ -364,7 +364,6 @@ def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: st
                 else:
                     assert yaml_d['phones'][phone][attribute_key] == attribute_value
 
-
 @pytest.mark.add_a_new_phone
 @pytest.mark.parametrize("vendor,family,version,udid,user,release_type,write,fota,activitytracking,functional,performance,manufacturer,model",
                          [("apple", "ios3", "4.2", "unique_udid_1", "user_n", "PU1", True, "", "", "", "", "", ""),                                                         # case: minimalist attributes and release_type overwritten
@@ -449,7 +448,6 @@ def test_show_config(capsys, phone: str):
     else:
         _asserting_phone_informations_in_stdout(captured, phone)
 
-
 @pytest.mark.display
 @pytest.mark.parametrize("item_to_show,stage_to_show", [("incorrect_item", ""), ("incorrect_item", "incorrect_stage"),("phones", "incorrect_stage"),
                                         ("phones", ""), ("bts", ""), ("biab", ""), ("stage", "dev"), ("stage", "prod"), ("undeployed_phones", ""),
@@ -458,7 +456,7 @@ def test_show_config(capsys, phone: str):
 def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
     match item_to_show.lower():
         case 'stage':
-            if stage_to_show not in yaml_d['stages']:                   # case: incorrect phone name
+            if stage_to_show not in yaml_d['stages']:                   # case: incorrect stage name
                 with pytest.raises(KeyError):
                     lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
                 captured = capsys.readouterr()
@@ -474,7 +472,10 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                 _asserting_phone_informations_in_stdout(captured, phone)
 
         case 'bts' | 'biab':
-            pass
+            lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
+            captured = capsys.readouterr()
+            for biab in yaml_d['biab']:
+                assert yaml_d['biab'][biab].key() in captured.out
 
         case 'undeployed_phones':
             lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
