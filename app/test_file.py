@@ -475,11 +475,22 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
             lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
             captured = capsys.readouterr()
             for biab in yaml_d['biab']:
+                assert biab in captured.out
                 for attribute in yaml_d['biab'][biab]:
                     assert yaml_d['biab'][biab][attribute] in captured.out
 
         case 'bts':
-            pass
+            lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
+            captured = capsys.readouterr()
+            for bts in yaml_d['bts']:
+                assert f"{bts}:" in captured.out
+                for attribute in yaml_d['bts'][bts]:
+                    if len(yaml_d['bts'][bts][attribute]) < 2:
+                        assert f"{attribute}: {yaml_d['bts'][bts][attribute]}" in captured.out
+                    else:
+                        assert f"{attribute}:"
+                        for attribute_element in yaml_d['bts'][bts][attribute]:
+                            assert f"{attribute_element}: {yaml_d['bts'][bts][attribute][attribute_element]}"
 
         case 'undeployed_phones':
             lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
