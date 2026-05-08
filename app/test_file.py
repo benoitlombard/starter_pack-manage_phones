@@ -481,7 +481,11 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                                             assert f"  {attribute}:" in captured.out
                                             for element in hub[port][attribute]:
                                                 try:
-                                                    assert f"    {element}: '{float(hub[port][attribute][element])}'" in captured.out    # mettre assert int OU float
+                                                    assert f"    {element}: '{float(hub[port][attribute][element])}'" in captured.out
+                                                    if f"  {element}: '{float(hub[port][attribute][element])}'" in captured.out or f"  {element}: '{float(hub[port][attribute][element])}'" in captured.out:
+                                                        assert True
+                                                    else:
+                                                        assert False
                                                 except ValueError:
                                                     if hub[port][attribute][element] in ["", "false", "true", None]:
                                                         if f"  {element}: '{hub[port][attribute][element]}'" in captured.out or f"  {element}: {hub[port][attribute][element]}" in captured.out:
@@ -498,7 +502,10 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                                                     assert False
                                             else:
                                                 try:
-                                                    assert f"  {attribute}: '{float(hub[port][attribute])}'" in captured.out      # mettre assert int OU float
+                                                    if f"  {attribute}: '{float(hub[port][attribute])}'" in captured.out or f"  {attribute}: '{float(hub[port][attribute])}'" in captured.out:
+                                                        assert True
+                                                    else:
+                                                        assert False
                                                 except ValueError:
                                                     assert f"  {attribute}: {hub[port][attribute]}" in captured.out
 
