@@ -1,6 +1,5 @@
 from manage_phones_CLI import add, change, deploy, undeploy, remove, show_config, lists
 import pytest
-import sys
 
 from manage_phones import yaml_d, yaml, file_name
 
