@@ -484,13 +484,25 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
             captured = capsys.readouterr()
             for bts in yaml_d['bts']:
                 assert f"{bts}:" in captured.out
+
                 for attribute in yaml_d['bts'][bts]:
-                    if len(yaml_d['bts'][bts][attribute]) < 2:
-                        assert f"{attribute}: {yaml_d['bts'][bts][attribute]}" in captured.out
+                    if type(yaml_d['bts'][bts][attribute]) is str:
+                        assert f"  {attribute}: {yaml_d['bts'][bts][attribute]}" in captured.out
+                    elif type(yaml_d['bts'][bts][attribute]) is int:
+                        assert f"  {attribute}: '{yaml_d['bts'][bts][attribute]}'" in captured.out
+                    elif type(yaml_d['bts'][bts][attribute]) is bool:
+                        assert f"  {attribute}: {yaml_d['bts'][bts][attribute].lower()}" in captured.out
                     else:
-                        assert f"{attribute}:"
+                        assert f"  {attribute}:" in captured.out
                         for attribute_element in yaml_d['bts'][bts][attribute]:
-                            assert f"{attribute_element}: {yaml_d['bts'][bts][attribute][attribute_element]}"
+                            try:
+                                assert f"    {attribute_element}: '{float(yaml_d['bts'][bts][attribute][attribute_element])}'" in captured.out
+                            except ValueError:
+                                if yaml_d['bts'][bts][attribute][attribute_element] in ["", "false", "true"]:
+                                    assert f"    {attribute_element}: '{yaml_d['bts'][bts][attribute][attribute_element]}'" in captured.out
+                                else:
+                                    assert f"    {attribute_element}: {yaml_d['bts'][bts][attribute][attribute_element]}" in captured.out
+
 
         case 'undeployed_phones':
             lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
