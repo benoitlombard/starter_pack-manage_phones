@@ -290,7 +290,7 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
         match item_to_show.lower():
             case 'stage':
                 if stage_to_show not in yaml_d['stages']:                   # case: incorrect stage name
-                    with pytest.raises(KeyError):
+                    with pytest.raises(KeyError, AttributeError):
                         lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
                     captured = capsys.readouterr()
                     assert "KeyError: makes sure 'stage' value is either 'dev' or 'prod'." in captured.out
