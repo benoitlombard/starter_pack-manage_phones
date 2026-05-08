@@ -554,7 +554,3 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                 if yaml_d['phones'][phone]['deployment_path']['hub'] is None:
                     _asserting_phone_informations_in_stdout(captured, phone)
 
-
-
-    
-    

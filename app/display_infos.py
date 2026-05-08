@@ -19,43 +19,6 @@ def show_stage(yaml_d: dict, yaml, stage: str)->None:
     Display the content of ['stages']['dev'] or ['stages']['prod'] entry in yaml file
     """
     for hub in yaml_d['stages'][stage]:
-        print(hub)
-        for port in hub:
-            if port == 'name':
-                print(f"name: {hub[port]}")
-            else:
-                print(f"{port}:")
-                if hub[port] is not str and hub[port] is not None:
-                    for attribute in hub[port]:
-                        if hub[port][attribute] is dict:
-                            for element in hub[port][attribute]:
-                                print(f"  {element}: {hub[port][attribute][element]}")
-                        else:
-                            if type(hub[port][attribute]) is not str and hub[port][attribute] is not None:
-                                print(f"  {attribute}:")
-                                for element in hub[port][attribute]:
-                                    try:
-                                        print(f"    {element}: '{float(hub[port][attribute][element])}'")    # mettre assert int OU float
-                                    except ValueError:
-                                        if hub[port][attribute][element] in ["", "false", "true", None]:
-                                            print(f"    {element}: '{hub[port][attribute][element]}'") # mettre assert "" OU ___ (rien du tout)
-                                        else:
-                                            print(f"    {element}: {hub[port][attribute][element]}")  
-                            else:
-                                if hub[port][attribute] in ["", "false", "true", None]:
-                                    print(f"  {attribute}: '{hub[port][attribute]}'")    # mettre assert "" OU ___ (rien du tout)
-                                else:
-                                    try:
-                                        print(f"  {attribute}: '{float(hub[port][attribute])}'")      # mettre assert int OU float
-                                    except ValueError:
-                                        print(f"  {attribute}: {hub[port][attribute]}")
-                                
-                            
-
-                                
-
-
-    for hub in yaml_d['stages'][stage]:
         yaml.dump(hub, sys.stdout)
 
 def _list_phones(yaml_d: dict, yaml)->None:
