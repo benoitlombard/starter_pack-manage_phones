@@ -468,7 +468,7 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                 for hub in yaml_d['stages'][stage_to_show]:
                     for port in hub:
                         if port == 'name':
-                            assert f"name: {hub[port]}")
+                            assert f"name: {hub[port]}" in captured.out
                         else:
                             assert f"{port}:")
                             if hub[port] is not str and hub[port] is not None:
