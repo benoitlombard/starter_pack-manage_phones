@@ -136,7 +136,7 @@ def lists(item_to_show: str = '', stage_to_show: str = '', measure_time: bool = 
         case 'bts' | 'biab':
             for biab in yaml_d['biab']:
                 print(biab)
-                print(biab.keys)
+                print(biab.keys())
             list_from_yaml(yaml_d = yaml_d,
                             yaml = yaml,
                             yaml_list_key = item_to_show.lower())
