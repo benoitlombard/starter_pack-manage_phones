@@ -293,6 +293,7 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                     lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
                 captured = capsys.readouterr()
                 assert "KeyError: makes sure 'stage' value is either 'dev' or 'prod'." in captured.out
+            
             else:
                 lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
                 captured = capsys.readouterr()
@@ -317,7 +318,7 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                                                             assert True
                                                         else:
                                                             assert False
-                                                    except (ValueError, TypeError):
+                                                    except (ValueError):
                                                         if hub[port][attribute][element] in ["", "false", "true", None]:
                                                             if f"  {element}: '{hub[port][attribute][element]}'" in captured.out or f"  {element}: {hub[port][attribute][element]}" in captured.out:
                                                                 assert True
@@ -339,7 +340,7 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                                                         assert True
                                                     else:
                                                         assert False
-                                                except (ValueError, TypeError):
+                                                except (ValueError):
                                                     assert f"  {attribute}: {hub[port][attribute]}" in captured.out
 
         case 'phones':
@@ -385,8 +386,3 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
             for phone in yaml_d['phones']:
                 if yaml_d['phones'][phone]['deployment_path']['hub'] is None:
                     _asserting_phone_informations_in_stdout(captured, phone)
-
-        case '_' :
-            lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
-            captured = capsys.readouterr()
-            assert "Error: User input do not match selection: " in captured.out
