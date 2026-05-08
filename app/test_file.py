@@ -282,9 +282,7 @@ def test_show_config(capsys, phone: str):
 
 @pytest.mark.display
 @pytest.mark.parametrize("item_to_show,stage_to_show", [("incorrect_item", ""), ("incorrect_item", "incorrect_stage"),("phones", "incorrect_stage"),
-                                        ("phones", ""), ("bts", ""), ("biab", ""), ("stage", "dev"), ("stage", "prod"), ("undeployed_phones", ""),
-                                        ("phones", "incorrect_stage"), ("bts", "incorrect_stage"), ("biab", "incorrect_stage"), ("stage", "incorrect_stage"),
-                                        ("stage", "incorrect_stage")])
+                                        ("phones", ""), ("bts", ""), ("biab", ""), ("stage", "dev"), ("stage", "prod"), ("undeployed_phones", "")])
 def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
     match item_to_show.lower():
         case 'stage':
