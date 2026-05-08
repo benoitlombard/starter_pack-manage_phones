@@ -485,6 +485,10 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                                                 except ValueError:
                                                     if hub[port][attribute][element] in ["", "false", "true", None]:
                                                         assert f"    {element}: '{hub[port][attribute][element]}'" in captured.out # mettre assert "" OU ___ (rien du tout)
+                                                        if f"    {element}: '{hub[port][attribute][element]}'" in captured.out or f"    {element}: {hub[port][attribute][element]}" in captured.out:
+                                                            assert True
+                                                        else:
+                                                            assert False
                                                     else:
                                                         assert f"    {element}: {hub[port][attribute][element]}" in captured.out  
                                         else:
