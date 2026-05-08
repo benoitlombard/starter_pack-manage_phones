@@ -76,12 +76,7 @@ pipeline {
                         pytest -m undeploy_phone -v
                         pytest -m remove_phone -v
                         pytest -m show_phone_configuration -v
-                        pytest -m display_phones -v
-                        pytest -m display_bts -v
-                        pytest -m display_biabs -v
-                        pytest -m display_prod_stage -v
-                        pytest -m display_dev_stage -v
-                        pytest -m display_not_deployed_phones -v
+                        pytest -m display -v
                     fi
                     if $add_a_new_phone; then
                         pytest -m add_a_new_phone -v
@@ -101,23 +96,8 @@ pipeline {
                     if $show_phone_configuration; then
                         pytest -m show_phone_configuration -v
                     fi
-                    if $display_phones; then
-                        pytest -m display_phones -v
-                    fi
-                    if $display_bts; then
-                        pytest -m display_bts -v
-                    fi
-                    if $display_biabs; then
-                        pytest -m display_biabs -v
-                    fi
-                    if $display_prod_stage; then
-                        pytest -m display_prod_stage -v
-                    fi
-                    if $display_dev_stage; then
-                        pytest -m display_dev_stage -v
-                    fi
-                    if $display_not_deployed_phones; then
-                        pytest -m display_not_deployed_phones -v
+                    if $display; then
+                        pytest -m display -v
                     fi
 
                     #pytest --junitxml=pytest-report.xml

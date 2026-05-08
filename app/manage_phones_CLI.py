@@ -149,7 +149,7 @@ def lists(item_to_show: str = '', stage_to_show: str = '', measure_time: bool = 
             if measure_time:
                 time_origin = time.time()
             for phone in yaml_d['phones']:
-                if not yaml_d['phones'][phone]['deployed']:
+                if yaml_d['phones'][phone]['deployment_path']["hub"] is None:
                     yaml.dump(yaml_d['phones'][phone], sys.stdout)
             if measure_time:
                 typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
