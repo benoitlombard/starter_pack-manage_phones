@@ -92,7 +92,7 @@ pipeline {
                         pytest -m show_phone_configuration -v
                     fi
                     if $display; then
-                        pytest -m display -vvv
+                        pytest -m display -v
                     fi
 
                     #pytest --junitxml=pytest-report.xml
