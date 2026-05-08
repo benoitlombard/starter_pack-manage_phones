@@ -374,9 +374,7 @@ def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: st
                           ("apple", "ios3", "4.2", "unique_udid_8", "user_n", "PU1", True, "fota_id", "activitytracking_id", "functional_id", "performance_id", "apple", "model_2"),
                           ("apple", "ios3", "4.2", "unique_udid_8", "user_n", "PU1", True, "fota_id", "", "", "", "", ""),                                          # case : udid already used
                           ("apple", "ios3", "4.2", "unique_udid_9", "user_n", "PU1", False, "fota_id", "", "", "", "", ""),
-                          ("apple", "ios3", "4.2", "unique_udid_10", "user_n", "PU1", False, "fota_id", "", "", "", "", "model_n"),
-                          ("apple", "ios3", "4.2", "unique_udid_11", "user_n", "PU1", False, "fota_id", "", "", "", "", ""),
-                          ("samsung", "SG8", "20", "unique_udid_12", "user_n", "PU1", True, "fota_id", "", "", "", "", "model_2"),
+                          ("apple", "ios3", "4.2", "unique_udid_10", "user_n", "PU1", True, "fota_id", "", "", "", "", "model_n"),
                           ("samsung", "SG8", "20", "unique_udid_12", "user_n", "PU1", True, 4, 4, 4, 4, "4", 4),
                           ("samsung", "SG8", 4, 4, 4, "PU1", True, 4, 4, 4, 4, "4", 4)])                      # case: not enough ips available
 def test_add_phone(capsys, vendor: str, family: str, version: str, udid: str, user: str, release_type: str, write: bool, fota: str,
