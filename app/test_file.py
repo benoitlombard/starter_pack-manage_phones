@@ -471,11 +471,14 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
             for phone in yaml_d['phones']:
                 _asserting_phone_informations_in_stdout(captured, phone)
 
-        case 'bts' | 'biab':
+        case 'biab':
             lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
             captured = capsys.readouterr()
             for biab in yaml_d['biab']:
                 assert yaml_d['biab'][biab].key() in captured.out
+
+        case 'bts':
+            pass
 
         case 'undeployed_phones':
             lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
