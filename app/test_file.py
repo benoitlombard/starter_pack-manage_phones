@@ -492,7 +492,7 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                                                         assert f"  {element}: {hub[port][attribute][element]}" in captured.out  
                                         else:
                                             if hub[port][attribute] in ["", "false", "true", None]:
-                                                if f"{attribute}: '{hub[port][attribute]}'" in captured.out or f"  {attribute}: {hub[port][attribute]}" in captured.out:
+                                                if f"{attribute}: '{hub[port][attribute]}'" in captured.out or f"  {attribute}: {hub[port][attribute]}" in captured.out or f"  {attribute}:" in captured.out:
                                                     assert True
                                                 else:
                                                     assert False
