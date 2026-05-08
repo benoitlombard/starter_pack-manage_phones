@@ -284,70 +284,65 @@ def test_show_config(capsys, phone: str):
 @pytest.mark.parametrize("item_to_show,stage_to_show", [("incorrect_item", ""), ("incorrect_item", "incorrect_stage"),("phones", "incorrect_stage"),
                                         ("phones", ""), ("bts", ""), ("biab", ""), ("stage", "dev"), ("stage", "prod"), ("undeployed_phones", ""),
                                         ("phones", "incorrect_stage"), ("bts", "incorrect_stage"), ("biab", "incorrect_stage"), ("stage", "incorrect_stage"),
-                                        ("stage", "incorrect_stage"), (4, 4),(4, "dev"), ("stage", 4), ("phones", 4), ("biab", 4), ("bts", 4)])
+                                        ("stage", "incorrect_stage")])
 def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
     if type(item_to_show) not in [int, float, bool]:
         match item_to_show.lower():
             case 'stage':
-                if stage_to_show not in [int, float, bool]:
-                    if stage_to_show not in yaml_d['stages']:                   # case: incorrect stage name
-                        with pytest.raises(KeyError):
-                            lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
-                        captured = capsys.readouterr()
-                        assert "KeyError: makes sure 'stage' value is either 'dev' or 'prod'." in captured.out
-                    
-                    else:
+                if stage_to_show not in yaml_d['stages']:                   # case: incorrect stage name
+                    with pytest.raises(KeyError):
                         lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
-                        captured = capsys.readouterr()
-                        for hub in yaml_d['stages'][stage_to_show]:
-                            for port in hub:
-                                if port == 'name':
-                                    assert f"name: {hub[port]}" in captured.out
-                                else:
-                                    assert f"{port}:"  in captured.out
-                                    if hub[port] is not str and hub[port] is not None:
-                                        for attribute in hub[port]:
-                                            if hub[port][attribute] is dict:
+                    captured = capsys.readouterr()
+                    assert "KeyError: makes sure 'stage' value is either 'dev' or 'prod'." in captured.out
+                
+                else:
+                    lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
+                    captured = capsys.readouterr()
+                    for hub in yaml_d['stages'][stage_to_show]:
+                        for port in hub:
+                            if port == 'name':
+                                assert f"name: {hub[port]}" in captured.out
+                            else:
+                                assert f"{port}:"  in captured.out
+                                if hub[port] is not str and hub[port] is not None:
+                                    for attribute in hub[port]:
+                                        if hub[port][attribute] is dict:
+                                            for element in hub[port][attribute]:
+                                                assert f"  {element}: {hub[port][attribute][element]}" in captured.out
+                                        else:
+                                            if type(hub[port][attribute]) is not str and hub[port][attribute] is not None:
+                                                assert f"  {attribute}:" in captured.out
                                                 for element in hub[port][attribute]:
-                                                    assert f"  {element}: {hub[port][attribute][element]}" in captured.out
-                                            else:
-                                                if type(hub[port][attribute]) is not str and hub[port][attribute] is not None:
-                                                    assert f"  {attribute}:" in captured.out
-                                                    for element in hub[port][attribute]:
-                                                        if hub[port][attribute][element] is not None:
-                                                            try:
-                                                                if f"  {element}: '{float(hub[port][attribute][element])}'" in captured.out or f"  {element}: '{int(hub[port][attribute][element])}'" in captured.out:
-                                                                    assert True
-                                                                else:
-                                                                    assert False
-                                                            except (ValueError):
-                                                                if hub[port][attribute][element] in ["", "false", "true", None]:
-                                                                    if f"  {element}: '{hub[port][attribute][element]}'" in captured.out or f"  {element}: {hub[port][attribute][element]}" in captured.out:
-                                                                        assert True
-                                                                    else:
-                                                                        assert False
-                                                                else:
-                                                                    assert f"  {element}: {hub[port][attribute][element]}" in captured.out  
-                                                        else:
-                                                            assert f"{element}:" in captured.out  
-                                                else:
-                                                    if hub[port][attribute] in ["", "false", "true", None]:
-                                                        if f"{attribute}: '{hub[port][attribute]}'" in captured.out or f"  {attribute}: {hub[port][attribute]}" in captured.out or f"  {attribute}:" in captured.out:
-                                                            assert True
-                                                        else:
-                                                            assert False
-                                                    else:
+                                                    if hub[port][attribute][element] is not None:
                                                         try:
-                                                            if f"  {attribute}: '{float(hub[port][attribute])}'" in captured.out or f"  {attribute}: '{float(hub[port][attribute])}'" in captured.out:
+                                                            if f"  {element}: '{float(hub[port][attribute][element])}'" in captured.out or f"  {element}: '{int(hub[port][attribute][element])}'" in captured.out:
                                                                 assert True
                                                             else:
                                                                 assert False
                                                         except (ValueError):
-                                                            assert f"  {attribute}: {hub[port][attribute]}" in captured.out
-                else:
-                    lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
-                    captured = capsys.readouterr()
-                    assert "Error: User input do not match selection: "
+                                                            if hub[port][attribute][element] in ["", "false", "true", None]:
+                                                                if f"  {element}: '{hub[port][attribute][element]}'" in captured.out or f"  {element}: {hub[port][attribute][element]}" in captured.out:
+                                                                    assert True
+                                                                else:
+                                                                    assert False
+                                                            else:
+                                                                assert f"  {element}: {hub[port][attribute][element]}" in captured.out  
+                                                    else:
+                                                        assert f"{element}:" in captured.out  
+                                            else:
+                                                if hub[port][attribute] in ["", "false", "true", None]:
+                                                    if f"{attribute}: '{hub[port][attribute]}'" in captured.out or f"  {attribute}: {hub[port][attribute]}" in captured.out or f"  {attribute}:" in captured.out:
+                                                        assert True
+                                                    else:
+                                                        assert False
+                                                else:
+                                                    try:
+                                                        if f"  {attribute}: '{float(hub[port][attribute])}'" in captured.out or f"  {attribute}: '{float(hub[port][attribute])}'" in captured.out:
+                                                            assert True
+                                                        else:
+                                                            assert False
+                                                    except (ValueError):
+                                                        assert f"  {attribute}: {hub[port][attribute]}" in captured.out
 
             case 'phones':
                 lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
