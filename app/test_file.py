@@ -461,9 +461,40 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                     lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
                 captured = capsys.readouterr()
                 assert "KeyError: makes sure 'stage' value is either 'dev' or 'prod'." in captured.out
+            
             else:
                 lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
                 captured = capsys.readouterr()
+                for hub in yaml_d['stages'][stage_to_show]:
+                    for port in hub:
+                        if port == 'name':
+                            assert f"name: {hub[port]}")
+                        else:
+                            assert f"{port}:")
+                            if hub[port] is not str and hub[port] is not None:
+                                for attribute in hub[port]:
+                                    if hub[port][attribute] is dict:
+                                        for element in hub[port][attribute]:
+                                            assert f"  {element}: {hub[port][attribute][element]}" in captured.out
+                                    else:
+                                        if type(hub[port][attribute]) is not str and hub[port][attribute] is not None:
+                                            assert f"  {attribute}:" in captured.out
+                                            for element in hub[port][attribute]:
+                                                try:
+                                                    assert f"    {element}: '{float(hub[port][attribute][element])}'" in captured.out    # mettre assert int OU float
+                                                except ValueError:
+                                                    if hub[port][attribute][element] in ["", "false", "true", None]:
+                                                        assert f"    {element}: '{hub[port][attribute][element]}'" in captured.out # mettre assert "" OU ___ (rien du tout)
+                                                    else:
+                                                        assert f"    {element}: {hub[port][attribute][element]}" in captured.out  
+                                        else:
+                                            if hub[port][attribute] in ["", "false", "true", None]:
+                                                assert f"  {attribute}: '{hub[port][attribute]}'" in captured.out    # mettre assert "" OU ___ (rien du tout)
+                                            else:
+                                                try:
+                                                    assert f"  {attribute}: '{float(hub[port][attribute])}'" in captured.out      # mettre assert int OU float
+                                                except ValueError:
+                                                    assert f"  {attribute}: {hub[port][attribute]}" in captured.out
 
         case 'phones':
             lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
@@ -484,7 +515,6 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
             captured = capsys.readouterr()
             for bts in yaml_d['bts']:
                 assert f"{bts}:" in captured.out
-
                 for attribute in yaml_d['bts'][bts]:
                     if type(yaml_d['bts'][bts][attribute]) is str:
                         assert f"  {attribute}: {yaml_d['bts'][bts][attribute]}" in captured.out
@@ -502,7 +532,6 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                                     assert f"    {attribute_element}: '{yaml_d['bts'][bts][attribute][attribute_element]}'" in captured.out
                                 else:
                                     assert f"    {attribute_element}: {yaml_d['bts'][bts][attribute][attribute_element]}" in captured.out
-
 
         case 'undeployed_phones':
             lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
