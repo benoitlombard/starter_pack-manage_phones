@@ -176,6 +176,42 @@ def test_013__add__ok_testrun_ids__yaml_attributes():
         assert value_found_in_yaml == dict_attributes[key]
 
 
+
+def asserting_phone_informations_in_stdout(captured, phone: str):
+    if 'testrun_ids' in yaml_d['phones'][phone]:
+                        list_of_attributes = {'release_type', 'user', 'fota', 'activitytracking', 'functional', 'performance', 'manufacturer',
+                                                'model', 'vendor','family','version', 'platform', 'ip', 'udid', 'hub', 'port'}
+                    else:
+                        list_of_attributes = {'release_type', 'user', 'manufacturer', 'model', 'vendor','family','version', 'platform', 'ip', 'udid', 'hub', 'port'}
+                    for attribute_key in list_of_attributes:
+
+                        if attribute_key in ['fota', 'activitytracking', 'functional', 'performance']:
+                            if yaml_d['phones'][phone]['testrun_ids'][attribute_key] is None:
+                                assert f"{attribute_key}:"
+                            else:
+                                if f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out:
+                                    assert f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out
+                                else:
+                                    assert f"{attribute_key}: '{yaml_d['phones'][phone]['testrun_ids'][attribute_key]}'" in captured.out
+
+                        elif attribute_key in ['hub', 'port']:
+                            if yaml_d['phones'][phone]['deployment_path'][attribute_key] is None:
+                                assert f"{attribute_key}:"
+                            else:
+                                if f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out:
+                                    assert f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out
+                                else:
+                                    assert f"{attribute_key}: '{yaml_d['phones'][phone]['deployment_path'][attribute_key]}'" in captured.out
+
+                        else:
+                            if yaml_d['phones'][phone][attribute_key] is None:
+                                assert f"{attribute_key}:"
+                            else:
+                                if f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out:
+                                    assert f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out
+                                else:
+                                    assert f"{attribute_key}: '{yaml_d['phones'][phone][attribute_key]}'" in captured.out
+
 @pytest.mark.deploy_phone
 @pytest.mark.parametrize("phone,stage", [("Hemera", "dev"), ("Chaos", "dev"), ("incorrect_phone", "dev"), ("Nyx", "incorrect_stage"), ("Nyx", "dev"), ("Nyx", "prod"), ("incorrect_phone", "incorrect_stage")])
 def test_deploy_phone(capsys, phone: str, stage: str):
@@ -465,7 +501,8 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                 lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
                 captured = capsys.readouterr()
         case 'phones':
-            pass
+            for phone in yaml_d['phones']:
+                asserting_phone_informations_in_stdout(captured, phone)
         case 'bts' | 'biab':
             pass
         case 'undeployed_phones':
@@ -473,39 +510,7 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
             captured = capsys.readouterr()
             for phone in yaml_d['phones']:
                 if yaml_d['phones'][phone]['deployment_path']['hub'] is None:
-                    if 'testrun_ids' in yaml_d['phones'][phone]:
-                        list_of_attributes = {'release_type', 'user', 'fota', 'activitytracking', 'functional', 'performance', 'manufacturer',
-                                                'model', 'vendor','family','version', 'platform', 'ip', 'udid', 'hub', 'port'}
-                    else:
-                        list_of_attributes = {'release_type', 'user', 'manufacturer', 'model', 'vendor','family','version', 'platform', 'ip', 'udid', 'hub', 'port'}
-                    for attribute_key in list_of_attributes:
-
-                        if attribute_key in ['fota', 'activitytracking', 'functional', 'performance']:
-                            if yaml_d['phones'][phone]['testrun_ids'][attribute_key] is None:
-                                assert f"{attribute_key}:"
-                            else:
-                                if f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out:
-                                    assert f"{attribute_key}: {yaml_d['phones'][phone]['testrun_ids'][attribute_key]}" in captured.out
-                                else:
-                                    assert f"{attribute_key}: '{yaml_d['phones'][phone]['testrun_ids'][attribute_key]}'" in captured.out
-
-                        elif attribute_key in ['hub', 'port']:
-                            if yaml_d['phones'][phone]['deployment_path'][attribute_key] is None:
-                                assert f"{attribute_key}:"
-                            else:
-                                if f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out:
-                                    assert f"{attribute_key}: {yaml_d['phones'][phone]['deployment_path'][attribute_key]}" in captured.out
-                                else:
-                                    assert f"{attribute_key}: '{yaml_d['phones'][phone]['deployment_path'][attribute_key]}'" in captured.out
-
-                        else:
-                            if yaml_d['phones'][phone][attribute_key] is None:
-                                assert f"{attribute_key}:"
-                            else:
-                                if f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out:
-                                    assert f"{attribute_key}: {yaml_d['phones'][phone][attribute_key]}" in captured.out
-                                else:
-                                    assert f"{attribute_key}: '{yaml_d['phones'][phone][attribute_key]}'" in captured.out
+                    asserting_phone_informations_in_stdout(captured, phone)
 
 
 
