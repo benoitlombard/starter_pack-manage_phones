@@ -480,19 +480,22 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                                         if type(hub[port][attribute]) is not str and hub[port][attribute] is not None:
                                             assert f"  {attribute}:" in captured.out
                                             for element in hub[port][attribute]:
-                                                try:
-                                                    if f"  {element}: '{float(hub[port][attribute][element])}'" in captured.out or f"  {element}: '{int(hub[port][attribute][element])}'" in captured.out:
-                                                        assert True
-                                                    else:
-                                                        assert False
-                                                except (ValueError, TypeError):
-                                                    if hub[port][attribute][element] in ["", "false", "true", None]:
-                                                        if f"  {element}: '{hub[port][attribute][element]}'" in captured.out or f"  {element}: {hub[port][attribute][element]}" in captured.out:
+                                                if hub[port][attribute][element] is not None:
+                                                    try:
+                                                        if f"  {element}: '{float(hub[port][attribute][element])}'" in captured.out or f"  {element}: '{int(hub[port][attribute][element])}'" in captured.out:
                                                             assert True
                                                         else:
                                                             assert False
-                                                    else:
-                                                        assert f"  {element}: {hub[port][attribute][element]}" in captured.out  
+                                                    except (ValueError, TypeError):
+                                                        if hub[port][attribute][element] in ["", "false", "true", None]:
+                                                            if f"  {element}: '{hub[port][attribute][element]}'" in captured.out or f"  {element}: {hub[port][attribute][element]}" in captured.out:
+                                                                assert True
+                                                            else:
+                                                                assert False
+                                                        else:
+                                                            assert f"  {element}: {hub[port][attribute][element]}" in captured.out  
+                                                else:
+                                                    assert f"{element}:" in captured.out  
                                         else:
                                             if hub[port][attribute] in ["", "false", "true", None]:
                                                 if f"{attribute}: '{hub[port][attribute]}'" in captured.out or f"  {attribute}: {hub[port][attribute]}" in captured.out or f"  {attribute}:" in captured.out:
