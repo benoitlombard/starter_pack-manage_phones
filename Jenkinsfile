@@ -3,7 +3,7 @@ pipeline {
     parameters {
         booleanParam(name: 'run_all_tests', defaultValue: true, description: '   Other parameters will be ignored if this parameter is checked.')
         booleanParam(name: 'command', defaultValue: false, description: '')
-        string(name: 'content', defaultValue: 'change --phone Chaos --release-type PU100 --user jean, ', description: ' Command to execute:')
+        string(name: 'content', defaultValue: 'change --phone Chaos --release-type PU100 --user jean ', description: ' Command to execute:')
         booleanParam(name: 'add_a_new_phone', defaultValue: false, description: '')
         booleanParam(name: 'change_existing_phone', defaultValue: false, description: '')
         booleanParam(name: 'deploy_phone', defaultValue: false, description: '')
