@@ -484,16 +484,15 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                                                     assert f"    {element}: '{float(hub[port][attribute][element])}'" in captured.out    # mettre assert int OU float
                                                 except ValueError:
                                                     if hub[port][attribute][element] in ["", "false", "true", None]:
-                                                        if f"    {element}: '{hub[port][attribute][element]}'" in captured.out or f"    {element}: {hub[port][attribute][element]}" in captured.out:
+                                                        if f"  {element}: '{hub[port][attribute][element]}'" in captured.out or f"  {element}: {hub[port][attribute][element]}" in captured.out:
                                                             assert True
                                                         else:
                                                             assert False
                                                     else:
-                                                        assert f"    {element}: {hub[port][attribute][element]}" in captured.out  
+                                                        assert f"  {element}: {hub[port][attribute][element]}" in captured.out  
                                         else:
                                             if hub[port][attribute] in ["", "false", "true", None]:
-                                                assert f"  {attribute}: '{hub[port][attribute]}'" in captured.out
-                                                if f"    {attribute}: '{hub[port][attribute]}'" in captured.out or f"    {attribute}: {hub[port][attribute]}" in captured.out:
+                                                if f"  {attribute}: '{hub[port][attribute]}'" in captured.out or f"  {attribute}: {hub[port][attribute]}" in captured.out:
                                                     assert True
                                                 else:
                                                     assert False
