@@ -470,7 +470,7 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                         if port == 'name':
                             assert f"name: {hub[port]}" in captured.out
                         else:
-                            assert f"{port}:")
+                            assert f"{port}:"  in captured.out
                             if hub[port] is not str and hub[port] is not None:
                                 for attribute in hub[port]:
                                     if hub[port][attribute] is dict:
