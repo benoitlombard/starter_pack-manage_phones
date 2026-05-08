@@ -110,7 +110,7 @@ pipeline {
                 sh '''
                     cd app
                     . venv_new/bin/activate
-                    if $commands; then
+                    if $command; then
                         python manage_phones_CLI.py $content
                     fi
                     '''
