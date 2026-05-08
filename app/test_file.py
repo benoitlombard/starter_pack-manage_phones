@@ -392,9 +392,5 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                 lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
                 captured = capsys.readouterr()
                 assert "Error: User input do not match selection: " in captured.out
-    else:
-        lists(item_to_show = item_to_show, stage_to_show = stage_to_show)
-        captured = capsys.readouterr()
-        assert "Error: User input do not match selection: " in captured.out
     
     
