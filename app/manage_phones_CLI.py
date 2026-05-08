@@ -134,9 +134,6 @@ def lists(item_to_show: str = '', stage_to_show: str = '', measure_time: bool = 
             if measure_time:
                 typer.secho(f"time elapsed: {(time.time() - time_origin):.6f} seconds.", fg=typer.colors.BRIGHT_BLACK)
         case 'bts' | 'biab':
-            for biab in yaml_d['biab']:
-                print(biab)
-                print(biab.keys())
             list_from_yaml(yaml_d = yaml_d,
                             yaml = yaml,
                             yaml_list_key = item_to_show.lower())
