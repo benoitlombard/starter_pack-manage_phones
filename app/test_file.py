@@ -196,7 +196,7 @@ def test_change_phone(capsys, phone: str, release_type: str, user: str, fota: st
                 else:
                     assert yaml_d['phones'][phone][attribute_key] == attribute_value
 
-@pytest.mark.add_a_new_phone
+@pytest.mark.add_a_new_phon
 @pytest.mark.parametrize("vendor,family,version,udid,user,release_type,write,fota,activitytracking,functional,performance,manufacturer,model",
                          [("apple", "ios3", "4.2", "unique_udid_1", "user_n", "PU1", True, "", "", "", "", "", ""),                                                         # case: minimalist attributes and release_type overwritten
                           ("apple", "ios3", "4.2", "unique_udid_2", "user_n", "PU1", True, "", "", "", "", "", ""),                                                            # case: minimalist attributes and release_type default value
