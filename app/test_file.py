@@ -481,7 +481,7 @@ def test_lists_phones(capsys, item_to_show: str, stage_to_show: str):
                                             assert f"  {attribute}:" in captured.out
                                             for element in hub[port][attribute]:
                                                 try:
-                                                    if f"  {element}: '{float(hub[port][attribute][element])}'" in captured.out or f"  {element}: '{float(hub[port][attribute][element])}'" in captured.out:
+                                                    if f"  {element}: '{float(hub[port][attribute][element])}'" in captured.out or f"  {element}: '{int(hub[port][attribute][element])}'" in captured.out:
                                                         assert True
                                                     else:
                                                         assert False
